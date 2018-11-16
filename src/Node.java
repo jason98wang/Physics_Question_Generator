@@ -1,4 +1,7 @@
 class Node<T>{
+	
+	// jason98wang suck de de
+	
 	private T item;
 	private Node<T> next;
 	
