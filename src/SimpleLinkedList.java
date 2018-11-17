@@ -63,6 +63,27 @@ class SimpleLinkedList<E> {
 			tempNode.setNext(tempNode.getNext().getNext());
 		}
 	}
+	
+	public boolean remove(E item) {
+		if (head == null) {
+			return false;
+		} else if (head.getItem().equals(item)) {
+			head = head.getNext();
+			return true;
+		}
+
+		Node<E> cur = head;
+		while (cur.getNext() != null) {
+			if (cur.getNext().getItem().equals(item)) {
+				Node<E> n = cur.getNext();
+				cur.setNext(n.getNext());
+
+				return true;
+			}
+			cur = cur.getNext();
+		}
+		return false;
+	}
 
 	public void clear() {
 		head = null;
