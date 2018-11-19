@@ -4,7 +4,6 @@ public abstract class Subject {
 	private int grade; 
 	private String level;
 	
-	
 	// setters
 	public void setName(String name) {
 		this.name = name;
