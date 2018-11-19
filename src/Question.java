@@ -7,8 +7,8 @@ public class Question {
 	
 	// constructor
 	Question(String problemStatement, SimpleLinkedList<Symbol> formula){
-		setProblemStatement(problemStatement);
-		setFormula(formula);
+		this.problemStatement = problemStatement;
+		this.formula = formula;
 	}
 	
 	// setters

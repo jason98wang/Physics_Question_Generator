@@ -1,8 +1,9 @@
 public abstract class Subject {
 	
 	private String name;
-	private int grade; 
+	private int grade;
 	private String level;
+	private SimpleLinkedList<Unit> units;
 	
 	// setters
 	public void setName(String name) {
@@ -28,6 +29,10 @@ public abstract class Subject {
 	
 	public String getLevel() {
 		return level;
+	}
+	
+	public SimpleLinkedList<Unit> getUnits(){
+		return units;
 	}
 	
 }

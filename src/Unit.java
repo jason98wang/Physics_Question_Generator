@@ -2,9 +2,17 @@
 public class Unit {
 	
 	// init vars
+	private String name;
+	private int num;
 	private SimpleLinkedList<Question> questions;
 	private SimpleLinkedList<Question> incorrectQuestions;
 	private int questionsTaken;
+	
+	// constructor
+	Unit(String name, int num){
+		this.name = name;
+		this.num = num;
+	}
 	
 	public void answeredQuestion(Question q, boolean correct) {
 		questionsTaken++;
@@ -22,6 +30,14 @@ public class Unit {
 	}
 	
 	// getters
+	public String getName() {
+		return name;
+	}
+	
+	public int getNum() {
+		return num;
+	}
+	
 	public Question getQuestion() {
 		return questions.get((int)(randNum(0, questions.size())));
 	}
