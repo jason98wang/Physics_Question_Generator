@@ -5,6 +5,14 @@ public class Subject {
 	private String level;
 	private SimpleLinkedList<Unit> units;
 	
+	public void addUnit(Unit u) {
+		units.add(u);
+	}
+	
+	public void removeUnit(Unit u) {
+		units.remove(u);
+	}
+	
 	// setters
 	public void setName(String name) {
 		this.name = name;

@@ -1,13 +1,5 @@
-import javax.swing.JFrame;
-
-public class Exe {
-
-	private static JFrame window;
-	
+public class Exe {	
 	public static void main(String[] args) {
-		
-		window = new QuizTaker();
-
+		new QuizTaker();
 	}
-
 }
