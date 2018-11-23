@@ -10,6 +10,7 @@ public class test {
 		test.add(5);
 		test.add(3);
 		test.add(4);
+		test.add(5);
 		
 		test.display();
 		
