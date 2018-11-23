@@ -1,19 +1,16 @@
 class SimpleLinkedList<E> {
 	private Node<E> head;
+	private Node<E> tail;
 
 	public void add(E item) {
-		Node<E> tempNode = head;
-
-		if (head == null) {
-			head = new Node<E>(item, null);
-			return;
+		Node<E> node = new Node<E>(item, null);
+		if (tail != null) {
+			tail.setNext(node);
+			tail = node;
+		} else {
+			head = node;
+			tail = node;
 		}
-
-		while (tempNode.getNext() != null) {
-			tempNode = tempNode.getNext();
-		}
-
-		tempNode.setNext(new Node<E>(item, null));
 	}
 
 	public E get(int index) {
@@ -63,7 +60,7 @@ class SimpleLinkedList<E> {
 			tempNode.setNext(tempNode.getNext().getNext());
 		}
 	}
-	
+
 	public boolean remove(E item) {
 		if (head == null) {
 			return false;

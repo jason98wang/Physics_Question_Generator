@@ -5,6 +5,14 @@ public class Subject {
 	private String level;
 	private SimpleLinkedList<Unit> units;
 	
+	// constructor
+	Subject(String name, int grade, String level) {
+		this.name = name;
+		this.grade = grade;
+		this.level = level;
+		units = new SimpleLinkedList<Unit>();
+	}
+	
 	public void addUnit(Unit u) {
 		units.add(u);
 	}
