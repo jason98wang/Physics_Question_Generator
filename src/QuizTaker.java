@@ -8,6 +8,7 @@ public class QuizTaker extends JFrame{
 	QuizTaker(){
 		super("Practice Like A Physicist");
 		
+		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setResizable(false);
