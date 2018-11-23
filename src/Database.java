@@ -1,9 +1,16 @@
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 
 import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.GistFile;
 import org.eclipse.egit.github.core.service.GistService;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;;
 
 public class Database {
 
@@ -21,23 +28,39 @@ public class Database {
 	private static SimpleLinkedList<Subject> subjects;
 	private static SimpleLinkedList<Symbol> symbols;
 
+	private static File jsonFile;
+
 	public static void main(String[] args) {
 		Database db = new Database();
-		
-		Subject s = new Subject("Physics", 12, "U"); 
-		db.addSubject(s);
-		Unit u = new Unit("TLAP", 1);
-		db.addUnit(s, u);
-		Question q = new Question("What is TLAP?", null);
-		db.addQuestion(u, q);
-		
+
+		//		Subject s = new Subject("Physics", 12, "U"); 
+		//		subjects.add(s);
+		//		Unit u = new Unit("TLAP", 1);
+		//		s.addUnit(u);
+		//		Question q = new Question("What is TLAP?", null);
+		//		u.addQuestion(q);
+
 		db.update();
 	}
 
 	Database() {
+		// fine json file
+		jsonFile = new File("database.json");
+
+		// init subjects and symbols
 		subjects = new SimpleLinkedList<Subject>();
 		symbols = new SimpleLinkedList<Symbol>();
 		
+		// setup gist and get data
+		initGist();
+
+		// output data to json file
+		fileOutput();
+		// interpret data from json file
+		fileInput();
+	}
+
+	private void initGist() {
 		// set user info
 		service = new GistService();
 		service.getClient().setCredentials(USERNAME, PASSWORD);
@@ -50,47 +73,73 @@ public class Database {
 		}
 
 		// get gistfile from its respective gist
-		Map<String, GistFile> m = gist.getFiles();
-		file = m.get("Database");
+		file = gist.getFiles().get("Database");
 
 		// get data from file
 		data = file.getContent();
 	}
 
-	private void updateGist() {
+	private static void fileInput() {
+		JSONArray array = null;
 		try {
-			service.updateGist(gist);
+			array = (JSONArray) (new JSONParser()).parse(new FileReader(jsonFile));
+		} catch (IOException | ParseException e) {
+			e.printStackTrace();
+		}
+
+		for (Object a : array) {
+			JSONObject subject = (JSONObject) a;
+
+			String name = (String) subject.get("name");
+			int grade = Integer.parseInt((String) subject.get("grade"));
+			String level = (String) subject.get("level");
+
+			Subject s = new Subject(name, grade, level);
+			subjects.add(s);
+			System.out.println("made new subject " + name + " " + grade + " " + level);
+
+			JSONArray units = (JSONArray) subject.get("units");
+
+			for (Object b : units) {
+				JSONObject unit = (JSONObject) b;
+
+				String name2 = (String) unit.get("name");
+				int number = Integer.parseInt((String) unit.get("number"));
+
+				Unit u = new Unit(name2, number);
+				s.addUnit(u);
+				System.out.println("made new unit " + name + " " + number);
+
+				JSONArray questions = (JSONArray) unit.get("questions");
+
+				for (Object c : questions) {
+					JSONObject question = (JSONObject) c;
+
+					String problemStatement = (String) question.get("problem");
+					String f = (String) question.get("formula");
+					// TEMPORARY
+					SimpleLinkedList<Symbol> formula = null; // (SimpleLinkedList<Symbol>) question.get("formula");
+
+					Question q = new Question(problemStatement, formula);
+					u.addQuestion(q);
+					System.out.println("made new question " + problemStatement + " " + formula);					
+				}
+			}
+		}
+	}
+
+	private static void fileOutput() {
+		// write to json file
+		try {
+			FileWriter file = new FileWriter(jsonFile);
+			file.write(data);
+			file.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void interpretGist() {
-		
-	}
-
 	public void update() {
-		for (int i = 0; i < subjects.size(); i++) {
-			Subject s = subjects.get(i);
-			data += "<<<" + s.getName() + "\n";
-
-			for (int j = 0; j < s.getUnits().size(); j++) {
-				Unit u = s.getUnits().get(j);
-				data += "<<" + u.getName() + "\n";
-
-				for (int k = 0; k < u.getQuestions().size(); k++) {
-					Question q = u.getQuestions().get(k);
-					data += "<" + q.getProblemStatement() + "\n";
-					data += q.getFormula() + "\n";
-					data += ">\n";
-				}
-
-				data += ">>\n";
-			}
-
-			data += ">>>\n";
-		}
-		
 		file.setContent(data);
 		try {
 			service.updateGist(gist);
@@ -108,21 +157,21 @@ public class Database {
 		subjects.remove(s);
 	}
 
-	public void addUnit(Subject s, Unit u) {
-		s.addUnit(u);
-	}
-
-	public void removeUnit(Subject s, Unit u) {
-		s.removeUnit(u);
-	}
-
-	public void addQuestion(Unit u, Question q) {
-		u.addQuestion(q);
-	}
-
-	public void removeQuestion(Unit u, Question q) {
-		u.removeQuestion(q);
-	}
+	//	public void addUnit(Subject s, Unit u) {
+	//		s.addUnit(u);
+	//	}
+	//
+	//	public void removeUnit(Subject s, Unit u) {
+	//		s.removeUnit(u);
+	//	}
+	//
+	//	public void addQuestion(Unit u, Question q) {
+	//		u.addQuestion(q);
+	//	}
+	//
+	//	public void removeQuestion(Unit u, Question q) {
+	//		u.removeQuestion(q);
+	//	}
 
 	public void addSymbol(Symbol s) {
 		symbols.add(s);
