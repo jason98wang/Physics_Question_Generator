@@ -2,15 +2,15 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/Users/ma521/Documents/Java/Physics_Question_Generator/jar_files/firebase-admin-6.5.0.jar"/>
-	<classpathentry kind="lib" path="/Users/ma521/Documents/Java/Physics_Question_Generator/jar_files/google-auth-library-oauth2-http-0.11.0.jar"/>
-	<classpathentry kind="lib" path="/Users/ma521/Documents/Java/Physics_Question_Generator/jar_files/api-common-1.0.0.jar"/>
-	<classpathentry kind="lib" path="/Users/ma521/Documents/Java/Physics_Question_Generator/jar_files/log4j-over-slf4j-1.7.25.jar"/>
-	<classpathentry kind="lib" path="/Users/ma521/Documents/Java/Physics_Question_Generator/jar_files/slf4j-api-1.7.25.jar"/>
-	<classpathentry kind="lib" path="/Users/ma521/Documents/Java/Physics_Question_Generator/jar_files/guava-r05.jar"/>
-	<classpathentry kind="lib" path="/Users/ma521/Documents/Java/Physics_Question_Generator/jar_files/Pastebin-0.2.1.jar"/>
-	<classpathentry kind="lib" path="/Users/ma521/Documents/Java/Physics_Question_Generator/jar_files/org.eclipse.egit.github.core-2.1.5.jar"/>
-	<classpathentry kind="lib" path="/Users/ma521/Documents/Java/Physics_Question_Generator/jar_files/gson-2.8.5.jar"/>
-	<classpathentry kind="lib" path="/Users/ma521/Documents/Java/Physics_Question_Generator/jar_files/json-simple-1.1.jar"/>
+	<classpathentry kind="lib" path="jar_files/api-common-1.0.0.jar"/>
+	<classpathentry kind="lib" path="jar_files/firebase-admin-6.5.0.jar"/>
+	<classpathentry kind="lib" path="jar_files/google-auth-library-oauth2-http-0.11.0.jar"/>
+	<classpathentry kind="lib" path="jar_files/gson-2.8.5.jar"/>
+	<classpathentry kind="lib" path="jar_files/guava-r05.jar"/>
+	<classpathentry kind="lib" path="jar_files/json-simple-1.1.jar"/>
+	<classpathentry kind="lib" path="jar_files/log4j-over-slf4j-1.7.25.jar"/>
+	<classpathentry kind="lib" path="jar_files/org.eclipse.egit.github.core-2.1.5.jar"/>
+	<classpathentry kind="lib" path="jar_files/Pastebin-0.2.1.jar"/>
+	<classpathentry kind="lib" path="jar_files/slf4j-api-1.7.25.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

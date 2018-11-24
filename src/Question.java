@@ -3,7 +3,7 @@ public class Question {
 	// init vars
 	private String problemStatement;
 	private SimpleLinkedList<Symbol> formula;
-	private double answer = 0;
+	private Double answer = 0.0;
 
 	//Stacks (for shunting yard alg)
 	private Stack<Operation> operators;
