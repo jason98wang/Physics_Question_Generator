@@ -77,31 +77,43 @@ public class QuizEditor extends JFrame {
 		JPanel displayFormula = new JPanel();
 		JTextArea enter = new JTextArea();
 
-		// Setting font and size
+		// Formatting
 		add.setFont(font);
 		add.setPreferredSize(new Dimension(150, 100));
+		
 		remove.setFont(font);
 		remove.setPreferredSize(new Dimension(200, 100));
+		
 		edit.setFont(font);
 		edit.setPreferredSize(new Dimension(150, 100));
+		
 		enter.setLineWrap(true);
 		enter.setWrapStyleWord(true);
+		
 		subject.setFont(font);
 		subject.setPreferredSize(new Dimension(100, 100));
 		((JLabel) subject.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+		
 		addSubject.setFont(font);
 		removeSubject.setFont(font);
+		
 		unit.setFont(font);
 		((JLabel) unit.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+		
 		addUnit.setFont(font);
 		removeUnit.setFont(font);
+		
 		confirm.setFont(font);
+		
 		formula.setFont(small);
 		((JLabel) formula.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+		
 		problemStatement.setFont(small);
 		problemStatement.setHorizontalAlignment(SwingConstants.CENTER);
+		
 		enter.setFont(small);
 		currentFormula.setFont(small);
+		
 		currentFormulaDisplay.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		displayPane.setPreferredSize(new Dimension((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 200,300));
 
@@ -131,7 +143,7 @@ public class QuizEditor extends JFrame {
 				// Update units in subject
 				if (!chosenSubject.equals("Choose a subject")) {
 					s = subjects.get(subject.getSelectedIndex() - 1);
-					// Priority queue
+					// Priority queue instead of linkedlist to keep the units in order
 					SimpleLinkedList<Unit> units = s.getUnits();
 					for (int i = 0; i < units.size(); i++) {
 						unit.addItem(units.get(i).getName());
@@ -160,11 +172,9 @@ public class QuizEditor extends JFrame {
 		});
 
 		// Formula combobox
-		if (formula.getItemCount() == 0) {
-			formula.addItem("Choose a formula");
-			formula.addItem("Create new formula");
-			formula.addItem("Use previous formula");
-		}
+		formula.addItem("Choose a formula");
+		formula.addItem("Create new formula");
+		formula.addItem("Use previous formula");
 
 		// Add Button
 		add.addActionListener(new ActionListener() {
@@ -174,17 +184,17 @@ public class QuizEditor extends JFrame {
 				editQ = false;
 				editingQ = false;
 				displayPane.removeAll();
-				subject.setVisible(true);
-				unit.setVisible(true);
-
+				
+				// action listener for formula combobox
 				formula.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						String chosenFormula = (String) formula.getSelectedItem();
 						q = new Question("", new SimpleLinkedList<Symbol>());
+						// creating a new formula
 						if (chosenFormula.equals("Create new formula")) {
 							newFormula = true;
 							createFormula(symbols, currentFormulaDisplay);
-
+						// using a previous formula
 						} else {
 							newFormula = false;
 							previousFormula(formulas, currentFormulaDisplay);
@@ -192,7 +202,8 @@ public class QuizEditor extends JFrame {
 					}
 				});
 				displayPane.add(formula);
-
+				
+				// Setting up add interface
 				displayFormula.add(currentFormula);
 				displayFormula.add(Box.createRigidArea(new Dimension(0,addingoffset)));
 				currentFormula.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -217,10 +228,10 @@ public class QuizEditor extends JFrame {
 				addQ = false;
 				editQ = false;
 				editingQ = false;
+				
+				// Displays list with all questions in the unit selected supporting multi selection
 				displayPane.removeAll();
 				list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-				subject.setVisible(true);
-				unit.setVisible(true);
 				JScrollPane scroll = new JScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 				displayPane.add(scroll);
 				revalidate();
@@ -235,6 +246,7 @@ public class QuizEditor extends JFrame {
 				removeQ = false;
 				editingQ = false;
 				displayPane.removeAll();
+				// Displays list with all questions in the unit but can only edit one at a time
 				list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				subject.setVisible(true);
 				unit.setVisible(true);
@@ -245,24 +257,34 @@ public class QuizEditor extends JFrame {
 		});
 
 		// Confirm Button
+		// Button used to confirm choices for add, remove and edit
 		confirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Add remove or edit has not been selected
 				if (!addQ && !removeQ && !editQ && !editingQ) {
 					JOptionPane.showMessageDialog(null, "Add, remove or edit has not been selected");
 					return;
 				}
+				
+				// No subject chosen
 				if (s == null) {
 					JOptionPane.showMessageDialog(null, "A valid subject has not been selected");
 					return;
 				}
+				
+				// No unit chosen
 				if (u == null) {
 					JOptionPane.showMessageDialog(null, "A valid unit has not been selected");
 					return;
 				}
+				
+				// No question chosen
 				if (q == null && !removeQ && !editQ && !editingQ) {
 					JOptionPane.showMessageDialog(null, "A valid question has not been selected");
 					return;
 				}
+				
+				// Removes selected question
 				if (removeQ) {
 					SimpleLinkedList<Question> questions = u.getQuestions();
 					int[] indicies = list.getSelectedIndices();
@@ -275,6 +297,8 @@ public class QuizEditor extends JFrame {
 					}
 					list.clearSelection();
 
+					
+					// Adds a question
 				} else if (addQ) {
 					q.setProblemStatement(enter.getText());
 					// d.addQuestion(s,u,q);
@@ -290,12 +314,13 @@ public class QuizEditor extends JFrame {
 					
 					// Editing questions
 				} else if (editQ) {
+					// Same as add interface but formula and problem statement are already filled in
 					editQ = false;
 					editingQ = true;
 					editQuestion = u.getQuestions().get((list.getSelectedIndex()));
 					String editProblemStatement = editQuestion.getProblemStatement();
 					SimpleLinkedList<Symbol> list = editQuestion.getFormula();
-
+					
 					SimpleLinkedList<Symbol> editFormula = new SimpleLinkedList<Symbol>();
 					for (int i = 0; i < list.size(); i++) {
 						editFormula.add(list.get(i));
@@ -334,7 +359,9 @@ public class QuizEditor extends JFrame {
 					enter.setEditable(true);
 					displayPane.add(enter);
 					revalidate();
+					//
 				} else {
+					// Confirms selection for editing interface
 					DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
 					model.add(model.indexOf(editQuestion.getProblemStatement()), enter.getText());
 					model.removeElement(editQuestion.getProblemStatement());
@@ -412,6 +439,8 @@ public class QuizEditor extends JFrame {
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
 		
 		midPane.add(buttons);
+		
+		// Difference in height between components in the frame
 		offset = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() - (int)displayPane.getPreferredSize().getHeight() - (int)buttons.getPreferredSize().getHeight() - (int)subject.getMinimumSize().getHeight() - (int)unit.getMinimumSize().getHeight() - (int)confirm.getPreferredSize().getHeight();
 		offset /= 5;
 	
@@ -466,40 +495,59 @@ public class QuizEditor extends JFrame {
 		JFrame addSubjectFrame = new JFrame("Add Subject");
 		addSubjectFrame.setSize(500, 600);
 		addSubjectFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		
+		
+		// Components
 		JPanel contentPanel = new JPanel();
 		JLabel enterName = new JLabel("Enter the  name of the subject");
 		JLabel enterGrade = new JLabel("Enter the grade of the subject");
 		JLabel enterLevel = new JLabel("Enter the level of the subject");
+		JTextArea name = new JTextArea();
+		JTextArea grade = new JTextArea();
+		JTextArea level = new JTextArea();
+		JButton addUnit = new JButton("Add a unit");
+		JList<String> units = new JList<String>();
+		JScrollPane scroll = new JScrollPane(units, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JButton confirm = new JButton("Confirm");
+		
+		
+		// Formatting
 		enterName.setFont(font);
 		enterName.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		enterGrade.setFont(font);
 		enterGrade.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		enterLevel.setFont(font);
 		enterLevel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		JTextArea name = new JTextArea();
+		
+		name.setFont(small);
 		name.setLineWrap(true);
 		name.setWrapStyleWord(true);
-		JTextArea grade = new JTextArea();
+		
+		grade.setFont(small);
 		grade.setLineWrap(true);
 		grade.setWrapStyleWord(true);
-		JTextArea level = new JTextArea();
+		
+		level.setFont(small);
 		level.setLineWrap(true);
 		level.setWrapStyleWord(true);
-		JButton addUnit = new JButton("Add a unit");
+		
 		addUnit.setFont(font);
+		addUnit.setAlignmentX(CENTER_ALIGNMENT);
+		confirm.setFont(font);
+		confirm.setAlignmentX(JButton.CENTER_ALIGNMENT);
+		
+		// List items
 		SimpleLinkedList<Unit> unitlist = new SimpleLinkedList<Unit>();
-		DefaultListModel<String> model = new DefaultListModel<String>();
-		JList<String> units = new JList<String>(model);
+		DefaultListModel<String> model = (DefaultListModel<String>)list.getModel();
+		
+		// Add unit button
 		addUnit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addUnit(unitlist, model);
 			}
 		});
-		addUnit.setAlignmentX(CENTER_ALIGNMENT);
-		JScrollPane scroll = new JScrollPane(units, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		JButton confirm = new JButton("Confirm");
-		confirm.setFont(font);
-		confirm.setAlignmentX(JButton.CENTER_ALIGNMENT)
+		
+		// Confirm button
 		confirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -514,6 +562,8 @@ public class QuizEditor extends JFrame {
 			}
 		});
 
+		
+		// Adding onto the content pane
 		contentPanel.add(enterName);
 		contentPanel.add(name);
 		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
@@ -529,31 +579,50 @@ public class QuizEditor extends JFrame {
 		contentPanel.add(confirm);
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		// this.setPreferredSize(preferredSize);
+		
+		
 		addSubjectFrame.setContentPane(contentPanel);
 		addSubjectFrame.setVisible(true);
 	}
 
+	
+	
 	// Method to add unit
 	private void addUnit(SimpleLinkedList<Unit> unitlist, DefaultListModel<String> model) {
 		JFrame addUnitFrame = new JFrame("Add Unit");
 		addUnitFrame.setSize(500, 300);
 		addUnitFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		
+		
+		// Components
 		JPanel contentPanel = new JPanel();
 		JLabel enterName = new JLabel("Enter unit name");
+		JLabel enterNum = new JLabel("Enter unit number");
+		JTextArea name = new JTextArea();
+		JTextArea num = new JTextArea();
+		JButton confirm = new JButton("Confirm");
+		
+		
+		// Formatting
 		enterName.setFont(font);
 		enterName.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		JLabel enterNum = new JLabel("Enter unit number");
+		
 		enterNum.setFont(font);
 		enterNum.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		JTextArea name = new JTextArea();
+		
+		name.setFont(small);
 		name.setLineWrap(true);
 		name.setWrapStyleWord(true);
-		JTextArea num = new JTextArea();
+		
+		num.setFont(small);
 		num.setLineWrap(true);
 		num.setWrapStyleWord(true);
-		JButton confirm = new JButton("Confirm");
+		
 		confirm.setFont(font);
 		confirm.setAlignmentX(JButton.CENTER_ALIGNMENT);
+		
+		
+		
 		confirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -572,6 +641,8 @@ public class QuizEditor extends JFrame {
 			}
 		});
 
+		
+		// Adding components onto JFrame
 		contentPanel.add(enterName);
 		contentPanel.add(name);
 		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
@@ -584,8 +655,11 @@ public class QuizEditor extends JFrame {
 		addUnitFrame.setVisible(true);
 	}
 	
+	
+	
 	// Method to join symbols together to form a formula
 	private BufferedImage joinBufferedImages(SimpleLinkedList<Symbol> formula) {
+		// get total width and max height
 		int height = 0;
 		int width = 0;
 		for (int i = 0; i < formula.size(); i++) {
@@ -594,6 +668,8 @@ public class QuizEditor extends JFrame {
 		}
 		BufferedImage connectedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
+		
+		// Draw each picture onto the new picture
 		Graphics g = connectedImage.createGraphics();
 		int sum = 0;
 		for (int i = 0; i < formula.size(); i++) {
@@ -601,9 +677,13 @@ public class QuizEditor extends JFrame {
 			sum += formula.get(i).getImage().getWidth();
 		}
 		g.dispose();
+		
+		
 		return connectedImage;
 	}
 
+	
+	
 	// Testing main class
 	public static void main(String[] args) {
 		try {
@@ -640,12 +720,16 @@ public class QuizEditor extends JFrame {
 		}
 	}
 
+	
+	
 	// Display all previous formulas
 	private void previousFormula(SimpleLinkedList<SimpleLinkedList<Symbol>> formulas, JLabel formulaDisplay) {
 		JFrame previousFormulaFrame = new JFrame("Choose Previous Formula");
 		previousFormulaFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		previousFormulaFrame.requestFocus();
 		previousFormulaFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+		
+		// setting up list
 		DefaultListModel<BufferedImage> model = new DefaultListModel<BufferedImage>();
 		JList<BufferedImage> list = new JList<BufferedImage>(model);
 		JPanel contentPanel = new JPanel();
@@ -655,7 +739,9 @@ public class QuizEditor extends JFrame {
 		list.setCellRenderer(new CustomListRenderer());
 		list.setPreferredSize(list.getMinimumSize());
 		JScrollPane scroll = new JScrollPane(list, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		contentPanel.add(scroll);
+		
+		
+		// Confirm button
 		JButton confirm = new JButton("Confirm formula");
 		confirm.setFont(font);
 		confirm.setAlignmentX(JButton.CENTER_ALIGNMENT);
@@ -670,13 +756,19 @@ public class QuizEditor extends JFrame {
 				return;
 			}
 		});
-
+		
+		
+		// Adding components onto frame
+		contentPanel.add(scroll);
 		contentPanel.add(confirm);
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		previousFormulaFrame.setContentPane(contentPanel);
 		previousFormulaFrame.setVisible(true);
 	}
 
+	
+	
+	
 	// ChooseFormula (Database d) {
 
 	// Method to create formulas
@@ -685,19 +777,34 @@ public class QuizEditor extends JFrame {
 		createFormulaFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		createFormulaFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		createFormulaFrame.requestFocus();
+		
+		// Panel for buttons
 		JPanel buttons = new JPanel();
 		buttons.setLayout(new GridLayout((symbols.size() + 1) / (int) Math.sqrt((symbols.size() + 1)),(int) Math.sqrt(symbols.size())));
+		
+		// Main panel
 		JPanel contentPanel = new JPanel();
+		
+		
+		// List to store entered formula
 		SimpleLinkedList<Symbol> formula = new SimpleLinkedList<Symbol>();
 		// SimpleLinkedList<Symbol> symbols = d.getSymbols();
+		
+		
+		// Display entered formula
 		JLabel enteredFormula = new JLabel();
 		enteredFormula.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		
+		// list with all of the jbuttons
 		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
 
 		for (int i = 0; i < symbols.size(); i++) {
+			
+			// JButton for all symbols
 			JButton symbol = new JButton(new ImageIcon(symbols.get(i).getImage()));
 			symbol.setBackground(Color.WHITE);
 			symbol.addActionListener(new ActionListener() {
+				// Add to formula
 				public void actionPerformed(ActionEvent e) {
 					formula.add(symbols.get(buttonlist.indexOf(symbol)));
 					enteredFormula.setIcon(new ImageIcon(joinBufferedImages(formula)));
@@ -707,6 +814,8 @@ public class QuizEditor extends JFrame {
 			buttonlist.add(symbol);
 			buttons.add(symbol);
 		}
+		
+		// Delete last symbol
 		JButton backspace = new JButton("Del");
 		backspace.setBackground(Color.WHITE);
 		backspace.setFont(font);
@@ -726,11 +835,11 @@ public class QuizEditor extends JFrame {
 				createFormulaFrame.revalidate();
 			}
 		});
-
+		
 		buttons.add(backspace);
-		contentPanel.add(buttons);
-		JScrollPane scroll = new JScrollPane(enteredFormula, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		contentPanel.add(scroll);
+		
+		
+		// confirm button
 		JButton confirm = new JButton("Confirm");
 		confirm.setFont(font);
 		confirm.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -744,7 +853,11 @@ public class QuizEditor extends JFrame {
 				return;
 			}
 		});
-
+		
+		// add to content pane
+		contentPanel.add(buttons);
+		JScrollPane scroll = new JScrollPane(enteredFormula, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		contentPanel.add(scroll);
 		contentPanel.add(confirm);
 		
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
@@ -753,6 +866,9 @@ public class QuizEditor extends JFrame {
 		createFormulaFrame.setVisible(true);
 	}
 
+	
+	
+	
 	// Method to draw buffered images in a jlist
 	private class CustomListRenderer extends DefaultListCellRenderer {
 
