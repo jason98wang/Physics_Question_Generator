@@ -27,4 +27,8 @@ public class Stack<T> {
         }
     }
 
+    public void clear() {
+        head = null;
+    }
+
 }

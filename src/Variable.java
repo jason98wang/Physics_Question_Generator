@@ -7,12 +7,16 @@ public class Variable extends Symbol{
 	// constructor
 	Variable(String id, BufferedImage image) {
 		super(id, image);
-		value = Double.parseDouble(id);
+		if (id.equals("pi")) {
+		    value = Math.PI;
+        }
 	}
 
 	Variable(String id) {
 	    super(id);
-        value = Double.parseDouble(id);
+        if (id.equals("pi")) {
+            value = Math.PI;
+        }
     }
 
 	// setter
