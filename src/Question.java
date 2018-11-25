@@ -122,4 +122,41 @@ public class Question {
 
 	}
 
+    /**
+     * toString
+     * This method converts a SimpleLinkedList of Symbols into a String
+     * @return stringFormula, the formula (of symbols) as a String
+     */
+    public String toString() {
+
+        String stringFormula = "";
+
+        for (int i = 0; i < formula.size(); i++) {
+            stringFormula += " ";
+            stringFormula += formula.get(i).getId();
+        }
+
+        stringFormula += " ";
+
+        return stringFormula;
+    }
+
+    /**
+     * toSymbol
+     * This method converts a String representing a formula into a SimpleLinkedList of Symbols
+     * @param stringFormula, the formula (of symbols) as a String
+     */
+    public void toSymbol(String stringFormula) {
+
+        if (stringFormula.length() > 1) {
+            if ((stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("+")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("-")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("*")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("/")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("sqrt")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("^")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("(")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals(")"))) {
+                formula.add(new Operation(stringFormula.substring(1,stringFormula.indexOf(" ",1))));
+            } else {
+                formula.add(new Variable(stringFormula.substring(1,stringFormula.indexOf(" ",1))));
+            }
+            toSymbol(stringFormula.substring(stringFormula.indexOf(" ",1)));
+        }
+
+    }
+
 }

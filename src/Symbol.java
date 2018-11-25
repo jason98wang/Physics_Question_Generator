@@ -11,11 +11,15 @@ public class Symbol {
 		this.id = id;
 		this.image = image;
 	}
+
+	Symbol(String id) {
+		this.id = id;
+	}
 	
 	public String getId() {
 		return id;
 	}
-	
+
 	public BufferedImage getImage() {
 		return image;
 	}

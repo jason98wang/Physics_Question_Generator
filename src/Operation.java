@@ -20,6 +20,17 @@ public class Operation extends Symbol{
         }
     }
 
+    Operation(String id) {
+        super(id);
+        if ((super.getId().equals("+")) || (super.getId().equals("-"))) {
+            precedence = 1;
+        } else if ((super.getId().equals("*")) || (super.getId().equals("/"))) {
+            precedence = 2;
+        } else {
+            precedence = 3;
+        }
+    }
+
     public String getOperation() {
         return super.getId();
     }
