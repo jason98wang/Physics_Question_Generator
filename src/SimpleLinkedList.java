@@ -15,7 +15,7 @@ class SimpleLinkedList<E> {
 
 	public E get(int index) {
 		Node<E> tempNode = head;
-
+		
 		int counter = 0;
 		while (tempNode != null) {
 
@@ -26,14 +26,14 @@ class SimpleLinkedList<E> {
 			tempNode = tempNode.getNext();
 			counter++;
 		}
-
+		
 		return null;
 	}
 
 	public int indexOf(E item) {
 		Node<E> tempNode = head;
 		int counter = 0;
-
+		
 		while (tempNode != null) {
 
 			if (tempNode.getItem().equals(item)) {
@@ -59,6 +59,7 @@ class SimpleLinkedList<E> {
 			}
 			tempNode.setNext(tempNode.getNext().getNext());
 		}
+		if (head == null || tail == null) tail = head;
 	}
 
 	public boolean remove(E item) {
