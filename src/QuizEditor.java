@@ -464,15 +464,18 @@ public class QuizEditor extends JFrame {
 	// AddSubject(Database d) {
 	private void addSubject(SimpleLinkedList<Subject> subjects) {
 		JFrame addSubjectFrame = new JFrame("Add Subject");
-		addSubjectFrame.setSize(500, 300);
+		addSubjectFrame.setSize(500, 600);
 		addSubjectFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		JPanel contentPanel = new JPanel();
 		JLabel enterName = new JLabel("Enter the  name of the subject");
 		JLabel enterGrade = new JLabel("Enter the grade of the subject");
 		JLabel enterLevel = new JLabel("Enter the level of the subject");
 		enterName.setFont(font);
+		enterName.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		enterGrade.setFont(font);
+		enterGrade.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		enterLevel.setFont(font);
+		enterLevel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		JTextArea name = new JTextArea();
 		name.setLineWrap(true);
 		name.setWrapStyleWord(true);
@@ -492,11 +495,11 @@ public class QuizEditor extends JFrame {
 				addUnit(unitlist, model);
 			}
 		});
-
+		addUnit.setAlignmentX(CENTER_ALIGNMENT);
 		JScrollPane scroll = new JScrollPane(units, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		JButton confirm = new JButton("Confirm");
 		confirm.setFont(font);
-
+		confirm.setAlignmentX(JButton.CENTER_ALIGNMENT)
 		confirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -513,12 +516,16 @@ public class QuizEditor extends JFrame {
 
 		contentPanel.add(enterName);
 		contentPanel.add(name);
+		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
 		contentPanel.add(enterGrade);
 		contentPanel.add(grade);
+		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
 		contentPanel.add(enterLevel);
 		contentPanel.add(level);
+		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
 		contentPanel.add(scroll);
 		contentPanel.add(addUnit);
+		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
 		contentPanel.add(confirm);
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		// this.setPreferredSize(preferredSize);
@@ -531,12 +538,13 @@ public class QuizEditor extends JFrame {
 		JFrame addUnitFrame = new JFrame("Add Unit");
 		addUnitFrame.setSize(500, 300);
 		addUnitFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		this.setSize(new Dimension(200, 500));
 		JPanel contentPanel = new JPanel();
 		JLabel enterName = new JLabel("Enter unit name");
 		enterName.setFont(font);
+		enterName.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		JLabel enterNum = new JLabel("Enter unit number");
 		enterNum.setFont(font);
+		enterNum.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		JTextArea name = new JTextArea();
 		name.setLineWrap(true);
 		name.setWrapStyleWord(true);
@@ -545,7 +553,7 @@ public class QuizEditor extends JFrame {
 		num.setWrapStyleWord(true);
 		JButton confirm = new JButton("Confirm");
 		confirm.setFont(font);
-
+		confirm.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		confirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -566,8 +574,10 @@ public class QuizEditor extends JFrame {
 
 		contentPanel.add(enterName);
 		contentPanel.add(name);
+		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
 		contentPanel.add(enterNum);
 		contentPanel.add(num);
+		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
 		contentPanel.add(confirm);
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		addUnitFrame.setContentPane(contentPanel);
