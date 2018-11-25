@@ -49,7 +49,7 @@ public class Database {
 		// init subjects and symbols
 		subjects = new SimpleLinkedList<Subject>();
 		symbols = new SimpleLinkedList<Symbol>();
-		
+
 		// setup gist and get data
 		initGist();
 
@@ -72,13 +72,14 @@ public class Database {
 		}
 
 		// get gistfile from its respective gist
-		file = gist.getFiles().get("Database");
+		file = gist.getFiles().get("database");
 
 		// get data from file
 		data = file.getContent();
 	}
 
 	private static void fileInput() {
+		// take in array of subjects
 		JSONArray array = null;
 		try {
 			array = (JSONArray) (new JSONParser()).parse(new FileReader(jsonFile));
@@ -86,45 +87,75 @@ public class Database {
 			e.printStackTrace();
 		}
 
+		// for every subject
 		for (Object a : array) {
 			JSONObject subject = (JSONObject) a;
 
+			// get its name, grade and level
 			String name = (String) subject.get("name");
 			int grade = Integer.parseInt((String) subject.get("grade"));
 			String level = (String) subject.get("level");
 
+			// add subject to linkedlist
 			Subject s = new Subject(name, grade, level);
 			subjects.add(s);
 			System.out.println("made new subject " + name + " " + grade + " " + level);
 
+			// get this subject's units
 			JSONArray units = (JSONArray) subject.get("units");
 
+			// for every unit
 			for (Object b : units) {
 				JSONObject unit = (JSONObject) b;
 
+				// get its name and number
 				String name2 = (String) unit.get("name");
 				int number = Integer.parseInt((String) unit.get("number"));
 
+				// add unit to subject
 				Unit u = new Unit(name2, number);
 				s.addUnit(u);
 				System.out.println("made new unit " + name + " " + number);
 
+				// get this unit's questions
 				JSONArray questions = (JSONArray) unit.get("questions");
 
+				// for every question
 				for (Object c : questions) {
 					JSONObject question = (JSONObject) c;
 
+					// get its problem statement and its formula
 					String problemStatement = (String) question.get("problem");
-					String f = (String) question.get("formula");
-					// TEMPORARY
-					SimpleLinkedList<Symbol> formula = null; // (SimpleLinkedList<Symbol>) question.get("formula");
+					SimpleLinkedList<Symbol> formula = toSymbol((String) question.get("formula")); // (SimpleLinkedList<Symbol>) question.get("formula");
 
-					Question q = new Question(problemStatement, formula);
+					for (int i = 0; i < formula.size(); i++) {
+						System.out.print(formula.get(i).getId() + " ");
+					}
+					System.out.println();
+
+					Question q = new Question(problemStatement, formula); // temp
 					u.addQuestion(q);
 					System.out.println("made new question " + problemStatement + " " + formula);					
 				}
 			}
 		}
+	}
+
+	private static SimpleLinkedList<Symbol> toSymbol(String stringFormula) {
+		SimpleLinkedList<Symbol> formula = new SimpleLinkedList<Symbol>();
+		stringFormula = stringFormula.substring(1, stringFormula.length());
+		while (stringFormula.length() > 0) {
+			String sub = stringFormula.substring(0, stringFormula.indexOf(" "));
+			if ((sub.equals("+")) || (sub.equals("-")) || (sub.equals("*")) || (sub.equals("/")) || (sub.equals("sqrt")) || (sub.equals("^")) || (sub.equals("(")) || (sub.equals(")"))) {
+				formula.add(new Operation(sub));
+			} else {
+				formula.add(new Variable(sub));
+			}
+			stringFormula = stringFormula.substring(stringFormula.indexOf(" ") + 1);
+			// toSymbol(stringFormula.substring(stringFormula.indexOf(" ",1)));
+		}
+
+		return formula;
 	}
 
 	private static void fileOutput() {
