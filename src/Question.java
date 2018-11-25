@@ -15,6 +15,8 @@ public class Question {
 		this.formula = formula;
 		operators = new Stack<>();
 		output = new SimpleQueue<>();
+		toRPN();
+		calcAnswer();
 	}
 
 	// setters
@@ -35,66 +37,9 @@ public class Question {
 		return formula;
 	}
 
-    /**
-     * getAnswer
-     * This method randomizes values of variables in the formula, calculates and returns the answer
-     * @return answer, the double value representing the answer to the question with the randomized variable values
-     */
 	public double getAnswer() {
-
-		//Randomize values of variables in formula (besides pi, which remains as pi)
-		for (int i = 0; i < formula.size(); i++) {
-			if (formula.get(i) instanceof Variable) {
-				if (!formula.get(i).getId().equals("pi")) {
-					((Variable)(formula.get(i))).setValue(Math.random()*99+1);
-				}
-			}
-		}
-
-		//Calculate and return the answer with the randomized values
-		toRPN();
-		calcAnswer();
-		operators.clear(); //Make sure operators stack is cleared
-        output.clear(); //Make sure calculation queue is cleared
 		return answer;
 	}
-
-    /**
-     * getFalseAnswers
-     * This method generates 3 false answers for the randomized values of variables (with the given formula)
-     * @return falseAnswers, an array of 3 doubles representing the 3 incorrect MC answers given
-     */
-	public double[] getFalseAnswers() {
-
-	    double[] falseAnswers = new double[3];
-
-	    for (int i = 0; i < 3; i++) {
-	        int j = (int)Math.random()*9;
-	        if (j == 0) {
-	            falseAnswers[i] = answer*2.0;
-            } else if (j == 1) {
-	            falseAnswers[i] = answer/2.0;
-            } else if (j == 2) {
-	            falseAnswers[i] = Math.pow(answer,2.0);
-            } else if (j == 3) {
-	            falseAnswers[i] = Math.sqrt(answer);
-            } else if (j == 4) {
-	            falseAnswers[i] = answer*3.0;
-            } else if (j == 5) {
-	            falseAnswers[i] = answer/3.0;
-            } else if (j == 6) {
-	            falseAnswers[i] = answer/Math.PI;
-            } else if (j == 7) {
-	            falseAnswers[i] = answer*Math.PI;
-            } else if (j == 8) {
-	            falseAnswers[i] = answer*Math.E;
-            } else if (j == 9) {
-                falseAnswers[i] = answer/Math.E;
-            }
-        }
-
-	    return falseAnswers;
-    }
 
 	/**
 	 * toRPN
