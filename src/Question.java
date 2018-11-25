@@ -57,9 +57,11 @@ public class Question {
 				if (((Operation)(formula.get(i))).getOperation().equals("sqrt")) {
 					operators.push((Operation)formula.get(i));
 				} else if ((!(((Operation)(formula.get(i))).getOperation().equals("("))) && !(((Operation)(formula.get(i))).getOperation().equals(")"))) {
-					while (((operators.peek().getOperation().equals("sqrt")) || ((((Operation)(formula.get(i))).getPrecedence() < operators.peek().getPrecedence())) || (((((Operation)(formula.get(i))).getPrecedence() == operators.peek().getPrecedence())) && (((Operation)(formula.get(i))).getOperation() != "^"))) && (operators.peek().getOperation() != "(")) {
-						output.enqueue(operators.pop());
-					}
+				    if (operators.peek() != null) {
+                        while (((operators.peek().getOperation().equals("sqrt")) || ((((Operation) (formula.get(i))).getPrecedence() < operators.peek().getPrecedence())) || (((((Operation) (formula.get(i))).getPrecedence() == operators.peek().getPrecedence())) && (((Operation) (formula.get(i))).getOperation() != "^"))) && (operators.peek().getOperation() != "(")) {
+                            output.enqueue(operators.pop());
+                        }
+                    }
 					operators.push((Operation)formula.get(i));
 				}
 				if (((Operation)(formula.get(i))).getOperation().equals("(")) {

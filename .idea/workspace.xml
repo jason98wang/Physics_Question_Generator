@@ -3,10 +3,49 @@
   <component name="ChangeListManager">
     <list default="true" id="a2aaff2f-f0ef-48ef-ab37-2085b6f7665a" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Operation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Operation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Database.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Database.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Node.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Node.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Operation.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Operation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Question.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Question.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$10.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$11.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$12.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$13.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$13.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$14.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$14.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$15.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$15.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$16.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$16.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$17.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$17.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$3$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$3$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$6$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$6$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$CustomListRenderer.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor$CustomListRenderer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizEditor.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizEditor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizTaker$ExitButtonActionListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizTaker$ExitButtonActionListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizTaker$NumQuestionsFocusListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizTaker$NumQuestionsFocusListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizTaker$StartButtonActionListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizTaker$StartButtonActionListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizTaker$SubjectActionListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizTaker$SubjectActionListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizTaker$UnitActionListener.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizTaker$UnitActionListener.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizTaker.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizTaker.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/QuizTakerExe.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/QuizTakerExe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/SimpleLinkedList.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/SimpleLinkedList.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/SimpleQueue.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/SimpleQueue.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Stack.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Stack.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Subject.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Subject.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Symbol.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Symbol.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Unit.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Unit.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/Variable.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/Variable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/test.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/test.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Question.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Question.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Symbol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Symbol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Variable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Variable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -18,14 +57,59 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Question.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Question.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Question.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="575">
-              <caret line="158" lean-forward="true" selection-start-line="158" selection-end-line="158" />
+            <state relative-caret-position="163">
+              <caret line="60" column="42" lean-forward="true" selection-start-line="60" selection-start-column="42" selection-end-line="60" selection-end-column="42" />
               <folding>
                 <element signature="e#891#892#0" expanded="true" />
                 <element signature="e#911#912#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Stack.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Stack.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="493">
+              <caret line="29" column="1" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
+              <folding>
+                <element signature="e#116#117#0" expanded="true" />
+                <element signature="e#162#163#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="442">
+              <caret line="26" column="49" selection-start-line="26" selection-start-column="49" selection-end-line="26" selection-end-column="49" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Database.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Database.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+              <folding>
+                <element signature="e#3947#3948#0" expanded="true" />
+                <element signature="e#3969#3970#0" expanded="true" />
+                <element signature="e#4010#4011#0" expanded="true" />
+                <element signature="e#4035#4036#0" expanded="true" />
+                <element signature="e#4394#4395#0" expanded="true" />
+                <element signature="e#4415#4416#0" expanded="true" />
+                <element signature="e#4454#4455#0" expanded="true" />
+                <element signature="e#4478#4479#0" expanded="true" />
+                <element signature="e#4541#4542#0" expanded="true" />
+                <element signature="e#4563#4564#0" expanded="true" />
+                <element signature="e#4612#4613#0" expanded="true" />
+                <element signature="e#4633#4634#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -84,7 +168,9 @@
         <option value="$PROJECT_DIR$/src/Symbol.java" />
         <option value="$PROJECT_DIR$/src/Operation.java" />
         <option value="$PROJECT_DIR$/src/Variable.java" />
+        <option value="$PROJECT_DIR$/src/test.java" />
         <option value="$PROJECT_DIR$/src/Question.java" />
+        <option value="$PROJECT_DIR$/src/Database.java" />
       </list>
     </option>
   </component>
@@ -139,6 +225,11 @@
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     </configuration>
+    <configuration name="test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="test" />
+      <module name="Physics_Question_Generator" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
@@ -177,6 +268,11 @@
       <properties />
       <listeners />
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.test" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -193,16 +289,16 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Messages" weight="0.32965517" />
       <window_info anchor="right" id="Palette&#9;" order="3" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="right" id="Maven Projects" order="3" />
-      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32965517" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="2" />
@@ -251,38 +347,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Stack.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="29" column="1" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="1" column="13" selection-start-line="1" selection-start-column="13" selection-end-line="1" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/SimpleQueue.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
           <caret line="21" column="24" lean-forward="true" selection-start-line="21" selection-start-column="24" selection-end-line="21" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Variable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="39" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Operation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="30" column="9" selection-start-line="30" selection-start-column="9" selection-end-line="30" selection-end-column="9" />
         </state>
       </provider>
     </entry>
@@ -299,13 +367,66 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Operation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="30" column="9" selection-start-line="30" selection-start-column="9" selection-end-line="30" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Variable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="39" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Stack.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="29" column="1" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
+          <folding>
+            <element signature="e#116#117#0" expanded="true" />
+            <element signature="e#162#163#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Question.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="575">
-          <caret line="158" lean-forward="true" selection-start-line="158" selection-end-line="158" />
+        <state relative-caret-position="163">
+          <caret line="60" column="42" lean-forward="true" selection-start-line="60" selection-start-column="42" selection-end-line="60" selection-end-column="42" />
           <folding>
             <element signature="e#891#892#0" expanded="true" />
             <element signature="e#911#912#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="26" column="49" selection-start-line="26" selection-start-column="49" selection-end-line="26" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Database.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+          <folding>
+            <element signature="e#3947#3948#0" expanded="true" />
+            <element signature="e#3969#3970#0" expanded="true" />
+            <element signature="e#4010#4011#0" expanded="true" />
+            <element signature="e#4035#4036#0" expanded="true" />
+            <element signature="e#4394#4395#0" expanded="true" />
+            <element signature="e#4415#4416#0" expanded="true" />
+            <element signature="e#4454#4455#0" expanded="true" />
+            <element signature="e#4478#4479#0" expanded="true" />
+            <element signature="e#4541#4542#0" expanded="true" />
+            <element signature="e#4563#4564#0" expanded="true" />
+            <element signature="e#4612#4613#0" expanded="true" />
+            <element signature="e#4633#4634#0" expanded="true" />
           </folding>
         </state>
       </provider>

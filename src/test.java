@@ -13,7 +13,19 @@ public class test {
 		test.add(5);
 		
 		test.display();
-		
+
+		SimpleLinkedList<Symbol> formula = new SimpleLinkedList<>();
+
+		formula.add(new Variable("2"));
+		formula.add(new Operation("+"));
+        formula.add(new Variable("2"));
+        formula.add(new Operation("/"));
+        formula.add(new Variable("3"));
+
+		Question question = new Question("Hello", formula);
+
+		System.out.println(question.getAnswer());
+
 	}
 
 }
