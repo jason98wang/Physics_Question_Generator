@@ -21,7 +21,7 @@ import javax.swing.JComboBox;
 
 public class QuizTaker {
 
-//	Database database;
+	Database database;
 	private SimpleLinkedList<Subject> subjects;
 	private SimpleLinkedList<Unit> units;
 	private Subject chosenSubject;
@@ -39,24 +39,25 @@ public class QuizTaker {
 	QuizTaker() {
 		window = new JFrame("Practice Like A Physicist");
 
-//		database = new Database();
+		database = new Database();
 
-		subjects = new SimpleLinkedList<Subject>();
-		subjects.add(new Subject("Physics", 11, "U"));
-		subjects.add(new Subject("Physics", 12, "U"));
-		subjects.add(new Subject("Physics", 11, "AP"));
-
-		subjects.get(0).addUnit(new Unit("TLAP", 1));
-		subjects.get(0).addUnit(new Unit("Kinematics", 1));
-		subjects.get(0).addUnit(new Unit("Dynamics", 1));
-
-		subjects.get(1).addUnit(new Unit("No TLAP", 1));
-		subjects.get(1).addUnit(new Unit("CMPM", 1));
-		subjects.get(1).addUnit(new Unit("Momentum", 1));
-
-		subjects.get(2).addUnit(new Unit("TLAP but harder", 1));
-		subjects.get(2).addUnit(new Unit("Kinematics but harder", 1));
-		subjects.get(2).addUnit(new Unit("Dynamics but harder", 1));
+		subjects = database.getSubjects();
+//		subjects = new SimpleLinkedList<Subject>();
+//		subjects.add(new Subject("Physics", 11, "U"));
+//		subjects.add(new Subject("Physics", 12, "U"));
+//		subjects.add(new Subject("Physics", 11, "AP"));
+//
+//		subjects.get(0).addUnit(new Unit("TLAP", 1));
+//		subjects.get(0).addUnit(new Unit("Kinematics", 1));
+//		subjects.get(0).addUnit(new Unit("Dynamics", 1));
+//
+//		subjects.get(1).addUnit(new Unit("No TLAP", 1));
+//		subjects.get(1).addUnit(new Unit("CMPM", 1));
+//		subjects.get(1).addUnit(new Unit("Momentum", 1));
+//
+//		subjects.get(2).addUnit(new Unit("TLAP but harder", 1));
+//		subjects.get(2).addUnit(new Unit("Kinematics but harder", 1));
+//		subjects.get(2).addUnit(new Unit("Dynamics but harder", 1));
 
 		////////////////////////////////////////////////// GUI
 		////////////////////////////////////////////////// STUFF/////////////////////////////////////
