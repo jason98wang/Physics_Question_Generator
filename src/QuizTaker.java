@@ -2,12 +2,12 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -21,11 +21,22 @@ import javax.swing.JComboBox;
 
 public class QuizTaker {
 
-	Database database;
+	private int numQuestions;
+
+	private Database database;
 	private SimpleLinkedList<Subject> subjects;
 	private SimpleLinkedList<Unit> units;
+	private SimpleLinkedList<Question> rootQuestions;
+	private SimpleLinkedList<Double> answers;
+	private SimpleLinkedList<double[]> choices;
+	private SimpleLinkedList<String> problemStatements;
+	private SimpleLinkedList<String[]> variableIDs;
+	private SimpleLinkedList<double[]> variableValues;
 	private Subject chosenSubject;
 	private Unit chosenUnit;
+
+	private Random rand;
+
 	private JFrame window;
 	private JLabel title;
 	private JPanel mainPanel;
@@ -34,7 +45,6 @@ public class QuizTaker {
 	private JButton exit;
 	private JComboBox<String> subject, unit;
 	private JTextField numQuestionsField;
-	private int numQuestions;
 
 	QuizTaker() {
 		window = new JFrame("Practice Like A Physicist");
@@ -135,6 +145,66 @@ public class QuizTaker {
 
 	}
 
+	private void startQuiz() {
+		answers = new SimpleLinkedList<Double>();
+		choices = new SimpleLinkedList<double[]>();
+		problemStatements = new SimpleLinkedList<String>();
+		variableIDs = new SimpleLinkedList<String[]>();
+		variableValues = new SimpleLinkedList<double[]>();
+		
+		SimpleLinkedList<Symbol> formula;
+		SimpleLinkedList<Variable> tempVariables;
+		Question tempQ;
+		int tempRand;
+
+		double[] wrongAns;
+		double ans;
+		String[] IDs;
+		double[] values;
+		String problemStatement;
+
+		rand = new Random();
+		rootQuestions = chosenUnit.getQuestions();
+
+		for (int i = 0; i < numQuestions; i++) {
+			tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size()));
+			tempVariables = new SimpleLinkedList<Variable>();
+
+			ans = tempQ.getAnswer();
+			answers.add(ans);
+
+			wrongAns = tempQ.getFalseAnswers();
+			tempRand = rand.nextInt(4);
+			if (tempRand == 3) {
+				choices.add(new double[] { ans, wrongAns[0], wrongAns[1], wrongAns[2] });
+			} else if (tempRand == 2) {
+				choices.add(new double[] { wrongAns[0], ans, wrongAns[1], wrongAns[2] });
+			} else if (tempRand == 1) {
+				choices.add(new double[] { wrongAns[0], wrongAns[1], ans, wrongAns[2] });
+			} else {
+				choices.add(new double[] { wrongAns[0], wrongAns[1], wrongAns[2], ans });
+			}
+
+			problemStatement = tempQ.getProblemStatement();
+			problemStatements.add(problemStatement);
+
+			formula = tempQ.getFormula();
+			for(int j = 0; j < formula.size(); j++) {
+				if(formula.get(j) instanceof Variable) {
+					tempVariables.add((Variable)formula.get(j));
+				}
+			}
+			IDs = new String[tempVariables.size()];
+			values = new double[tempVariables.size()];
+			for(int k = 0; k < tempVariables.size(); k++) {
+				IDs[k] = tempVariables.get(k).getId();
+				values[k] = tempVariables.get(k).getValue();
+			}
+			variableIDs.add(IDs);
+			variableValues.add(values);
+		}
+	}
+
 	////////////////////////////////////////////////////// PRIVATE
 	////////////////////////////////////////////////////// CLASSES////////////////////////////////
 
@@ -202,6 +272,7 @@ public class QuizTaker {
 			if (validNum) {
 				numQuestions = Integer.parseInt(numQuestionsField.getText());
 
+				startQuiz();
 			} else {
 				JOptionPane.showMessageDialog(null, "Invalid # of Questions");
 			}
