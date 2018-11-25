@@ -32,4 +32,9 @@ public class SimpleQueue<T> {
         return head.getItem();
     }
 
+    public void clear() {
+        head = null;
+        tail = null;
+    }
+
 }
