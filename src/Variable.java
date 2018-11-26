@@ -1,4 +1,3 @@
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -9,13 +8,6 @@ public class Variable extends Symbol{
 	private double value;
 
 	// constructor
-	Variable(String id, BufferedImage image) {
-		super(id, image);
-		if (id.equals("pi")) {
-		    value = Math.PI;
-        }
-	}
-
 	Variable(String id) {
 	    super(id);
 	    try {

@@ -1,7 +1,6 @@
 //Square root stored as sqrt
 //Plus stored as +, minus as -, times as *, divided as /, squared is inputted as smth * itself
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -13,17 +12,6 @@ public class Operation extends Symbol{
     private int precedence;
 
     // constructor
-    Operation(String id, BufferedImage image) {
-        super(id, image);
-        if ((super.getId().equals("+")) || (super.getId().equals("-"))) {
-            precedence = 1;
-        } else if ((super.getId().equals("*")) || (super.getId().equals("/"))) {
-            precedence = 2;
-        } else {
-            precedence = 3;
-        }
-    }
-
     Operation(String id) {
         super(id);
 	    try {
