@@ -17,7 +17,13 @@ public class Variable extends Symbol{
 		}
         if (id.equals("pi")) {
             value = Math.PI;
-        }
+        } else {
+	    	try {
+	    	    value = Double.parseDouble(id);
+            } catch (NumberFormatException e) {
+
+            }
+		}
     }
 
 	// setter
