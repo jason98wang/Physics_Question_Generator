@@ -35,7 +35,7 @@ class QuizTakerDisplay extends JFrame {
 	int questionNum = 0;
 	SimpleLinkedList<String> questions;
 	SimpleLinkedList<Double> answers;
-	SimpleLinkedList<Double[]> choices;
+	SimpleLinkedList<double[]> choices;
 
 	double[][] wrongAnswer;
 
@@ -48,7 +48,7 @@ class QuizTakerDisplay extends JFrame {
 	}
 
 	// Constructor
-	 QuizTakerDisplay(SimpleLinkedList<String> question, SimpleLinkedList<double[]> choices, SimpleLinkedList<Double> answer) {
+	 QuizTakerDisplay(SimpleLinkedList<String> question, SimpleLinkedList<double[]> choices, SimpleLinkedList<Double> answers) {
 		super("Practice Like A Physicist");
 
 		// Set the frame to full screen
@@ -251,7 +251,7 @@ class QuizTakerDisplay extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 
-			if (wrongAnswer[questionNum][3] == answers.get(questionNum)) {
+			if (choices.get(questionNum)[3] == answers.get(questionNum)) {
 				System.out.println("yay");
 			} else {
 				answer4.setBackground(Color.RED);
