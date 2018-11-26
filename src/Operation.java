@@ -2,6 +2,10 @@
 //Plus stored as +, minus as -, times as *, divided as /, squared is inputted as smth * itself
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class Operation extends Symbol{
 
@@ -22,6 +26,11 @@ public class Operation extends Symbol{
 
     Operation(String id) {
         super(id);
+	    try {
+			setImage(ImageIO.read(new File("Symbols/Operations/" + id + ".png")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         if ((super.getId().equals("+")) || (super.getId().equals("-"))) {
             precedence = 1;
         } else if ((super.getId().equals("*")) || (super.getId().equals("/"))) {

@@ -47,10 +47,14 @@ public class QuizEditor extends JFrame {
 	private JLabel currentFormulaDisplay;
 	private int offset = 0;
 	private int addingoffset = 20;
+	
+	private Database database;
 
 	// QuizEditor(Database d) {
-	QuizEditor(SimpleLinkedList<Subject> subjects, SimpleLinkedList<Symbol> symbols,
+	QuizEditor(Database database, SimpleLinkedList<Subject> subjects, SimpleLinkedList<Symbol> symbols,
 			SimpleLinkedList<SimpleLinkedList<Symbol>> formulas) {
+		
+		this.database = database;
 
 		// Setting up frames
 		this.setTitle("Quiz Editor");
@@ -406,6 +410,7 @@ public class QuizEditor extends JFrame {
 				subject.removeItem(s.getName());
 				subject.setSelectedIndex(0);
 				s = null;
+				database.update(); // call database to update
 			}
 		});
 
@@ -422,6 +427,7 @@ public class QuizEditor extends JFrame {
 				unit.removeItem(u.getName());
 				u = null;
 				unit.setSelectedIndex(0);
+				database.update(); // call database to update
 			}
 		});
 		
@@ -554,6 +560,7 @@ public class QuizEditor extends JFrame {
 					subjects.add(new Subject(name.getText(), Integer.parseInt(grade.getText()), level.getText()));
 					subject.addItem(name.getText());
 					addSubjectFrame.dispose();
+					database.update(); // call database to update
 					return;
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null, "A valid grade has not been selected");
@@ -634,6 +641,7 @@ public class QuizEditor extends JFrame {
 						unit.addItem(name.getText());
 					}
 					addUnitFrame.dispose();
+					database.update(); // call database to update
 					return;
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null, "A valid number has not been selected");
@@ -687,22 +695,29 @@ public class QuizEditor extends JFrame {
 	// Testing main class
 	public static void main(String[] args) {
 		try {
-			SimpleLinkedList<Subject> subjects = new SimpleLinkedList<Subject>();
-			Subject s = new Subject("HI", 11, "S");
-			s.addUnit(new Unit("a", 1));
-			s.addUnit(new Unit("b", 2));
-			s.addUnit(new Unit("c", 3));
-			s.addUnit(new Unit("d", 4));
-			s.addUnit(new Unit("e", 5));
-			subjects.add(s);
-			Symbol add = new Symbol("add", ImageIO.read(new File("Symbols/Operations/Add.png")));
-			Symbol equal = new Symbol("equal", ImageIO.read(new File("Symbols/Operations/equal.png")));
-			Symbol pi = new Symbol("pi", ImageIO.read(new File("Symbols/Variables/Pi.png")));
-			Symbol time = new Symbol("time", ImageIO.read(new File("Symbols/Variables/time.png")));
-			Symbol velocity = new Symbol("velocity", ImageIO.read(new File("Symbols/Variables/velocity.png")));
+//			SimpleLinkedList<Subject> subjects = new SimpleLinkedList<Subject>();
+//			Subject s = new Subject("HI", 11, "S");
+//			s.addUnit(new Unit("a", 1));
+//			s.addUnit(new Unit("b", 2));
+//			s.addUnit(new Unit("c", 3));
+//			s.addUnit(new Unit("d", 4));
+//			s.addUnit(new Unit("e", 5));
+//			subjects.add(s);
+			Database database = new Database();
+			SimpleLinkedList<Subject> subjects = database.getSubjects();
+			
+			Symbol add = new Operation("+");
+			Symbol subtract = new Operation("-");
+			Symbol multiply = new Operation("*");
+			// Symbol divide = new Operation("/");
+			Symbol pi = new Variable("pi");
+			Symbol time = new Variable("time");
+			Symbol velocity = new Variable("velocity");
 			SimpleLinkedList<Symbol> symbols = new SimpleLinkedList<Symbol>();
 			symbols.add(add);
-			symbols.add(equal);
+			symbols.add(subtract);
+			symbols.add(multiply);
+			// symbols.add(divide);
 			symbols.add(pi);
 			symbols.add(time);
 			symbols.add(velocity);
@@ -711,10 +726,9 @@ public class QuizEditor extends JFrame {
 			tmp.add(time);
 			tmp.add(add);
 			tmp.add(velocity);
-			tmp.add(equal);
 			tmp.add(pi);
 			formulas.add(tmp);
-			quiz = new QuizEditor(subjects, symbols, formulas);
+			quiz = new QuizEditor(database, subjects, symbols, formulas);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
