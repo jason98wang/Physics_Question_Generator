@@ -203,6 +203,7 @@ public class QuizTaker {
 			variableIDs.add(IDs);
 			variableValues.add(values);
 		}
+		new QuizTakerDisplay(problemStatements,choices,answers); 
 	}
 
 	////////////////////////////////////////////////////// PRIVATE
