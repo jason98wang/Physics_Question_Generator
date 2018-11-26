@@ -69,7 +69,7 @@ public class Question {
 	    double[] falseAnswers = new double[3];
 
 	    for (int i = 0; i < 3; i++) {
-	        int j = (int)Math.random()*9;
+	        int j = (int)(Math.random()*9);
 	        if (j == 0) {
 	            falseAnswers[i] = answer*2.0;
             } else if (j == 1) {
