@@ -75,10 +75,10 @@ class QuizTakerDisplay extends JFrame {
 		answer4 = new JButton();
 		
 		panel.setLayout(null);
-		answer1.setBounds(200, 600, 300, 100);
-		answer2.setBounds(600, 600, 300, 100);
-		answer3.setBounds(1000, 600, 300, 100);
-		answer4.setBounds(1400, 600, 300, 100);
+		answer1.setBounds(200 / 2, 600 / 2, 300 / 2, 100 / 2);
+		answer2.setBounds(600 / 2, 600 / 2, 300 / 2, 100 / 2);
+		answer3.setBounds(1000 / 2, 600 / 2, 300 / 2, 100 / 2);
+		answer4.setBounds(1400 / 2, 600 / 2, 300 / 2, 100 / 2);
 		
 		answer1.addActionListener(new Answer1Listener());
 		answer2.addActionListener(new Answer2Listener());

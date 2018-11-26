@@ -8,7 +8,6 @@ import javax.imageio.ImageIO;
 
 public class Operation extends Symbol{
 
-    private String operation;
     private int precedence;
 
     // constructor
