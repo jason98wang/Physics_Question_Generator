@@ -2,10 +2,10 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/Users/JasonWang/eclipse-workspace/Physics_Question_Generator/jar_files/api-common-1.0.0.jar"/>
-	<classpathentry kind="lib" path="/Users/JasonWang/eclipse-workspace/Physics_Question_Generator/jar_files/gson-2.8.5.jar"/>
-	<classpathentry kind="lib" path="/Users/JasonWang/eclipse-workspace/Physics_Question_Generator/jar_files/json-simple-1.1.jar"/>
-	<classpathentry kind="lib" path="/Users/JasonWang/eclipse-workspace/Physics_Question_Generator/jar_files/org.eclipse.egit.github.core-2.1.5.jar"/>
-	<classpathentry kind="lib" path="/Users/JasonWang/eclipse-workspace/Physics_Question_Generator/jar_files/Pastebin-0.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/joshd/Desktop/Java/Physics_Question_Generator/jar_files/api-common-1.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/joshd/Desktop/Java/Physics_Question_Generator/jar_files/gson-2.8.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/joshd/Desktop/Java/Physics_Question_Generator/jar_files/json-simple-1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/joshd/Desktop/Java/Physics_Question_Generator/jar_files/org.eclipse.egit.github.core-2.1.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/joshd/Desktop/Java/Physics_Question_Generator/jar_files/Pastebin-0.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

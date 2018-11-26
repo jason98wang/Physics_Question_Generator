@@ -173,7 +173,10 @@ public class QuizTaker {
 			ans = tempQ.getAnswer();
 			answers.add(ans);
 
-			wrongAns = tempQ.getFalseAnswers();
+			wrongAns = new double[3];
+			wrongAns[0] = tempQ.getFalseAnswers()[0];
+			wrongAns[1] = tempQ.getFalseAnswers()[1];
+			wrongAns[2] = tempQ.getFalseAnswers()[2];
 			tempRand = rand.nextInt(4);
 			if (tempRand == 3) {
 				choices.add(new double[] { ans, wrongAns[0], wrongAns[1], wrongAns[2] });
@@ -202,6 +205,7 @@ public class QuizTaker {
 			}
 			variableIDs.add(IDs);
 			variableValues.add(values);
+			
 		}
 		new QuizTakerDisplay(problemStatements,choices,answers); 
 	}
