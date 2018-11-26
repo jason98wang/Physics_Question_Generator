@@ -159,7 +159,7 @@ public class Question {
 				} else if (((Operation)(output.peek())).getOperation().equals("-")) {
 					output.dequeue();
 					calc.push(calc.pop() - tempVariable);
-				} else if (((Operation)(output.peek())).getOperation().equals("*")) {
+				} else if (((Operation)(output.peek())).getOperation().equals("mul")) {
 					output.dequeue();
 					calc.push(calc.pop() * tempVariable);
 				} else if (((Operation)(output.peek())).getOperation().equals("div")) {
@@ -206,7 +206,7 @@ public class Question {
     public void toSymbol(String stringFormula) {
 
         if (stringFormula.length() > 1) {
-            if ((stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("+")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("-")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("*")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("/")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("sqrt")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("^")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("(")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals(")"))) {
+            if ((stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("+")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("-")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("mul")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("/")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("sqrt")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("^")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("(")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals(")"))) {
                 formula.add(new Operation(stringFormula.substring(1,stringFormula.indexOf(" ",1))));
             } else {
                 formula.add(new Variable(stringFormula.substring(1,stringFormula.indexOf(" ",1))));

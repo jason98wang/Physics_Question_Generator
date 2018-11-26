@@ -20,7 +20,7 @@ public class Operation extends Symbol{
 		}
         if ((super.getId().equals("+")) || (super.getId().equals("-"))) {
             precedence = 1;
-        } else if ((super.getId().equals("*")) || (super.getId().equals("/"))) {
+        } else if ((super.getId().equals("mul")) || (super.getId().equals("div"))) {
             precedence = 2;
         } else {
             precedence = 3;

@@ -142,8 +142,8 @@ public class Database {
 		SimpleLinkedList<Symbol> formula = new SimpleLinkedList<Symbol>();
 		stringFormula = stringFormula.substring(1, stringFormula.length());
 		while (stringFormula.length() > 0) {
-			String sub = stringFormula.substring(0, stringFormula.indexOf(" "));
-			if ((sub.equals("+")) || (sub.equals("-")) || (sub.equals("*")) || (sub.equals("/")) || (sub.equals("sqrt")) || (sub.equals("^")) || (sub.equals("(")) || (sub.equals(")"))) {
+			String sub = stringFormula.substring(0, stringFormula.indexOf(" "));			
+			if ((sub.equals("+")) || (sub.equals("-")) || (sub.equals("mul")) || (sub.equals("div")) || (sub.equals("sqrt")) || (sub.equals("^")) || (sub.equals("(")) || (sub.equals(")"))) {
 				formula.add(new Operation(sub));
 			} else {
 				formula.add(new Variable(sub));
