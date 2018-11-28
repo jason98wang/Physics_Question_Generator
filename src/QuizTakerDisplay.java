@@ -23,33 +23,35 @@ import java.io.File;
 import java.io.IOException;
 
 class QuizTakerDisplay extends JFrame {
-
+	
 	// Class variables
 	private static JFrame window;
 	Image nextPic;
 	boolean questionAnswered;
 	boolean correct = false, correct1 = false;
-
+	
 	JButton answer1, answer2, answer3, answer4;
 	JButton nextButton;
 
 	JLabel label;
 	JLabel questionLabel;
-
+	JPanel panel2;
 	Font font1 = new Font("Serif", Font.BOLD, 100);
 	Font font2 = new Font("Arial", Font.ITALIC, 50);
 	Font font3 = new Font("Serif", Font.BOLD, 25);
 	int questionNum = 0;
+	String[] ids;
+	double[] values;
 	SimpleLinkedList<String> questions;
 	SimpleLinkedList<Double> answers;
 	SimpleLinkedList<double[]> choices;
 	SimpleLinkedList<String[]> variableIDs;
 	SimpleLinkedList<double[]> variableValues;
 
-	ImageIcon acceleration, appliedForce, chemicalEnergy, delta, displacement, e, elasticForce, gravationalEnergy,
-			gravationalForce, impulse, kineticEnergy, KineticFrictionalForce, lambda, magneticForce, momentum,
-			normalForce, nuclearEnergy, soundEnergy, springForce, staticFrictionalForce, tensionalForce, thermalEnergy,
-			theta, time, velocity, work, xForce, yForce;
+//	ImageIcon acceleration, appliedForce, chemicalEnergy, delta, displacement, e, elasticForce, gravationalEnergy,
+//			gravationalForce, impulse, kineticEnergy, KineticFrictionalForce, lambda, magneticForce, momentum,
+//			normalForce, nuclearEnergy, soundEnergy, springForce, staticFrictionalForce, tensionalForce, thermalEnergy,
+//			theta, time, velocity, work, xForce, yForce;
 
 	double[][] wrongAnswer;
 
@@ -81,15 +83,15 @@ class QuizTakerDisplay extends JFrame {
 				}
 
 				//drawing the variables 
-				System.out.println(variableIDs.get(questionNum).length);
-				for (int i = 0; i < variableIDs.get(questionNum).length; i++) {
-					try {
-						String picture = variableIDs.get(questionNum)[i];
-						picture = "acceleration";
-						BufferedImage image = ImageIO.read(new File( "Symbols/Variables/acceleration.png"));
-						g.drawImage (image,0,0,this);
-					} catch (IOException e) {}				
-				}
+//				System.out.println(variableIDs.get(questionNum).length);
+//				for (int i = 0; i < variableIDs.get(questionNum).length; i++) {
+//					try {
+//						String picture = variableIDs.get(questionNum)[i];
+//						picture = "acceleration";
+//						BufferedImage image = ImageIO.read(new File( "Symbols/Variables/acceleration.png"));
+//						g.drawImage (image,0,0,this);
+//					} catch (IOException e) {}				
+//				}
 				repaint();
 			}
 		};
@@ -145,7 +147,20 @@ class QuizTakerDisplay extends JFrame {
 
 		panel1.add(answer4);
 		panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
-
+		panel2 = new JPanel();
+		ids = variableIDs.get(0);
+		values = variableValues.get(0);
+		for (int j = 0; j < ids.length; j++) {
+			try {
+				panel2.add(new JLabel(new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
+				JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
+				value.setFont(font2);
+				panel2.add(value);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
 		nextButton = new JButton();
 		try {
 			nextButton = new JButton(new ImageIcon(ImageIO.read(new File("nextButton.png"))));
@@ -157,17 +172,20 @@ class QuizTakerDisplay extends JFrame {
 		label = new JLabel("Question #" + Integer.toString(questionNum + 1));
 		label.setFont(font2);
 		nextButton.addActionListener(new NextButtonListener());
-
+		int x = 100;
 		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		panel.add(Box.createRigidArea(new Dimension(0, 100)));
+		panel.add(Box.createRigidArea(new Dimension(0, x)));
 		panel.add(label);
-		panel.add(Box.createRigidArea(new Dimension(0, 100)));
+		panel.add(Box.createRigidArea(new Dimension(0, x)));
 		questionLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		panel.add(questionLabel);
-		panel.add(Box.createRigidArea(new Dimension(0, 100)));
+		panel.add(Box.createRigidArea(new Dimension(0, x)));
+		panel2.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+		panel.add(panel2);
+		panel.add(Box.createRigidArea(new Dimension(0, x)));
 		panel1.setAlignmentX(JPanel.CENTER_ALIGNMENT);
 		panel.add(panel1);
-		panel.add(Box.createRigidArea(new Dimension(0, 100)));
+		panel.add(Box.createRigidArea(new Dimension(0, x)));
 		JPanel flowPanel = new JPanel();
 		flowPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
@@ -243,16 +261,33 @@ class QuizTakerDisplay extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			panel2.removeAll();
 			questionNum++;
-			answer2.setBackground(null);
-			answer1.setBackground(null);
-			answer3.setBackground(null);
-			answer4.setBackground(null);
 			if (questionNum == questions.size()) {
 				dispose();
 				new SummaryPage();
 				return;
 			}
+			ids = variableIDs.get(questionNum);
+			values = variableValues.get(questionNum);
+			
+			for (int j = 0; j < ids.length; j++) {
+				try {
+					panel2.add(new JLabel(new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
+					JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
+//					System.out.println(String.format("%.2f", values[j]) + " " + round(values[j],2));
+					value.setFont(font2);
+					panel2.add(value);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}
+			
+			answer2.setBackground(null);
+			answer1.setBackground(null);
+			answer3.setBackground(null);
+			answer4.setBackground(null);
+			
 			questionLabel.setText(questions.get(questionNum));
 			label.setText("Question #" + Integer.toString(questionNum + 1));
 			answer1.setText(Double.toString(round(choices.get(questionNum)[0], 2)));
