@@ -81,7 +81,7 @@ public class Question {
 				}
 			}
 		    } while (flag);
-		    randInts[i] = h;
+		    randInts[i] = j;
 	        if (j == 0) {
 	            falseAnswers[i] = answer*2.0;
             } else if (j == 1) {

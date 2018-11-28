@@ -208,6 +208,8 @@ public class QuizTaker {
 			
 		}
 		new QuizTakerDisplay(problemStatements,choices,answers,variableIDs,variableValues); 
+		window.dispose();
+		
 	}
 
 	////////////////////////////////////////////////////// PRIVATE
