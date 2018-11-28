@@ -57,6 +57,7 @@ class SimpleLinkedList<E> {
 			for (int i = 0; i < index - 1; i++) {
 				tempNode = tempNode.getNext();
 			}
+			if (tail == tempNode.getNext()) tail = tempNode;
 			tempNode.setNext(tempNode.getNext().getNext());
 		}
 		if (head == null || tail == null) tail = head;
@@ -97,7 +98,6 @@ class SimpleLinkedList<E> {
 			counter++;
 			tempNode = tempNode.getNext();
 		}
-
 		return counter;
 	}
 

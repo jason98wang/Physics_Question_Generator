@@ -149,6 +149,7 @@ public class QuizEditor extends JFrame {
 					s = subjects.get(subject.getSelectedIndex() - 1);
 					// Priority queue instead of linkedlist to keep the units in order
 					SimpleLinkedList<Unit> units = s.getUnits();
+					unit.removeAll();
 					for (int i = 0; i < units.size(); i++) {
 						unit.addItem(units.get(i).getName());
 					}
@@ -293,11 +294,12 @@ public class QuizEditor extends JFrame {
 					SimpleLinkedList<Question> questions = u.getQuestions();
 					int[] indicies = list.getSelectedIndices();
 					DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
+					Object[] A = model.toArray();
 					for (int i = 0; i < indicies.length; i++) {
 						// d.deleteQuestion(s,u,questions.get(i);
-						model.removeElementAt(i);
+						model.removeElement(A[indicies[i]]);
 						// Remove Later
-						u.removeQuestion(questions.get(i));
+						u.removeQuestion(questions.get(indicies[i]));
 					}
 					list.clearSelection();
 
@@ -752,7 +754,7 @@ public class QuizEditor extends JFrame {
 		}
 		list.setCellRenderer(new CustomListRenderer());
 		list.setPreferredSize(list.getMinimumSize());
-		JScrollPane scroll = new JScrollPane(list, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane scroll = new JScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
 
 		// Confirm button
