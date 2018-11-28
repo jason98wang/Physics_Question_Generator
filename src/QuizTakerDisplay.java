@@ -86,7 +86,7 @@ class QuizTakerDisplay extends JFrame {
 					try {
 						String picture = variableIDs.get(questionNum)[i];
 						picture = "acceleration";
-						BufferedImage image = ImageIO.read(new File( "res/acceleration.png"));
+						BufferedImage image = ImageIO.read(new File( "Symbols/Variables/acceleration.png"));
 						g.drawImage (image,0,0,this);
 					} catch (IOException e) {}				
 				}
