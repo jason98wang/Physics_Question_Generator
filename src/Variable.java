@@ -19,6 +19,8 @@ public class Variable extends Symbol{
             value = Math.PI;
         } else if (id.equals("g")) {
 		value = 9.81;
+	} else if (id.equals("c")) {
+		value = 3.0 * Math.pow(10,8);
 	} else {
 	    	try {
 	    	    value = Double.parseDouble(id);
