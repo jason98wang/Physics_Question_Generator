@@ -7,7 +7,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.Toolkit;
 import java.awt.Color;
@@ -16,15 +15,12 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 //Keyboard imports
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.IOException;
 
 class QuizTakerDisplay extends JFrame {
 
@@ -47,12 +43,20 @@ class QuizTakerDisplay extends JFrame {
 	SimpleLinkedList<String> questions;
 	SimpleLinkedList<Double> answers;
 	SimpleLinkedList<double[]> choices;
+	SimpleLinkedList<String[]> variableIDs;
+	SimpleLinkedList<double[]> variableValues;
+
+	ImageIcon acceleration, appliedForce, chemicalEnergy, delta, displacement, e, elasticForce, gravationalEnergy,
+			gravationalForce, impulse, kineticEnergy, KineticFrictionalForce, lambda, magneticForce, momentum,
+			normalForce, nuclearEnergy, soundEnergy, springForce, staticFrictionalForce, tensionalForce, thermalEnergy,
+			theta, time, velocity, work, xForce, yForce;
 
 	double[][] wrongAnswer;
 
 	// Constructor
 	QuizTakerDisplay(SimpleLinkedList<String> question, SimpleLinkedList<double[]> choices,
-			SimpleLinkedList<Double> answers) {
+			SimpleLinkedList<Double> answers, SimpleLinkedList<String[]> variableIDs,
+			SimpleLinkedList<double[]> variableValues) {
 		super("Practice Like A Physicist");
 		// Set the frame to full screen
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -68,10 +72,23 @@ class QuizTakerDisplay extends JFrame {
 					correct1 = true;
 				} else if (correct1) {
 					correct1 = false;
-					try {Thread.sleep(500);}catch(Exception e) {}
-					ActionEvent e = new ActionEvent(nextButton,0,"");
-//					nextButton.actionPerformed(e);
+					try {
+						Thread.sleep(500);
+					} catch (Exception e) {
+					}
+					ActionEvent e = new ActionEvent(nextButton, 0, "");
 					nextButton.getActionListeners()[0].actionPerformed(e);
+				}
+
+				//drawing the variables 
+				System.out.println(variableIDs.get(questionNum).length);
+				for (int i = 0; i < variableIDs.get(questionNum).length; i++) {
+					try {
+						String picture = variableIDs.get(questionNum)[i];
+						picture = "acceleration";
+						BufferedImage image = ImageIO.read(new File( "res/acceleration.png"));
+						g.drawImage (image,0,0,this);
+					} catch (IOException e) {}				
 				}
 				repaint();
 			}
@@ -87,16 +104,19 @@ class QuizTakerDisplay extends JFrame {
 		this.questions = question;
 		this.choices = choices;
 		this.answers = answers;
+		this.variableIDs = variableIDs;
+		this.variableValues = variableValues;
 
-		if (questions.size() == 0) {
-			dispose();
-		}
+		//		if (questions.size() == 0) {
+		//			dispose();
+		//		}
 
 		//creating buttons for each choice
-		answer1 = new JButton(Double.toString(choices.get(questionNum)[0]));
-		answer2 = new JButton(Double.toString(choices.get(questionNum)[1]));
-		answer3 = new JButton(Double.toString(choices.get(questionNum)[2]));
-		answer4 = new JButton(Double.toString(choices.get(questionNum)[3]));
+
+		answer1 = new JButton(Double.toString(round(choices.get(questionNum)[0], 2)));
+		answer2 = new JButton(Double.toString(round(choices.get(questionNum)[1], 2)));
+		answer3 = new JButton(Double.toString(round(choices.get(questionNum)[2], 2)));
+		answer4 = new JButton(Double.toString(round(choices.get(questionNum)[3], 2)));
 
 		answer1.setFont(font3);
 		answer2.setFont(font3);
@@ -108,7 +128,7 @@ class QuizTakerDisplay extends JFrame {
 		//		answer3.setBounds(1000 , 600 , 300 , 100);
 		//		answer4.setBounds(1400 , 600 , 300 , 100);
 
-		//add listners for each button
+		//add listeners for each button
 		answer1.addActionListener(new Answer1Listener());
 		answer2.addActionListener(new Answer2Listener());
 		answer3.addActionListener(new Answer3Listener());
@@ -128,7 +148,7 @@ class QuizTakerDisplay extends JFrame {
 
 		nextButton = new JButton();
 		try {
-			nextButton = new JButton(new ImageIcon(ImageIO.read(new File("NextButton.png"))));
+			nextButton = new JButton(new ImageIcon(ImageIO.read(new File("nextButton.png"))));
 		} catch (Exception ex) {
 		}
 		questionLabel = new JLabel(questions.get(questionNum));
@@ -158,48 +178,6 @@ class QuizTakerDisplay extends JFrame {
 		this.setContentPane(panel);
 
 	} // End of constructor
-		
-
-
-	// ********* INNER CLASSES *********
-	//
-	//	private class GameAreaPanel extends JPanel {
-	//
-	//		
-	//
-	//		GameAreaPanel() {
-
-	//
-	//		}
-	//
-	//		public void paintComponent(Graphics g) {
-	//
-	//			// Call the super class
-	//			super.paintComponent(g);
-	//			setDoubleBuffered(true);
-	//
-	//			questionAnswered = false;
-	//
-	//			g.setFont(font1);
-	//			int displayNum = questionNum + 1;
-	//			g.drawString("Question #" + displayNum, 700, 90);
-	//
-	//			g.drawImage(nextPic, 1750, 905, null, this);
-	//
-	//			g.setFont(font2);
-	//			g.drawString(questions.get(questionNum), 900, 300);
-	//
-	//			answer1.setText(Double.toString(choices.get(questionNum)[0]));
-	//			answer2.setText(Double.toString(choices.get(questionNum)[1]));
-	//			answer3.setText(Double.toString(choices.get(questionNum)[2]));
-	//			answer4.setText(Double.toString(choices.get(questionNum)[3]));
-	//
-	//			// Repaint
-	//			repaint();
-	//
-	//		} // End of paintComponent
-	//	}// End of GameAreaPanel
-	//
 
 	private class Answer1Listener implements ActionListener {
 
@@ -260,7 +238,7 @@ class QuizTakerDisplay extends JFrame {
 
 		}
 	}
-	
+
 	private class NextButtonListener implements ActionListener {
 
 		@Override
@@ -272,15 +250,28 @@ class QuizTakerDisplay extends JFrame {
 			answer4.setBackground(null);
 			if (questionNum == questions.size()) {
 				dispose();
+				new SummaryPage();
+				return;
 			}
 			questionLabel.setText(questions.get(questionNum));
 			label.setText("Question #" + Integer.toString(questionNum + 1));
-			answer1.setText(Double.toString(choices.get(questionNum)[0]));
-			answer2.setText(Double.toString(choices.get(questionNum)[1]));
-			answer3.setText(Double.toString(choices.get(questionNum)[2]));
-			answer4.setText(Double.toString(choices.get(questionNum)[3]));
+			answer1.setText(Double.toString(round(choices.get(questionNum)[0], 2)));
+			answer2.setText(Double.toString(round(choices.get(questionNum)[1], 2)));
+			answer3.setText(Double.toString(round(choices.get(questionNum)[2], 2)));
+			answer4.setText(Double.toString(round(choices.get(questionNum)[3], 2)));
 			revalidate();
 		}
+	}
+
+	public double round(double value, int places) {
+		if (places < 0) {
+			throw new IllegalArgumentException();
+		}
+
+		long factor = (long) Math.pow(10, places);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
 	}
 
 }

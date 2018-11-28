@@ -207,7 +207,7 @@ public class QuizTaker {
 			variableValues.add(values);
 			
 		}
-		new QuizTakerDisplay(problemStatements,choices,answers); 
+		new QuizTakerDisplay(problemStatements,choices,answers,variableIDs,variableValues); 
 	}
 
 	////////////////////////////////////////////////////// PRIVATE
