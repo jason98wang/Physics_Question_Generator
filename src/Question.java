@@ -67,9 +67,21 @@ public class Question {
 	public double[] getFalseAnswers() {
 
 	    double[] falseAnswers = new double[3];
+		double[] randInts = new double[3];
+		boolean flag;
 
 	    for (int i = 0; i < 3; i++) {
-	        int j = (int)(Math.random()*9);
+		    flag = false;
+		    int j = 0;
+		    do {
+	        	j = (int)(Math.random()*9);
+		    	for (int h = 0; h < 3; h ++) {
+				if (j == randInts[h]) {
+					flag = true;
+				}
+			}
+		    } while (flag);
+		    randInts[i] = h;
 	        if (j == 0) {
 	            falseAnswers[i] = answer*2.0;
             } else if (j == 1) {
