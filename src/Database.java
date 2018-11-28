@@ -39,6 +39,7 @@ public class Database {
 		//		Question q = new Question("What is TLAP?", null);
 		//		u.addQuestion(q);
 
+		db.getSubjects().get(0).getStudents().add(new Student("Yili Liu", "333333333", "sample_password"));
 		db.update();
 	}
 
@@ -118,7 +119,7 @@ public class Database {
 
 				// add unit to subject
 				Unit u = new Unit(name2, number);
-				s.addUnit(u);
+				s.getUnits().add(u);
 
 				// get this unit's questions
 				JSONArray questions = (JSONArray) unit.get("questions");
@@ -135,12 +136,30 @@ public class Database {
 					u.addQuestion(q);
 				}
 			}
+
+			// get this subject's units
+			JSONArray students = (JSONArray) subject.get("students");
+			for (Object b : students) {
+				JSONObject student = (JSONObject) b;
+
+				// get its name and number
+				String name2 = (String) student.get("name");
+				String studentNumber = (String) student.get("studentNumber");
+				String password = (String) student.get("password");
+				int incorrect = Integer.parseInt((String) student.get("incorrect"));
+				int total = Integer.parseInt((String) student.get("total"));
+
+				// add unit to subject
+				Student st = new Student(name2, studentNumber, password, incorrect, total);
+				s.getStudents().add(st);
+			}
 		}
 	}
 
 	private static SimpleLinkedList<Symbol> toSymbol(String stringFormula) {
 		SimpleLinkedList<Symbol> formula = new SimpleLinkedList<Symbol>();
 		stringFormula = stringFormula.substring(1, stringFormula.length());
+
 		while (stringFormula.length() > 0) {
 			String sub = stringFormula.substring(0, stringFormula.indexOf(" "));			
 			if ((sub.equals("+")) || (sub.equals("-")) || (sub.equals("mul")) || (sub.equals("div")) || (sub.equals("sqrt")) || (sub.equals("^")) || (sub.equals("(")) || (sub.equals(")"))) {
@@ -181,7 +200,21 @@ public class Database {
 				uobj.put("questions", c);
 				b.add(uobj);
 			}
+
+			JSONArray d = new JSONArray();
+			for (int j = 0; j < subject.getStudents().size(); j++) {
+				Student student = subject.getStudents().get(j);
+				JSONObject tobj = new JSONObject();
+				tobj.put("name", student.getName());
+				tobj.put("studentNumber", student.getStudentNumber());
+				tobj.put("password", student.getPassword());
+				tobj.put("incorrect", Integer.toString(student.getIncorrectQuestions()));
+				tobj.put("total", Integer.toString(student.getTotalQuestions()));
+				d.add(tobj);
+			}
+
 			sobj.put("units", b);
+			sobj.put("students", d);
 			a.add(sobj);
 		}
 
@@ -190,7 +223,7 @@ public class Database {
 			FileWriter file = new FileWriter(jsonFile);
 			file.write(a.toJSONString());
 			file.close();
-			
+
 			// read from file line by line
 			BufferedReader br = new BufferedReader(new FileReader(jsonFile));
 			String output = "";
@@ -200,7 +233,7 @@ public class Database {
 				s = br.readLine();
 			}
 			br.close();
-			
+
 			// update gist
 			gistFile.setContent(output);
 			service.updateGist(gist);
