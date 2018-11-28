@@ -71,9 +71,9 @@ public class Question {
 		boolean flag;
 
 	    for (int i = 0; i < 3; i++) {
-		    flag = false;
 		    int j = 0;
 		    do {
+			flag = false;
 	        	j = (int)(Math.random()*9);
 		    	for (int h = 0; h < 3; h ++) {
 				if (j == randInts[h]) {
