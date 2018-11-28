@@ -69,7 +69,9 @@ class QuizTakerDisplay extends JFrame {
 				} else if (correct1) {
 					correct1 = false;
 					try {Thread.sleep(500);}catch(Exception e) {}
-					nextButton.doClick();
+					ActionEvent e = new ActionEvent(nextButton,0,"");
+//					nextButton.actionPerformed(e);
+					nextButton.getActionListeners()[0].actionPerformed(e);
 				}
 				repaint();
 			}
