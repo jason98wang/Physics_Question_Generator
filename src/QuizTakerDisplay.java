@@ -32,7 +32,7 @@ class QuizTakerDisplay extends JFrame {
 	private static JFrame window;
 	Image nextPic;
 	boolean questionAnswered;
-
+	boolean correct = false, correct1 = false;
 
 	JButton answer1, answer2, answer3, answer4;
 	JButton nextButton;
@@ -60,7 +60,20 @@ class QuizTakerDisplay extends JFrame {
 		this.setResizable(false);
 
 		// Set up the game panel
-		JPanel panel = new JPanel();
+		JPanel panel = new JPanel() {
+			public void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				if (correct) {
+					correct = false;
+					correct1 = true;
+				} else if (correct1) {
+					correct1 = false;
+					try {Thread.sleep(500);}catch(Exception e) {}
+					nextButton.doClick();
+				}
+				repaint();
+			}
+		};
 		panel.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
 
 		// Focus the frame
@@ -98,7 +111,6 @@ class QuizTakerDisplay extends JFrame {
 		answer2.addActionListener(new Answer2Listener());
 		answer3.addActionListener(new Answer3Listener());
 		answer4.addActionListener(new Answer4Listener());
-
 		JPanel panel1 = new JPanel();
 		panel1.add(answer1);
 		panel1.add(Box.createRigidArea(new Dimension(100, 0)));
@@ -144,7 +156,7 @@ class QuizTakerDisplay extends JFrame {
 		this.setContentPane(panel);
 
 	} // End of constructor
-
+		
 
 
 	// ********* INNER CLASSES *********
@@ -194,11 +206,7 @@ class QuizTakerDisplay extends JFrame {
 
 			if (choices.get(questionNum)[0] == answers.get(questionNum)) {
 				answer1.setBackground(Color.GREEN);
-				revalidate();
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {}
-				nextButton.doClick();
+				correct = true;
 			} else {
 				answer1.setBackground(Color.RED);
 			}
@@ -212,13 +220,8 @@ class QuizTakerDisplay extends JFrame {
 		public void actionPerformed(ActionEvent arg0) {
 
 			if (choices.get(questionNum)[1] == answers.get(questionNum)) {
-
+				correct = true;
 				answer2.setBackground(Color.GREEN);
-				revalidate();
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {}
-				nextButton.doClick();
 			} else {
 				answer2.setBackground(Color.RED);
 			}
@@ -233,11 +236,7 @@ class QuizTakerDisplay extends JFrame {
 
 			if (choices.get(questionNum)[2] == answers.get(questionNum)) {
 				answer3.setBackground(Color.GREEN);
-				revalidate();
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {}
-				nextButton.doClick();
+				correct = true;
 			} else {
 				answer3.setBackground(Color.RED);
 			}
@@ -252,18 +251,14 @@ class QuizTakerDisplay extends JFrame {
 
 			if (choices.get(questionNum)[3] == answers.get(questionNum)) {
 				answer4.setBackground(Color.GREEN);
-				revalidate();
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {}
-				nextButton.doClick();
+				correct = true;
 			} else {
 				answer4.setBackground(Color.RED);
 			}
 
 		}
 	}
-
+	
 	private class NextButtonListener implements ActionListener {
 
 		@Override
@@ -273,8 +268,9 @@ class QuizTakerDisplay extends JFrame {
 			answer1.setBackground(null);
 			answer3.setBackground(null);
 			answer4.setBackground(null);
-			if (questionNum == questions.size())
+			if (questionNum == questions.size()) {
 				dispose();
+			}
 			questionLabel.setText(questions.get(questionNum));
 			label.setText("Question #" + Integer.toString(questionNum + 1));
 			answer1.setText(Double.toString(choices.get(questionNum)[0]));
