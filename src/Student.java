@@ -66,4 +66,11 @@ public class Student {
 	public int getTotalQuestions() {
 		return totalQuestions;
 	}
+	
+	public double getPercentage() {
+		if (totalQuestions != 0) {
+			return (double)(incorrectQuestions) / totalQuestions;
+		}
+		return -1;
+	}
 }

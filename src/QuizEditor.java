@@ -10,8 +10,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import javax.imageio.ImageIO;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
@@ -376,6 +375,8 @@ public class QuizEditor extends JFrame {
 					currentFormulaDisplay.setIcon(new ImageIcon());
 					enter.setText("");
 				}
+				
+				database.update(); // call database to update
 			}
 		});
 

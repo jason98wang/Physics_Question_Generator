@@ -39,7 +39,6 @@ public class Database {
 		//		Question q = new Question("What is TLAP?", null);
 		//		u.addQuestion(q);
 
-		db.getSubjects().get(0).getStudents().add(new Student("Yili Liu", "333333333", "sample_password"));
 		db.update();
 	}
 
