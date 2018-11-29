@@ -22,6 +22,8 @@ public class Operation extends Symbol{
             precedence = 1;
         } else if ((super.getId().equals("mul")) || (super.getId().equals("div"))) {
             precedence = 2;
+        } else if ((super.getId().equals("(")) || (super.getId().equals(")")))  {
+        	precedence = 0;
         } else {
             precedence = 3;
         }

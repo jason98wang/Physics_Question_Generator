@@ -129,7 +129,7 @@ public class Question {
                             output.enqueue(operators.pop());
                         }
                     }
-					operators.push((Operation)formula.get(i));
+					operators.push((Operation)formula.get(i));;
 				}
 				if (((Operation)(formula.get(i))).getOperation().equals("(")) {
 					operators.push((Operation)formula.get(i));

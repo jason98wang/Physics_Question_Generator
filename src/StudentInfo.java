@@ -13,6 +13,10 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
 
 public class StudentInfo {
 
@@ -30,6 +34,9 @@ public class StudentInfo {
 	private JButton start;
 	private JButton exit;
 	private JComboBox<String> subject, student;
+	private JTable table;
+	private String[] columnNames;
+	private Object[][] data;
 
 	public static void main(String[] args) {
 		new StudentInfo();
@@ -80,9 +87,11 @@ public class StudentInfo {
 		mainPanel.setBorder(BorderFactory.createEmptyBorder((int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 10), 0,
 				(int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 10), 0));
 		mainPanel.setVisible(true);
-		
-//		display = new JPanel();
-//		display
+
+		table = new JTable();
+		String[] columns = {"Name", "Student Number", "Password", "Incorrect", "Total"};
+		data = new Object[10][5];
+		mainPanel.add(table);
 
 		window.add(mainPanel, BorderLayout.CENTER);
 
@@ -93,9 +102,24 @@ public class StudentInfo {
 		window.setVisible(true);
 	}
 
+	public class SimpleTable implements TableModelListener {
+		public SimpleTable() {
+			table.getModel().addTableModelListener(this);
+		}
+
+		public void tableChanged(TableModelEvent e) {
+			int row = e.getFirstRow();
+			int column = e.getColumn();
+			TableModel model = (TableModel)e.getSource();
+			String columnName = model.getColumnName(column);
+			Object data = model.getValueAt(row, column);
+			
+		}
+	}
+
 	////////////////////////////////////////////////////// PRIVATE
 	////////////////////////////////////////////////////// CLASSES////////////////////////////////
-	
+
 	private void addSubjects() {
 		for (int i = 0; i < subjects.size(); i++) {
 			subject.addItem(subjects.get(i).getName() + " " + subjects.get(i).getGrade() + " " + subjects.get(i).getLevel());
