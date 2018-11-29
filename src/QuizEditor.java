@@ -136,7 +136,7 @@ public class QuizEditor extends JFrame {
 		subject.addItem("Choose a subject");
 		unit.addItem("Choose a unit");
 		for (int i = 0; i < subjects.size(); i++) {
-			subject.addItem(subjects.get(i).getName());
+			subject.addItem(subjects.get(i).getName() + " " + subjects.get(i).getGrade() + " " + subjects.get(i).getLevel());
 		}
 
 		// Subject combobox
@@ -150,7 +150,7 @@ public class QuizEditor extends JFrame {
 					SimpleLinkedList<Unit> units = s.getUnits();
 					unit.removeAll();
 					for (int i = 0; i < units.size(); i++) {
-						unit.addItem(units.get(i).getName());
+						unit.addItem(units.get(i).getNum() + ". " + units.get(i).getName());
 					}
 				}
 				list.setModel(new DefaultListModel<String>());
@@ -561,7 +561,7 @@ public class QuizEditor extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					subjects.add(new Subject(name.getText(), Integer.parseInt(grade.getText()), level.getText()));
-					subject.addItem(name.getText());
+					subject.addItem(name.getText() + " " + grade.getText() + " " + level.getText());
 					addSubjectFrame.dispose();
 					database.update(); // call database to update
 					return;
@@ -641,7 +641,7 @@ public class QuizEditor extends JFrame {
 						model.addElement(name.getText());
 					}
 					if (s != null) {
-						unit.addItem(name.getText());
+						unit.addItem(num.getText() + ". " + name.getText());
 					}
 					addUnitFrame.dispose();
 					database.update(); // call database to update

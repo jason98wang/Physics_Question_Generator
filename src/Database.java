@@ -190,7 +190,7 @@ public class Database {
 
 				JSONArray c = new JSONArray();
 				for (int k = 0; k < unit.getQuestions().size(); k++) {
-					Question question = unit.getQuestions().get(j);
+					Question question = unit.getQuestions().get(k);
 					JSONObject qobj = new JSONObject();
 					qobj.put("problem", question.getProblemStatement());
 					qobj.put("formula", question.toString());
