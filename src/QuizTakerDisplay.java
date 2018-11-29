@@ -172,7 +172,7 @@ class QuizTakerDisplay extends JFrame {
 		label = new JLabel("Question #" + Integer.toString(questionNum + 1));
 		label.setFont(font2);
 		nextButton.addActionListener(new NextButtonListener());
-		int x = 100;
+		int x = 50;
 		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		panel.add(Box.createRigidArea(new Dimension(0, x)));
 		panel.add(label);
@@ -275,7 +275,6 @@ class QuizTakerDisplay extends JFrame {
 				try {
 					panel2.add(new JLabel(new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
 					JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
-//					System.out.println(String.format("%.2f", values[j]) + " " + round(values[j],2));
 					value.setFont(font2);
 					panel2.add(value);
 				} catch (IOException ex) {
