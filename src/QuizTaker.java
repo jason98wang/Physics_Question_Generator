@@ -25,6 +25,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import org.imgscalr.Scalr;
+
 import javax.swing.JComboBox;
 
 public class QuizTaker {
@@ -71,6 +74,7 @@ public class QuizTaker {
 
 		try {
 			logo = ImageIO.read(new File("logo.png"));
+			logo = Scalr.resize(logo, (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2));
 		} catch (IOException e) {
 			logo = null;
 			System.out.println("File not found");
@@ -84,6 +88,7 @@ public class QuizTaker {
 
 		start = new JButton("START");
 		start.addActionListener(new StartButtonActionListener());
+//		start
 		start.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		exit = new JButton("EXIT");
@@ -306,8 +311,6 @@ public class QuizTaker {
 			setDoubleBuffered(true);
 
 			g.drawImage(logo, (int) ((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (logo.getWidth() / 2)), 0, null);
-//			g.setColor(lightBlue);
-//			g.fillRect(0, 0, 500, 500);
 
 			repaint();
 		}
