@@ -48,7 +48,7 @@ public class QuizTaker {
 	private BufferedImage logo;
 
 	private JFrame window;
-	private JLabel title;
+	private JPanel title;
 	private JPanel mainPanel;
 	private JPanel optionsPanel;
 	private JButton start;
@@ -76,11 +76,11 @@ public class QuizTaker {
 			System.out.println("File not found");
 		}
 
-		title = new JLabel("PRACTICE LIKE A PHYSICIST");
-		title.setFont(new Font("Serif", Font.PLAIN, 30));
+		title = new LogoPanel();
 		title.setBackground(indigo);
 		title.setForeground(lightBlue);
-		title.setAlignmentX(Component.CENTER_ALIGNMENT);
+		title.setBorder(BorderFactory.createEmptyBorder(0, 0,
+				(int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 5), 0));
 
 		start = new JButton("START");
 		start.addActionListener(new StartButtonActionListener());
@@ -115,9 +115,8 @@ public class QuizTaker {
 		mainPanel.add(optionsPanel);
 		mainPanel.add(start);
 		mainPanel.add(exit);
-		mainPanel.setBorder(
-				BorderFactory.createEmptyBorder((int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 10), 0,
-						(int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 10), 0));
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0,
+				(int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 5), 0));
 		mainPanel.setVisible(true);
 
 		window.add(mainPanel, BorderLayout.CENTER);
@@ -125,6 +124,7 @@ public class QuizTaker {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		window.setResizable(false);
+		window.setUndecorated(true);
 		window.requestFocusInWindow();
 		window.setVisible(true);
 	}
@@ -299,8 +299,17 @@ public class QuizTaker {
 		}
 
 	}
-	
-	private class MainPanel extends JPanel{
-		
+
+	private class LogoPanel extends JPanel {
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			setDoubleBuffered(true);
+
+			g.drawImage(logo, (int) ((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (logo.getWidth() / 2)), 0, null);
+//			g.setColor(lightBlue);
+//			g.fillRect(0, 0, 500, 500);
+
+			repaint();
+		}
 	}
 }
