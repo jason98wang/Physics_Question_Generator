@@ -38,6 +38,7 @@ public class QuizTaker {
 	private SimpleLinkedList<Subject> subjects;
 	private SimpleLinkedList<Unit> units;
 	private SimpleLinkedList<Question> rootQuestions;
+	private SimpleLinkedList<Question> questions;
 	private SimpleLinkedList<Double> answers;
 	private SimpleLinkedList<double[]> choices;
 	private SimpleLinkedList<String> problemStatements;
@@ -71,10 +72,12 @@ public class QuizTaker {
 
 		////////////////////////////////////////////////// GUI
 		////////////////////////////////////////////////// STUFF/////////////////////////////////////
+		
+		window.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 
 		try {
 			logo = ImageIO.read(new File("logo.png"));
-			logo = Scalr.resize(logo, (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2));
+			logo = Scalr.resize(logo, (int) (window.getHeight() / 2));
 		} catch (IOException e) {
 			logo = null;
 			System.out.println("File not found");
@@ -82,13 +85,11 @@ public class QuizTaker {
 
 		title = new LogoPanel();
 		title.setBackground(indigo);
-		title.setForeground(lightBlue);
 		title.setBorder(BorderFactory.createEmptyBorder(0, 0,
 				(int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 5), 0));
 
 		start = new JButton("START");
 		start.addActionListener(new StartButtonActionListener());
-//		start
 		start.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		exit = new JButton("EXIT");
@@ -124,10 +125,8 @@ public class QuizTaker {
 				(int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 5), 0));
 		mainPanel.setVisible(true);
 
-		window.add(mainPanel, BorderLayout.CENTER);
-
+		window.add(mainPanel, BorderLayout.CENTER);	
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		window.setResizable(false);
 		window.setUndecorated(true);
 		window.requestFocusInWindow();
@@ -161,6 +160,7 @@ public class QuizTaker {
 		problemStatements = new SimpleLinkedList<String>();
 		variableIDs = new SimpleLinkedList<String[]>();
 		variableValues = new SimpleLinkedList<double[]>();
+		questions = new SimpleLinkedList<Question>();
 
 		SimpleLinkedList<Symbol> formula;
 		SimpleLinkedList<Variable> tempVariables;
@@ -215,9 +215,11 @@ public class QuizTaker {
 			}
 			variableIDs.add(IDs);
 			variableValues.add(values);
+			
+			questions.add(new Question(problemStatement, formula));
 
 		}
-		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues);
+		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions);
 		window.dispose();
 
 	}
@@ -310,7 +312,7 @@ public class QuizTaker {
 			super.paintComponent(g);
 			setDoubleBuffered(true);
 
-			g.drawImage(logo, (int) ((Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2) - (logo.getWidth() / 2)), 0, null);
+			g.drawImage(logo, (int) ((window.getWidth() / 2) - (logo.getWidth() / 2)), 0, null);
 
 			repaint();
 		}
