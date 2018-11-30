@@ -24,7 +24,7 @@ public class test {
 
 		Question question = new Question("Hello", formula);
 
-		System.out.println(question.getAnswer());
+		System.out.println(test.contain(1));
 
 	}
 

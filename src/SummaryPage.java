@@ -9,12 +9,7 @@ class SummaryPage extends JFrame {
 
 	private static JFrame window;
 
-	JLabel title;
-
-	public static void main(String[] args) {
-		window = new SummaryPage();
-		
-	}
+	JLabel title, accuracy;
 
 	// Constructor
 	SummaryPage() {
@@ -42,6 +37,12 @@ class SummaryPage extends JFrame {
 		panel.add(title);
 
 		this.setContentPane(panel);
+		
+		accuracy = new JLabel((QuizTakerDisplay.wrongQuestions.size() / QuizTakerDisplay.questions.size()) + "");
+		accuracy.setFont(new Font("Serif", Font.BOLD, 100));
+		panel.add(accuracy);
+		
+		System.out.println(QuizTakerDisplay.wrongQuestions.size());
 
 	} // End of constructor
 

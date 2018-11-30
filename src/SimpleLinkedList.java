@@ -108,5 +108,17 @@ class SimpleLinkedList<E> {
 			tempNode = tempNode.getNext();
 		}
 	}
+	
+	public boolean contain(E item) {
+		Node<E> tempNode = head;
+		for(int i = 0; i<size(); i++) {
+			if(tempNode.getItem() == item) {
+				return true;
+			}
+			tempNode = tempNode.getNext();
+		}
+		return false;
+		
+	}
 
 }
