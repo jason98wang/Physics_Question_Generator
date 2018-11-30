@@ -1,14 +1,22 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -35,7 +43,9 @@ public class QuizTaker {
 	private Subject chosenSubject;
 	private Unit chosenUnit;
 
+	private Color indigo, lightBlue;
 	private Random rand;
+	private BufferedImage logo;
 
 	private JFrame window;
 	private JLabel title;
@@ -52,28 +62,24 @@ public class QuizTaker {
 		database = new Database();
 
 		subjects = database.getSubjects();
-//		subjects = new SimpleLinkedList<Subject>();
-//		subjects.add(new Subject("Physics", 11, "U"));
-//		subjects.add(new Subject("Physics", 12, "U"));
-//		subjects.add(new Subject("Physics", 11, "AP"));
-//
-//		subjects.get(0).addUnit(new Unit("TLAP", 1));
-//		subjects.get(0).addUnit(new Unit("Kinematics", 1));
-//		subjects.get(0).addUnit(new Unit("Dynamics", 1));
-//
-//		subjects.get(1).addUnit(new Unit("No TLAP", 1));
-//		subjects.get(1).addUnit(new Unit("CMPM", 1));
-//		subjects.get(1).addUnit(new Unit("Momentum", 1));
-//
-//		subjects.get(2).addUnit(new Unit("TLAP but harder", 1));
-//		subjects.get(2).addUnit(new Unit("Kinematics but harder", 1));
-//		subjects.get(2).addUnit(new Unit("Dynamics but harder", 1));
+
+		indigo = new Color(56, 53, 74);
+		lightBlue = new Color(162, 236, 250);
 
 		////////////////////////////////////////////////// GUI
 		////////////////////////////////////////////////// STUFF/////////////////////////////////////
 
+		try {
+			logo = ImageIO.read(new File("logo.png"));
+		} catch (IOException e) {
+			logo = null;
+			System.out.println("File not found");
+		}
+
 		title = new JLabel("PRACTICE LIKE A PHYSICIST");
 		title.setFont(new Font("Serif", Font.PLAIN, 30));
+		title.setBackground(indigo);
+		title.setForeground(lightBlue);
 		title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		start = new JButton("START");
@@ -86,19 +92,17 @@ public class QuizTaker {
 
 		unit = new JComboBox<String>();
 		unit.addActionListener(new UnitActionListener());
-//		unit.setAlignmentY(Component.CENTER_ALIGNMENT);
 
 		subject = new JComboBox<String>();
 		subject.addActionListener(new SubjectActionListener());
 		addSubjects();
-//		subject.setAlignmentY(Component.CENTER_ALIGNMENT);
 
 		numQuestionsField = new JTextField("# of Questions");
 		numQuestionsField.addFocusListener(new NumQuestionsFocusListener());
-//		numQuestionsField.setAlignmentY(Component.CENTER_ALIGNMENT);
 
 		optionsPanel = new JPanel();
 		optionsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 5));
+		optionsPanel.setBackground(indigo);
 		optionsPanel.add(subject);
 		optionsPanel.add(unit);
 		optionsPanel.add(numQuestionsField);
@@ -106,6 +110,7 @@ public class QuizTaker {
 
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+		mainPanel.setBackground(indigo);
 		mainPanel.add(title);
 		mainPanel.add(optionsPanel);
 		mainPanel.add(start);
@@ -151,7 +156,7 @@ public class QuizTaker {
 		problemStatements = new SimpleLinkedList<String>();
 		variableIDs = new SimpleLinkedList<String[]>();
 		variableValues = new SimpleLinkedList<double[]>();
-		
+
 		SimpleLinkedList<Symbol> formula;
 		SimpleLinkedList<Variable> tempVariables;
 		Question tempQ;
@@ -192,24 +197,24 @@ public class QuizTaker {
 			problemStatements.add(problemStatement);
 
 			formula = tempQ.getFormula();
-			for(int j = 0; j < formula.size(); j++) {
-				if(formula.get(j) instanceof Variable) {
-					tempVariables.add((Variable)formula.get(j));
+			for (int j = 0; j < formula.size(); j++) {
+				if (formula.get(j) instanceof Variable) {
+					tempVariables.add((Variable) formula.get(j));
 				}
 			}
 			IDs = new String[tempVariables.size()];
 			values = new double[tempVariables.size()];
-			for(int k = 0; k < tempVariables.size(); k++) {
+			for (int k = 0; k < tempVariables.size(); k++) {
 				IDs[k] = tempVariables.get(k).getId();
 				values[k] = tempVariables.get(k).getValue();
 			}
 			variableIDs.add(IDs);
 			variableValues.add(values);
-			
+
 		}
-		new QuizTakerDisplay(problemStatements,choices,answers,variableIDs,variableValues); 
+		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues);
 		window.dispose();
-		
+
 	}
 
 	////////////////////////////////////////////////////// PRIVATE
@@ -293,5 +298,9 @@ public class QuizTaker {
 			window.dispose();
 		}
 
+	}
+	
+	private class MainPanel extends JPanel{
+		
 	}
 }
