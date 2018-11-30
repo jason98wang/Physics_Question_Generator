@@ -48,8 +48,12 @@ class QuizTakerDisplay extends JFrame {
 	SimpleLinkedList<double[]> choices;
 	SimpleLinkedList<String[]> variableIDs;
 	SimpleLinkedList<double[]> variableValues;
+	boolean questionRight = true; 
+	static int questionWrong = 0;
 
-	static SimpleLinkedList<String> wrongQuestions = new SimpleLinkedList<String>();
+	static SimpleLinkedList<Question> wrongQuestions = new SimpleLinkedList<Question>();
+	
+	SimpleLinkedList<Question> rootQuestions; 
 	URL url;
 
 //	ImageIcon acceleration, appliedForce, chemicalEnergy, delta, displacement, e, elasticForce, gravationalEnergy,
@@ -62,7 +66,7 @@ class QuizTakerDisplay extends JFrame {
 	// Constructor
 	QuizTakerDisplay(SimpleLinkedList<String> question, SimpleLinkedList<double[]> choices,
 			SimpleLinkedList<Double> answers, SimpleLinkedList<String[]> variableIDs,
-			SimpleLinkedList<double[]> variableValues) {
+			SimpleLinkedList<double[]> variableValues, SimpleLinkedList<Question> rootQuestions) {
 
 		super("Practice Like A Physicist");
 
@@ -78,6 +82,7 @@ class QuizTakerDisplay extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setResizable(false);
+		
 
 		// Set up the game panel
 		JPanel panel = new JPanel() {
@@ -102,6 +107,8 @@ class QuizTakerDisplay extends JFrame {
 			}
 		};
 		panel.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+//		panel.setBackground(new Color(56, 53, 74));
+		
 
 		// Focus the frame
 		this.requestFocusInWindow();
@@ -114,6 +121,7 @@ class QuizTakerDisplay extends JFrame {
 		this.answers = answers;
 		this.variableIDs = variableIDs;
 		this.variableValues = variableValues;
+		this.rootQuestions = rootQuestions;
 
 		// if (questions.size() == 0) {
 		// dispose();
@@ -196,6 +204,10 @@ class QuizTakerDisplay extends JFrame {
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		this.setContentPane(panel);
 
+//		panel1.setBackground(new Color(56, 53, 74));
+//		panel2.setBackground(new Color(56, 53, 74));
+//		flowPanel.setBackground(new Color(56, 53, 74));
+		
 	} // End of constructor
 
 	private class Answer1Listener implements ActionListener {
@@ -206,10 +218,15 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[0] == answers.get(questionNum)) {
 				answer1.setBackground(Color.GREEN);
 				correct = true;
+				if(questionRight != true) {
+					questionWrong++;
+				}
 			} else {
 				answer1.setBackground(Color.RED);
-				if (!wrongQuestions.contain(questions.get(questionNum))) {
-					wrongQuestions.add(questions.get(questionNum));
+				questionRight = false;
+				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {					
+					wrongQuestions.add(rootQuestions.get(questionNum));
+					
 					System.out.println("added");
 				}
 			}
@@ -225,10 +242,14 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[1] == answers.get(questionNum)) {
 				correct = true;
 				answer2.setBackground(Color.GREEN);
+				if(questionRight != true) {
+					questionWrong++;
+				}
 			} else {
 				answer2.setBackground(Color.RED);
-				if (!wrongQuestions.contain(questions.get(questionNum))) {
-					wrongQuestions.add(questions.get(questionNum));
+				questionRight = false;
+				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
+					wrongQuestions.add(rootQuestions.get(questionNum));
 					System.out.println("added");
 				}
 			}
@@ -244,10 +265,14 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[2] == answers.get(questionNum)) {
 				answer3.setBackground(Color.GREEN);
 				correct = true;
+				if(questionRight != true) {
+					questionWrong++;
+				}
 			} else {
 				answer3.setBackground(Color.RED);
-				if (!wrongQuestions.contain(questions.get(questionNum))) {
-					wrongQuestions.add(questions.get(questionNum));
+				questionRight = false;
+				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
+					wrongQuestions.add(rootQuestions.get(questionNum));
 					System.out.println("added");
 				}
 
@@ -264,10 +289,14 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[3] == answers.get(questionNum)) {
 				answer4.setBackground(Color.GREEN);
 				correct = true;
+				if(questionRight != true) {
+					questionWrong++;
+				}
 			} else {
 				answer4.setBackground(Color.RED);
-				if (!wrongQuestions.contain(questions.get(questionNum))) {
-					wrongQuestions.add(questions.get(questionNum));
+				questionRight = false;
+				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
+					wrongQuestions.add(rootQuestions.get(questionNum));
 					System.out.println("added");
 				}
 			}
@@ -281,6 +310,7 @@ class QuizTakerDisplay extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			panel2.removeAll();
 			questionNum++;
+			questionRight = true; 
 			if (questionNum == questions.size()) {
 
 				new SummaryPage();
