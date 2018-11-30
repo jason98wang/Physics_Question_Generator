@@ -7,5 +7,6 @@
 	<classpathentry kind="lib" path="/Users/joshcai/eclipse-workspace/Physics_Question_Generator/jar_files/json-simple-1.1.jar"/>
 	<classpathentry kind="lib" path="/Users/joshcai/eclipse-workspace/Physics_Question_Generator/jar_files/org.eclipse.egit.github.core-2.1.5.jar"/>
 	<classpathentry kind="lib" path="/Users/joshcai/eclipse-workspace/Physics_Question_Generator/jar_files/Pastebin-0.2.1.jar"/>
+	<classpathentry kind="lib" path="/Users/joshcai/eclipse-workspace/Physics_Question_Generator/jar_files/imgscalr-lib-4.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
