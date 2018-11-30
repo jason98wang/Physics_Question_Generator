@@ -3,6 +3,7 @@
 import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,19 +18,19 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 //Keyboard imports
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 class QuizTakerDisplay extends JFrame {
-	
+
 	// Class variables
 	private static JFrame window;
 	Image nextPic;
 	boolean questionAnswered;
 	boolean correct = false, correct1 = false;
-	
+
 	JButton answer1, answer2, answer3, answer4;
 	JButton nextButton;
 
@@ -42,11 +43,14 @@ class QuizTakerDisplay extends JFrame {
 	int questionNum = 0;
 	String[] ids;
 	double[] values;
-	SimpleLinkedList<String> questions;
+	static SimpleLinkedList<String> questions;
 	SimpleLinkedList<Double> answers;
 	SimpleLinkedList<double[]> choices;
 	SimpleLinkedList<String[]> variableIDs;
 	SimpleLinkedList<double[]> variableValues;
+
+	static SimpleLinkedList<String> wrongQuestions = new SimpleLinkedList<String>();
+	URL url;
 
 //	ImageIcon acceleration, appliedForce, chemicalEnergy, delta, displacement, e, elasticForce, gravationalEnergy,
 //			gravationalForce, impulse, kineticEnergy, KineticFrictionalForce, lambda, magneticForce, momentum,
@@ -59,7 +63,17 @@ class QuizTakerDisplay extends JFrame {
 	QuizTakerDisplay(SimpleLinkedList<String> question, SimpleLinkedList<double[]> choices,
 			SimpleLinkedList<Double> answers, SimpleLinkedList<String[]> variableIDs,
 			SimpleLinkedList<double[]> variableValues) {
+
 		super("Practice Like A Physicist");
+
+	
+		
+//		Icon icon = null;
+//		try {
+//			icon = new ImageIcon(ImageIO.read(new File("clapping.gif")));
+//		} catch (IOException e1) {}
+//		JLabel clapping = new JLabel(icon);
+
 		// Set the frame to full screen
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
@@ -69,11 +83,13 @@ class QuizTakerDisplay extends JFrame {
 		JPanel panel = new JPanel() {
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
+				
 				if (correct) {
 					correct = false;
 					correct1 = true;
 				} else if (correct1) {
 					correct1 = false;
+					//this.add(clapping);
 					try {
 						Thread.sleep(500);
 					} catch (Exception e) {
@@ -82,16 +98,6 @@ class QuizTakerDisplay extends JFrame {
 					nextButton.getActionListeners()[0].actionPerformed(e);
 				}
 
-				//drawing the variables 
-//				System.out.println(variableIDs.get(questionNum).length);
-//				for (int i = 0; i < variableIDs.get(questionNum).length; i++) {
-//					try {
-//						String picture = variableIDs.get(questionNum)[i];
-//						picture = "acceleration";
-//						BufferedImage image = ImageIO.read(new File( "Symbols/Variables/acceleration.png"));
-//						g.drawImage (image,0,0,this);
-//					} catch (IOException e) {}				
-//				}
 				repaint();
 			}
 		};
@@ -109,11 +115,11 @@ class QuizTakerDisplay extends JFrame {
 		this.variableIDs = variableIDs;
 		this.variableValues = variableValues;
 
-		//		if (questions.size() == 0) {
-		//			dispose();
-		//		}
+		// if (questions.size() == 0) {
+		// dispose();
+		// }
 
-		//creating buttons for each choice
+		// creating buttons for each choice
 
 		answer1 = new JButton(Double.toString(round(choices.get(questionNum)[0], 2)));
 		answer2 = new JButton(Double.toString(round(choices.get(questionNum)[1], 2)));
@@ -124,13 +130,8 @@ class QuizTakerDisplay extends JFrame {
 		answer2.setFont(font3);
 		answer3.setFont(font3);
 		answer4.setFont(font3);
-		//		panel.setLayout(null);
-		//		answer1.setBounds(200, 600 , 300 , 100);
-		//		answer2.setBounds(600 , 600 , 300 , 100 );
-		//		answer3.setBounds(1000 , 600 , 300 , 100);
-		//		answer4.setBounds(1400 , 600 , 300 , 100);
 
-		//add listeners for each button
+		// add listeners for each button
 		answer1.addActionListener(new Answer1Listener());
 		answer2.addActionListener(new Answer2Listener());
 		answer3.addActionListener(new Answer3Listener());
@@ -207,6 +208,10 @@ class QuizTakerDisplay extends JFrame {
 				correct = true;
 			} else {
 				answer1.setBackground(Color.RED);
+				if (!wrongQuestions.contain(questions.get(questionNum))) {
+					wrongQuestions.add(questions.get(questionNum));
+					System.out.println("added");
+				}
 			}
 
 		}
@@ -222,6 +227,10 @@ class QuizTakerDisplay extends JFrame {
 				answer2.setBackground(Color.GREEN);
 			} else {
 				answer2.setBackground(Color.RED);
+				if (!wrongQuestions.contain(questions.get(questionNum))) {
+					wrongQuestions.add(questions.get(questionNum));
+					System.out.println("added");
+				}
 			}
 
 		}
@@ -237,6 +246,11 @@ class QuizTakerDisplay extends JFrame {
 				correct = true;
 			} else {
 				answer3.setBackground(Color.RED);
+				if (!wrongQuestions.contain(questions.get(questionNum))) {
+					wrongQuestions.add(questions.get(questionNum));
+					System.out.println("added");
+				}
+
 			}
 
 		}
@@ -252,6 +266,10 @@ class QuizTakerDisplay extends JFrame {
 				correct = true;
 			} else {
 				answer4.setBackground(Color.RED);
+				if (!wrongQuestions.contain(questions.get(questionNum))) {
+					wrongQuestions.add(questions.get(questionNum));
+					System.out.println("added");
+				}
 			}
 
 		}
@@ -264,16 +282,18 @@ class QuizTakerDisplay extends JFrame {
 			panel2.removeAll();
 			questionNum++;
 			if (questionNum == questions.size()) {
-				dispose();
+
 				new SummaryPage();
+				dispose();
 				return;
 			}
 			ids = variableIDs.get(questionNum);
 			values = variableValues.get(questionNum);
-			
+
 			for (int j = 0; j < ids.length; j++) {
 				try {
-					panel2.add(new JLabel(new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
+					panel2.add(
+							new JLabel(new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
 					JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
 					value.setFont(font2);
 					panel2.add(value);
@@ -281,12 +301,12 @@ class QuizTakerDisplay extends JFrame {
 					ex.printStackTrace();
 				}
 			}
-			
+
 			answer2.setBackground(null);
 			answer1.setBackground(null);
 			answer3.setBackground(null);
 			answer4.setBackground(null);
-			
+
 			questionLabel.setText(questions.get(questionNum));
 			label.setText("Question #" + Integer.toString(questionNum + 1));
 			answer1.setText(Double.toString(round(choices.get(questionNum)[0], 2)));
