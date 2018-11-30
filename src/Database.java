@@ -44,7 +44,7 @@ public class Database {
 
 	Database() {
 		// fine json file
-		jsonFile = new File("database.json");
+		jsonFile = new File("database/database.json");
 
 		// init subjects and symbols
 		subjects = new SimpleLinkedList<Subject>();
