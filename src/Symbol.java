@@ -14,6 +14,7 @@ public class Symbol {
 
 	Symbol(String id) {
 		this.id = id;
+		this.image = null;
 		//		try {
 		//			double v = Integer.parseInt(id);
 		//			
