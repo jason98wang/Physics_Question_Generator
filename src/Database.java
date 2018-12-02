@@ -85,15 +85,16 @@ public class Database {
 
 	private static void interpretData() {
 		// take in array of subjects
-		JSONArray array = null;
+		JSONObject all = null;
 		try {
-			array = (JSONArray) (new JSONParser()).parse(new FileReader(jsonFile));
+			all = (JSONObject) (new JSONParser()).parse(new FileReader(jsonFile));
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
 		}
 
+		JSONArray array1 = (JSONArray) all.get("subjects");
 		// for every subject
-		for (Object a : array) {
+		for (Object a : array1) {
 			JSONObject subject = (JSONObject) a;
 
 			// get its name, grade and level
@@ -153,6 +154,27 @@ public class Database {
 				s.getStudents().add(st);
 			}
 		}
+		
+		JSONArray array2 = (JSONArray) all.get("operations");
+		for (Object a : array2) {
+			JSONObject symbol = (JSONObject) a;
+
+			// get its id
+			String id = (String) symbol.get("id");
+			Symbol s = new Operation(id);
+			
+			symbols.add(s);
+		}
+		
+		JSONArray array3 = (JSONArray) all.get("variables");
+		for (Object a : array3) {
+			JSONObject symbol = (JSONObject) a;
+
+			// get its id
+			String id = (String) symbol.get("id");
+			Symbol s = new Variable(id);
+			symbols.add(s);
+		}
 	}
 
 	private static SimpleLinkedList<Symbol> toSymbol(String stringFormula) {
@@ -173,7 +195,9 @@ public class Database {
 	}
 
 	public void update() {
-		JSONArray a = new JSONArray();
+		JSONObject all = new JSONObject();
+		
+		JSONArray array1 = new JSONArray();
 		for (int i = 0; i < subjects.size(); i++) {
 			Subject subject = subjects.get(i);
 			JSONObject sobj = new JSONObject();
@@ -214,13 +238,31 @@ public class Database {
 
 			sobj.put("units", b);
 			sobj.put("students", d);
-			a.add(sobj);
+			array1.add(sobj);
+		}
+		
+		JSONArray array2 = new JSONArray();
+		JSONArray array3 = new JSONArray();
+		
+		for (int i = 0; i < symbols.size(); i++) {
+			Symbol s = symbols.get(i);
+			JSONObject sobj = new JSONObject();
+			sobj.put("id", s.getId());
+			if (s instanceof Operation) {
+				array2.add(sobj);
+			} else {
+				array3.add(sobj);
+			}
 		}
 
+		all.put("subjects", array1);
+		all.put("operations", array2);
+		all.put("variables", array3);
+		
 		try {
 			// write to file
 			FileWriter file = new FileWriter(jsonFile);
-			file.write(a.toJSONString());
+			file.write(all.toJSONString());
 			file.close();
 
 			// read from file line by line
