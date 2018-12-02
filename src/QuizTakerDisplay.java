@@ -9,6 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
 import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -35,7 +37,8 @@ class QuizTakerDisplay extends JFrame {
 	JButton nextButton;
 
 	JLabel label;
-	JLabel questionLabel;
+	JTextArea questionLabel;
+	
 	JPanel panel2;
 	Font font1 = new Font("Serif", Font.BOLD, 100);
 	Font font2 = new Font("Arial", Font.ITALIC, 50);
@@ -171,7 +174,7 @@ class QuizTakerDisplay extends JFrame {
 			nextButton = new JButton(new ImageIcon(ImageIO.read(new File("nextButton.png"))));
 		} catch (Exception ex) {
 		}
-		questionLabel = new JLabel(questions.get(questionNum));
+		questionLabel = new JTextArea(questions.get(questionNum));
 
 		questionLabel.setFont(font1);
 		label = new JLabel("Question #" + Integer.toString(questionNum + 1));
@@ -203,6 +206,10 @@ class QuizTakerDisplay extends JFrame {
 		//		panel1.setBackground(new Color(56, 53, 74));
 		//		panel2.setBackground(new Color(56, 53, 74));
 		//		flowPanel.setBackground(new Color(56, 53, 74));
+		
+		questionLabel.setLineWrap(true);
+		questionLabel.setEditable(false);
+
 
 	} // End of constructor
 
