@@ -9,9 +9,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import java.awt.Toolkit;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -176,7 +178,23 @@ class QuizTakerDisplay extends JFrame {
 		}
 		questionLabel = new JTextArea(questions.get(questionNum));
 
-		questionLabel.setFont(font1);
+
+		double lengthOnRow = Math.ceil(questions.get(questionNum).length() / 3.00);
+
+		int size;
+		
+		if(lengthOnRow < 47) {
+			size = 100;
+		}else {
+			size = (int)(100 - (lengthOnRow - 46));
+		}
+
+		questionLabel.setRows(2);
+		
+		
+		
+		questionLabel.setFont(new Font("Serif", Font.BOLD, size));
+		
 		label = new JLabel("Question #" + Integer.toString(questionNum + 1));
 		label.setFont(font2);
 		nextButton.addActionListener(new NextButtonListener());
@@ -208,7 +226,9 @@ class QuizTakerDisplay extends JFrame {
 		//		flowPanel.setBackground(new Color(56, 53, 74));
 		
 		questionLabel.setLineWrap(true);
-		questionLabel.setEditable(false);
+		//questionLabel.setEditable(false);
+		//JScrollPane scrollPane = new JScrollPane(questionLabel);
+		
 
 
 	} // End of constructor
