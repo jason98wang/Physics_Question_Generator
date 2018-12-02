@@ -3,7 +3,6 @@
 import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,9 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-
 import java.awt.Toolkit;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -27,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+
 class QuizTakerDisplay extends JFrame {
 
 	// Class variables
@@ -39,7 +37,7 @@ class QuizTakerDisplay extends JFrame {
 	JButton nextButton;
 
 	JLabel label;
-	JTextArea questionLabel;
+	JLabel questionLabel;
 	
 	JPanel panel2;
 	Font font1 = new Font("Serif", Font.BOLD, 100);
@@ -162,10 +160,14 @@ class QuizTakerDisplay extends JFrame {
 		values = variableValues.get(0);
 		for (int j = 0; j < ids.length; j++) {
 			try {
-				panel2.add(new JLabel(new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
-				JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
-				value.setFont(font2);
-				panel2.add(value);
+				try {
+					Double.parseDouble(ids[j]);
+				} catch (NumberFormatException e) {
+					panel2.add(new JLabel(new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
+					JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
+					value.setFont(font2);
+					panel2.add(value);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -176,9 +178,10 @@ class QuizTakerDisplay extends JFrame {
 			nextButton = new JButton(new ImageIcon(ImageIO.read(new File("nextButton.png"))));
 		} catch (Exception ex) {
 		}
-		questionLabel = new JTextArea(questions.get(questionNum));
-
-
+		questionLabel = new JLabel("<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
+		questionLabel.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
+		questionLabel.setHorizontalAlignment(JLabel.CENTER);
+		
 		double lengthOnRow = Math.ceil(questions.get(questionNum).length() / 3.00);
 
 		int size;
@@ -189,7 +192,7 @@ class QuizTakerDisplay extends JFrame {
 			size = (int)(100 - (lengthOnRow - 46));
 		}
 
-		questionLabel.setRows(2);
+//		questionLabel.setRows(2);
 		
 		
 		
@@ -204,6 +207,8 @@ class QuizTakerDisplay extends JFrame {
 		panel.add(label);
 		panel.add(Box.createRigidArea(new Dimension(0, x)));
 		questionLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		questionLabel.setPreferredSize(new Dimension((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(), 100 + (int)(Math.ceil(questionLabel.getPreferredSize().getHeight() * (questionLabel.getPreferredSize().getWidth() / Toolkit.getDefaultToolkit().getScreenSize().getWidth())))));
+		questionLabel.setMinimumSize(questionLabel.getPreferredSize());
 		panel.add(questionLabel);
 		panel.add(Box.createRigidArea(new Dimension(0, x)));
 		panel2.setAlignmentX(JPanel.CENTER_ALIGNMENT);
@@ -214,20 +219,17 @@ class QuizTakerDisplay extends JFrame {
 		panel.add(Box.createRigidArea(new Dimension(0, x)));
 		JPanel flowPanel = new JPanel();
 		flowPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-
+		
 		nextButton.setAlignmentX(JButton.LEFT_ALIGNMENT);
 		flowPanel.add(nextButton);
 		panel.add(flowPanel);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		this.setContentPane(panel);
-
-		//		panel1.setBackground(new Color(56, 53, 74));
-		//		panel2.setBackground(new Color(56, 53, 74));
-		//		flowPanel.setBackground(new Color(56, 53, 74));
 		
-		questionLabel.setLineWrap(true);
-		//questionLabel.setEditable(false);
-		//JScrollPane scrollPane = new JScrollPane(questionLabel);
+		JScrollPane scroll = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroll.getVerticalScrollBar().setUnitIncrement(16);
+		this.setContentPane(scroll);
+		java.awt.Rectangle r = flowPanel.getBounds();
+		panel.setPreferredSize(new Dimension((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(),r.y + r.height + 50));
 		
 
 
@@ -360,7 +362,7 @@ class QuizTakerDisplay extends JFrame {
 			answer3.setBackground(null);
 			answer4.setBackground(null);
 
-			questionLabel.setText(questions.get(questionNum));
+			questionLabel.setText("<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
 			label.setText("Question #" + Integer.toString(questionNum + 1));
 			answer1.setText(Double.toString(round(choices.get(questionNum)[0], 2)));
 			answer2.setText(Double.toString(round(choices.get(questionNum)[1], 2)));
