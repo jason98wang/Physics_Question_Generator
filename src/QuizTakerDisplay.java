@@ -122,9 +122,6 @@ class QuizTakerDisplay extends JFrame {
 		this.variableValues = variableValues;
 		this.rootQuestions = rootQuestions;
 
-		// if (questions.size() == 0) {
-		// dispose();
-		// }
 
 		// creating buttons for each choice
 
