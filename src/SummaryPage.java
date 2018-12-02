@@ -2,6 +2,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,11 +17,9 @@ class SummaryPage extends JFrame {
 	double accuracy;
 	JButton exit, redo;
 	SimpleLinkedList<Question> wrongQuestions;
-	SimpleLinkedList<Double> newAnswers = new SimpleLinkedList<Double>();
-	SimpleLinkedList<double[]> choices;
 
 	// Constructor
-	SummaryPage() {
+	SummaryPage(SimpleLinkedList<Question> wrongQuestions) {
 		super("Summary Page");
 		// Set the frame to full screen
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,37 +52,30 @@ class SummaryPage extends JFrame {
 
 		exit = new JButton("Exit");
 		redo = new JButton("Redo Wrong Questions");
+		
+		redo.addActionListener( new RedoListener());
 
-		System.out.println(QuizTakerDisplay.questionWrong);
+		panel.add(redo);
+
 		this.wrongQuestions = QuizTakerDisplay.wrongQuestions;
+
 
 	} // End of constructor
 
-	private class exitListener implements ActionListener{
+	private class exitListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			window.dispose();
 		}
 	}
-	
-	private class redoListener implements ActionListener{
+
+	private class RedoListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
-			//get answers
-			for(int i = 0; i<wrongQuestions.size(); i++) {
-				newAnswers.add(wrongQuestions.get(i).getAnswer());
-			}
-			
-			
-			
-			
-			
-			
-			
-			
-			//new QuizTakerDisplay();
+			QuizTaker.startQuiz(wrongQuestions);
+			dispose();
 		}
+	}
 
 }

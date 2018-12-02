@@ -48,10 +48,10 @@ public class QuizTaker {
 	private Unit chosenUnit;
 
 	private Color indigo, lightBlue;
-	private Random rand;
+	private static Random rand;
 	private BufferedImage logo;
 
-	private JFrame window;
+	private static JFrame window;
 	private JPanel title;
 	private JPanel mainPanel;
 	private JPanel optionsPanel;
@@ -72,7 +72,7 @@ public class QuizTaker {
 
 		////////////////////////////////////////////////// GUI
 		////////////////////////////////////////////////// STUFF/////////////////////////////////////
-		
+
 		window.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 
 		try {
@@ -125,7 +125,7 @@ public class QuizTaker {
 				(int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 5), 0));
 		mainPanel.setVisible(true);
 
-		window.add(mainPanel, BorderLayout.CENTER);	
+		window.add(mainPanel, BorderLayout.CENTER);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setResizable(false);
 		window.setUndecorated(true);
@@ -215,7 +215,76 @@ public class QuizTaker {
 			}
 			variableIDs.add(IDs);
 			variableValues.add(values);
-			
+
+			questions.add(new Question(problemStatement, formula));
+
+		}
+		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions);
+		window.dispose();
+
+	}
+
+	static void startQuiz(SimpleLinkedList<Question> rootQuestions) {
+		SimpleLinkedList<Double> answers = new SimpleLinkedList<Double>();
+		SimpleLinkedList<double[]> choices = new SimpleLinkedList<double[]>();
+		SimpleLinkedList<String> problemStatements = new SimpleLinkedList<String>();
+		SimpleLinkedList<String[]> variableIDs = new SimpleLinkedList<String[]>();
+		SimpleLinkedList<double[]> variableValues = new SimpleLinkedList<double[]>();
+		SimpleLinkedList<Question> questions = new SimpleLinkedList<Question>();
+
+		SimpleLinkedList<Symbol> formula;
+		SimpleLinkedList<Variable> tempVariables;
+		Question tempQ;
+		int tempRand;
+
+		double[] wrongAns;
+		double ans;
+		String[] IDs;
+		double[] values;
+		String problemStatement;
+
+		rand = new Random();
+
+		for (int i = 0; i < rootQuestions.size(); i++) {
+			tempQ = rootQuestions.get(i);
+			tempVariables = new SimpleLinkedList<Variable>();
+
+			ans = tempQ.getAnswer();
+			answers.add(ans);
+
+			wrongAns = new double[3];
+			wrongAns[0] = tempQ.getFalseAnswers()[0];
+			wrongAns[1] = tempQ.getFalseAnswers()[1];
+			wrongAns[2] = tempQ.getFalseAnswers()[2];
+			tempRand = rand.nextInt(4);
+			if (tempRand == 3) {
+				choices.add(new double[] { ans, wrongAns[0], wrongAns[1], wrongAns[2] });
+			} else if (tempRand == 2) {
+				choices.add(new double[] { wrongAns[0], ans, wrongAns[1], wrongAns[2] });
+			} else if (tempRand == 1) {
+				choices.add(new double[] { wrongAns[0], wrongAns[1], ans, wrongAns[2] });
+			} else {
+				choices.add(new double[] { wrongAns[0], wrongAns[1], wrongAns[2], ans });
+			}
+
+			problemStatement = tempQ.getProblemStatement();
+			problemStatements.add(problemStatement);
+
+			formula = tempQ.getFormula();
+			for (int j = 0; j < formula.size(); j++) {
+				if (formula.get(j) instanceof Variable) {
+					tempVariables.add((Variable) formula.get(j));
+				}
+			}
+			IDs = new String[tempVariables.size()];
+			values = new double[tempVariables.size()];
+			for (int k = 0; k < tempVariables.size(); k++) {
+				IDs[k] = tempVariables.get(k).getId();
+				values[k] = tempVariables.get(k).getValue();
+			}
+			variableIDs.add(IDs);
+			variableValues.add(values);
+
 			questions.add(new Question(problemStatement, formula));
 
 		}

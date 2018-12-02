@@ -48,18 +48,18 @@ class QuizTakerDisplay extends JFrame {
 	SimpleLinkedList<double[]> choices;
 	SimpleLinkedList<String[]> variableIDs;
 	SimpleLinkedList<double[]> variableValues;
-	boolean questionRight = true; 
+	boolean questionRight = true;
 	static int questionWrong = 0;
 
 	static SimpleLinkedList<Question> wrongQuestions = new SimpleLinkedList<Question>();
-	
-	SimpleLinkedList<Question> rootQuestions; 
+
+	SimpleLinkedList<Question> rootQuestions;
 	URL url;
 
-//	ImageIcon acceleration, appliedForce, chemicalEnergy, delta, displacement, e, elasticForce, gravationalEnergy,
-//			gravationalForce, impulse, kineticEnergy, KineticFrictionalForce, lambda, magneticForce, momentum,
-//			normalForce, nuclearEnergy, soundEnergy, springForce, staticFrictionalForce, tensionalForce, thermalEnergy,
-//			theta, time, velocity, work, xForce, yForce;
+	//	ImageIcon acceleration, appliedForce, chemicalEnergy, delta, displacement, e, elasticForce, gravationalEnergy,
+	//			gravationalForce, impulse, kineticEnergy, KineticFrictionalForce, lambda, magneticForce, momentum,
+	//			normalForce, nuclearEnergy, soundEnergy, springForce, staticFrictionalForce, tensionalForce, thermalEnergy,
+	//			theta, time, velocity, work, xForce, yForce;
 
 	double[][] wrongAnswer;
 
@@ -70,25 +70,22 @@ class QuizTakerDisplay extends JFrame {
 
 		super("Practice Like A Physicist");
 
-	
-		
-//		Icon icon = null;
-//		try {
-//			icon = new ImageIcon(ImageIO.read(new File("clapping.gif")));
-//		} catch (IOException e1) {}
-//		JLabel clapping = new JLabel(icon);
+		//		Icon icon = null;
+		//		try {
+		//			icon = new ImageIcon(ImageIO.read(new File("clapping.gif")));
+		//		} catch (IOException e1) {}
+		//		JLabel clapping = new JLabel(icon);
 
 		// Set the frame to full screen
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setResizable(false);
-		
 
 		// Set up the game panel
 		JPanel panel = new JPanel() {
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
-				
+
 				if (correct) {
 					correct = false;
 					correct1 = true;
@@ -107,8 +104,7 @@ class QuizTakerDisplay extends JFrame {
 			}
 		};
 		panel.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-//		panel.setBackground(new Color(56, 53, 74));
-		
+		//		panel.setBackground(new Color(56, 53, 74));
 
 		// Focus the frame
 		this.requestFocusInWindow();
@@ -204,10 +200,10 @@ class QuizTakerDisplay extends JFrame {
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		this.setContentPane(panel);
 
-//		panel1.setBackground(new Color(56, 53, 74));
-//		panel2.setBackground(new Color(56, 53, 74));
-//		flowPanel.setBackground(new Color(56, 53, 74));
-		
+		//		panel1.setBackground(new Color(56, 53, 74));
+		//		panel2.setBackground(new Color(56, 53, 74));
+		//		flowPanel.setBackground(new Color(56, 53, 74));
+
 	} // End of constructor
 
 	private class Answer1Listener implements ActionListener {
@@ -218,15 +214,15 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[0] == answers.get(questionNum)) {
 				answer1.setBackground(Color.GREEN);
 				correct = true;
-				if(questionRight != true) {
+				if (questionRight != true) {
 					questionWrong++;
 				}
 			} else {
 				answer1.setBackground(Color.RED);
 				questionRight = false;
-				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {					
+				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
-					
+
 					System.out.println("added");
 				}
 			}
@@ -242,7 +238,7 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[1] == answers.get(questionNum)) {
 				correct = true;
 				answer2.setBackground(Color.GREEN);
-				if(questionRight != true) {
+				if (questionRight != true) {
 					questionWrong++;
 				}
 			} else {
@@ -265,7 +261,7 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[2] == answers.get(questionNum)) {
 				answer3.setBackground(Color.GREEN);
 				correct = true;
-				if(questionRight != true) {
+				if (questionRight != true) {
 					questionWrong++;
 				}
 			} else {
@@ -289,7 +285,7 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[3] == answers.get(questionNum)) {
 				answer4.setBackground(Color.GREEN);
 				correct = true;
-				if(questionRight != true) {
+				if (questionRight != true) {
 					questionWrong++;
 				}
 			} else {
@@ -310,10 +306,10 @@ class QuizTakerDisplay extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			panel2.removeAll();
 			questionNum++;
-			questionRight = true; 
+			questionRight = true;
 			if (questionNum == questions.size()) {
 
-				new SummaryPage();
+				new SummaryPage(wrongQuestions);
 				dispose();
 				return;
 			}
