@@ -45,9 +45,7 @@ class SummaryPage extends JFrame {
 
 		this.setContentPane(panel);
 
-		accuracy = ((double)QuizTakerDisplay.questionWrong / (double)QuizTakerDisplay.questions.size())*100.00;
-
-		System.out.println(accuracy);
+		accuracy = QuizTakerDisplay.questionWrong / QuizTakerDisplay.questions.size();
 
 		// accuracy.setFont(new Font("Serif", Font.BOLD, 100));
 		// panel.add(accuracy);
