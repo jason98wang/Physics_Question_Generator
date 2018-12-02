@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 public class Variable extends Symbol{
 
 	private double value;
+	private boolean constant;
 
 	// constructor
 	Variable(String id) {
@@ -17,15 +18,21 @@ public class Variable extends Symbol{
 		}
 		if (id.equals("pi")) {
 			value = Math.PI;
+			constant = true;
 		} else if (id.equals("g")) {
 			value = 9.81;
+			constant = true;
 		} else if (id.equals("c")) {
 			value = 3.0 * Math.pow(10,8);
+			constant = true;
 		} else {
 			try {
 				value = Double.parseDouble(id);
 			} catch (NumberFormatException e) {
 
+			}
+			if (value != 0.0) {
+				constant = true;
 			}
 		}
 	}
@@ -38,5 +45,9 @@ public class Variable extends Symbol{
 	// getter
 	public double getValue() {
 		return value;
+	}
+	
+	public boolean isConstant() {
+		return constant;
 	}
 }
