@@ -45,7 +45,7 @@ public class Question {
 		//Randomize values of variables in formula (besides pi, which remains as pi)
 		for (int i = 0; i < formula.size(); i++) {
 			if (formula.get(i) instanceof Variable) {
-				if ((!formula.get(i).getId().equals("pi")) && (!formula.get(i).getId().equals("g")) && (!formula.get(i).getId().equals("c")) && (!(String.valueOf(((Variable)formula.get(i)).getValue()).equals(formula.get(i).getId()))) && (!formula.get(i).getId().equals("g")) && (!formula.get(i).getId().equals("c"))) {
+				if (!(((Variable)formula.get(i)).isConstant())) {
 					((Variable)(formula.get(i))).setValue(Math.random()*99+1);
 				}
 			}
