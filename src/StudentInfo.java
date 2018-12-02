@@ -265,71 +265,6 @@ public class StudentInfo {
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setSize(500, 150);
 		frame.setVisible(true);
-
-		//ActionListener for team1 button
-		//		team1.addActionListener(new ActionListener() {
-		//			public void actionPerformed(ActionEvent e) {
-		//				bracket.setMatchWinner(team1Name, round, match); //Set team1 as the winner of the match
-		//
-		//				match++; //Next match
-		//				if (match > numMatches) { //If match is higher than numMatches in that round, go to next round
-		//					round++;
-		//					if (bracket.getTournamentWinner() == null) { //If tournament is not done yet
-		//						match = 1;
-		//						numMatches = bracket.getNumberOfMatchesInRound(round); //Set match back to 1 and get numMatches in that round
-		//					} else {
-		//						frame.dispose(); //Otherwise, tournament is finished
-		//						display.update(bracket);
-		//						JOptionPane.showMessageDialog(null, team1Name + " wins the tournament!");
-		//					}
-		//				}
-		//
-		//				if (bracket.getTournamentWinner() == null) {
-		//					teamsInMatch = bracket.getTeamsInMatch(round, match); //Get teamNames of the teams in this round and match
-		//					team1Name = teamsInMatch[0][0];
-		//					team2Name = teamsInMatch[1][0];
-		//
-		//					roundMatch.setText("Round " + round + " Match " + match); //Update roundMatch label and buttons
-		//					team1.setText(team1Name);
-		//					team2.setText(team2Name);
-		//
-		//					display.update(bracket); //Update display
-		//				}
-		//			}
-		//		});
-		//
-		//		//ActionListener for team2 button
-		//		//Same logic as actionListener for team1
-		//		team2.addActionListener(new ActionListener() {
-		//			public void actionPerformed(ActionEvent e) {
-		//				bracket.setMatchWinner(team2Name, round, match);
-		//
-		//				match++;
-		//				if (match > numMatches) {
-		//					round++;
-		//					if (bracket.getTournamentWinner() == null) {
-		//						match = 1;
-		//						numMatches = bracket.getNumberOfMatchesInRound(round);
-		//					} else {
-		//						frame.dispose();
-		//						display.update(bracket);
-		//						JOptionPane.showMessageDialog(null, team2Name + " wins the tournament!");
-		//					}
-		//				}
-		//
-		//				if (bracket.getTournamentWinner() == null) {
-		//					teamsInMatch = bracket.getTeamsInMatch(round, match);
-		//					team1Name = teamsInMatch[0][0];
-		//					team2Name = teamsInMatch[1][0];
-		//
-		//					roundMatch.setText("Round " + round + " Match " + match);
-		//					team1.setText(team1Name);
-		//					team2.setText(team2Name);
-		//
-		//					display.update(bracket);
-		//				}
-		//			}
-		//		});
 	}
 
 	//Window for adding teams into system
@@ -504,18 +439,14 @@ public class StudentInfo {
 				}
 			}
 
-			public void keyReleased(KeyEvent e) {
-
-			}
+			public void keyReleased(KeyEvent e) {}
 		});
+		
 		seedField.addKeyListener(new KeyListener() {
 
-			public void keyTyped(KeyEvent e) {
-
-			}
+			public void keyTyped(KeyEvent e) {}
 
 			public void keyPressed(KeyEvent e) {
-
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					teamName = nameField.getText();
 
@@ -588,13 +519,10 @@ public class StudentInfo {
 
 	//Method for checking for duplicate team names
 	private boolean checkDuplicate(String teamName) {
-
 		if (teamNames.contains(teamName)) {
 			return true;
-		} else {
-			return false;
 		}
-
+		return false;
 	}
 
 	//Inner classes for adding a JButton to the JTable
@@ -655,18 +583,12 @@ public class StudentInfo {
 		}
 
 		public Object getCellEditorValue() {
-			if (clicked) {
-
-			}
-
 			clicked = false;
 			return new String(label);
 		}
 
 		public boolean stopCellEditing() {
-
 			clicked = false;
-
 			return super.stopCellEditing();
 		}
 
