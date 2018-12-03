@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,7 +15,7 @@ class SummaryPage extends JFrame {
 	private static JFrame window;
 
 	JLabel title;
-	double accuracy;
+	JLabel accuracy;
 	JButton exit, redo;
 	SimpleLinkedList<Question> wrongQuestions;
 
@@ -29,35 +30,38 @@ class SummaryPage extends JFrame {
 		// Set up the game panel
 		JPanel panel = new JPanel();
 		panel.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-
+		
 		// Focus the frame
 		this.requestFocusInWindow();
 
 		// Make the frame visible
 		this.setVisible(true);
 
+		exit = new JButton("Exit");
+		redo = new JButton("Redo Wrong Questions");
+		redo.addActionListener( new RedoListener());
+		panel.add(redo);
+
+		
 		title = new JLabel("Summary Page");
 		title.setFont(new Font("Serif", Font.BOLD, 100));
-
 		title.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		panel.add(title);
-
 		this.setContentPane(panel);
-
-		accuracy = QuizTakerDisplay.questionWrong / QuizTakerDisplay.questions.size();
-
-		// accuracy.setFont(new Font("Serif", Font.BOLD, 100));
-		// panel.add(accuracy);
-
-		exit = new JButton("Exit");
-		redo = new JButton("Redo Wrong Questions");
 		
-		redo.addActionListener( new RedoListener());
-
-		panel.add(redo);
+		double correctNess = ((((double)(QuizTakerDisplay.questions.size() - QuizTakerDisplay.questionWrong) / (double)QuizTakerDisplay.questions.size()) * 100.00));
+		accuracy = new JLabel(String.format("%.2f", correctNess) + "%");
+		
+		accuracy.setFont(new Font("Serif", Font.BOLD, 100));
+		accuracy.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		accuracy.setAlignmentY(JLabel.CENTER_ALIGNMENT);
+		panel.add(accuracy);
 
 		this.wrongQuestions = QuizTakerDisplay.wrongQuestions;
+		
+
+
 
 
 	} // End of constructor
