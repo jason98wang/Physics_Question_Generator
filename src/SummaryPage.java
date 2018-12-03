@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -10,6 +11,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import data_structures.SimpleLinkedList;
@@ -20,8 +22,10 @@ class SummaryPage extends JFrame {
 
 	JLabel title;
 	JLabel accuracy;
-	JButton exit, redo;
+	JButton exit, redo,homePage;
 	SimpleLinkedList<Question> wrongQuestions;
+	Color indigo = new Color(56, 53, 74);
+	Color lightBlue = new Color(162, 236, 250);
 
 	// Constructor
 	SummaryPage(SimpleLinkedList<Question> wrongQuestions) {
@@ -34,6 +38,7 @@ class SummaryPage extends JFrame {
 		// Set up the game panel
 		JPanel panel = new JPanel();
 		panel.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+		this.setUndecorated(true);
 
 		// Focus the frame
 		this.requestFocusInWindow();
@@ -46,6 +51,7 @@ class SummaryPage extends JFrame {
 
 		title.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		title.setHorizontalAlignment(JLabel.CENTER);
+		title.setForeground(lightBlue);
 
 		panel.add(title);
 		panel.add(Box.createRigidArea(new Dimension(0, 200)));
@@ -57,7 +63,8 @@ class SummaryPage extends JFrame {
 		accuracy = new JLabel(String.format("%.2f", precentage) + "%");
 
 		accuracy.setFont(new Font("Serif", Font.BOLD, 150));
-		
+		accuracy.setForeground(lightBlue);
+			
 		accuracy.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		accuracy.setHorizontalAlignment(JLabel.CENTER);
 		
@@ -66,27 +73,37 @@ class SummaryPage extends JFrame {
 		
 		exit = new JButton("        Exit        ");
 		redo = new JButton("Redo Wrong Questions");
+		homePage= new JButton("Back to Main Page");
 		
 		redo.addActionListener( new RedoListener());
+		exit.addActionListener( new ExitListener());
+		homePage.addActionListener( new HomePageListener());
 		
 		
 		JPanel panel1 = new JPanel();
 		panel1.add(exit);
 		panel1.add(Box.createRigidArea(new Dimension(100, 0)));
 		panel1.add(redo);
+		panel1.add(Box.createRigidArea(new Dimension(100, 0)));
+		panel1.add(homePage);
 		panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
 		panel1.setAlignmentX(CENTER_ALIGNMENT);
+		panel1.setBackground(indigo);
 		panel.add(panel1);
+		
+		
+		
+		panel.setBackground(indigo);
 		
 		this.wrongQuestions = QuizTakerDisplay.wrongQuestions;
 
 
 	} // End of constructor
 
-	private class exitListener implements ActionListener {
+	private class ExitListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			window.dispose();
+			dispose();
 		}
 	}
 
@@ -94,9 +111,25 @@ class SummaryPage extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if(wrongQuestions.size() !=0) {
 			QuizTaker.startQuiz(wrongQuestions);
 			dispose();
+			}else {
+				JOptionPane.showMessageDialog(null, "No wrong question to do! Choose a new unit and pracitce again.");
+			}
+			
 		}
+	}
+	
+	private class HomePageListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			new QuizTaker();
+			dispose();
+		}
+
+
 	}
 
 }

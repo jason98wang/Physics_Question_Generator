@@ -109,10 +109,11 @@ class QuizTakerDisplay extends JFrame {
 			}
 		};
 		panel.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-		//		panel.setBackground(new Color(56, 53, 74));
+		
 
 		// Focus the frame
 		this.requestFocusInWindow();
+		this.setUndecorated(true);
 
 		// Make the frame visible
 		this.setVisible(true);
@@ -253,8 +254,6 @@ class QuizTakerDisplay extends JFrame {
 				questionRight = false;
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
-
-					System.out.println("added");
 				}
 			}
 
@@ -300,7 +299,6 @@ class QuizTakerDisplay extends JFrame {
 				questionRight = false;
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
-					System.out.println("added");
 				}
 
 			}
@@ -324,7 +322,6 @@ class QuizTakerDisplay extends JFrame {
 				questionRight = false;
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
-					System.out.println("added");
 				}
 			}
 
