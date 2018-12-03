@@ -10,6 +10,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -41,7 +42,7 @@ public class StudentInfo {
 	private Subject curSubject;
 
 	private Object[] objs;
-	private Object[] col = {"Name", "Student Number", "Password", ""};
+	private Object[] col = {"Name", "Student Number", "Password", "%"};
 	private DefaultTableModel tableModel;
 	private JTable table;
 
@@ -51,8 +52,9 @@ public class StudentInfo {
 	private Color lightBlue = new Color(162, 236, 250);
 	private Color orange = new Color(232, 167, 55);
 
-	private JComboBox<String> subjectMenu = new JComboBox<String>();
-
+	private JComboBox<String> subjectMenu;
+	private HashMap<Integer, Student> intToStudent;
+	
 	public static void main(String[] args) {
 		new StudentInfo();
 	}
@@ -68,11 +70,14 @@ public class StudentInfo {
 			}
 		};
 		table = new JTable(tableModel);
+		subjectMenu = new JComboBox<String>();
+		intToStudent = new HashMap<Integer, Student>();
 
 		JFrame frame = new JFrame("PLAP Student Centre");
+		JPanel panel = new JPanel();
 		JButton save = new JButton("Save");
 		JButton addStudent = new JButton("Add Student");
-		JPanel panel = new JPanel();
+		JButton deleteStudent = new JButton("Delete Student");
 		Border padding = BorderFactory.createEmptyBorder(50, 200, 50, 200);
 		
 		// ButtonGroup group = new ButtonGroup();
@@ -80,8 +85,8 @@ public class StudentInfo {
 		initDropDownMenu();
 
 		//Add JButton to table and format table
-		table.getColumnModel().getColumn(3).setCellRenderer(new ButtonRenderer());
-		table.getColumnModel().getColumn(3).setCellEditor(new ButtonEditor(new JTextField()));
+//		table.getColumnModel().getColumn(3).setCellRenderer(new ButtonRenderer());
+//		table.getColumnModel().getColumn(3).setCellEditor(new ButtonEditor(new JTextField()));
 		table.setRowHeight(30);
 		table.setFillsViewportHeight(true);
 		table.setOpaque(true);
@@ -93,12 +98,14 @@ public class StudentInfo {
 		save.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
 		addStudent.setAlignmentX(Component.CENTER_ALIGNMENT);
+		deleteStudent.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		//Format panel
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.add(subjectMenu);
 		panel.add(new JScrollPane(table));
 		panel.add(addStudent);
+		panel.add(deleteStudent);
 		panel.add(save);
 		panel.setBorder(padding);
 		panel.setBackground(Color.BLACK);
@@ -111,10 +118,17 @@ public class StudentInfo {
 		frame.setSize(1200, 850);
 		frame.setVisible(true);
 
-		//ActionListener for addTeam button
+		//ActionListener for addStudent button
 		addStudent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				add(); //open add team window
+			}
+		});
+		
+		//ActionListener for deleteStudent button
+		deleteStudent.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				delete();
 			}
 		});
 
@@ -162,8 +176,9 @@ public class StudentInfo {
 							objs[0] = st.getName();
 							objs[1] = st.getStudentNumber();
 							objs[2] = st.getPassword();
-							objs[3] = "Remove";
+							objs[3] = st.getPercentage();
 							tableModel.addRow(objs);
+							intToStudent.put(j, st);
 						}
 						
 						found = true;
@@ -176,8 +191,18 @@ public class StudentInfo {
 		subjectMenu.setVisible(true);
 	}
 	
+	private void delete() {
+		int[] rows = table.getSelectedRows();
+		
+		for (int i = rows.length - 1; i >= 0; i--) {
+			Student st = intToStudent.get(rows[i]);
+			curSubject.getStudents().remove(st);
+			tableModel.removeRow(rows[i]);
+		}
+	}
+	
 	private void clearTable() {
-		for (int j = 0; j < tableModel.getRowCount(); j++) {
+		while (tableModel.getRowCount() > 0) {
 			tableModel.removeRow(0);
 		}
 	}
@@ -266,7 +291,7 @@ public class StudentInfo {
 					objs[0] = nameField.getText();
 					objs[1] = studentNumberField.getText();
 					objs[2] = passwordField.getText();
-					objs[3] = "Remove";
+					objs[3] = -1;
 					tableModel.addRow(objs);
 					curSubject.getStudents().add(new Student((String) objs[0], (String) objs[1], (String) objs[2]));
 				}
@@ -281,7 +306,7 @@ public class StudentInfo {
 					objs[0] = nameField.getText();
 					objs[1] = studentNumberField.getText();
 					objs[2] = passwordField.getText();
-					objs[3] = "Remove";
+					objs[3] = -1;
 					tableModel.addRow(objs);
 					curSubject.getStudents().add(new Student((String) objs[0], (String) objs[1], (String) objs[2]));
 				}
@@ -296,7 +321,7 @@ public class StudentInfo {
 					objs[0] = nameField.getText();
 					objs[1] = studentNumberField.getText();
 					objs[2] = passwordField.getText();
-					objs[3] = "Remove";
+					objs[3] = -1;
 					tableModel.addRow(objs);
 					curSubject.getStudents().add(new Student((String) objs[0], (String) objs[1], (String) objs[2]));
 				}
