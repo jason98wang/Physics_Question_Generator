@@ -1,9 +1,12 @@
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -16,7 +19,7 @@ class SummaryPage extends JFrame {
 	private static JFrame window;
 
 	JLabel title;
-	double accuracy;
+	JLabel accuracy;
 	JButton exit, redo;
 	SimpleLinkedList<Question> wrongQuestions;
 
@@ -42,23 +45,39 @@ class SummaryPage extends JFrame {
 		title.setFont(new Font("Serif", Font.BOLD, 100));
 
 		title.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		title.setHorizontalAlignment(JLabel.CENTER);
 
 		panel.add(title);
+		panel.add(Box.createRigidArea(new Dimension(0, 200)));
+		panel.setLayout(new BoxLayout(panel, getDefaultCloseOperation()));
 
 		this.setContentPane(panel);
 
-		accuracy = QuizTakerDisplay.questionWrong / QuizTakerDisplay.questions.size();
+		double precentage = ((QuizTakerDisplay.questions.size() - QuizTakerDisplay.questionWrong) / (double)QuizTakerDisplay.questions.size()) * 100.00;
+		accuracy = new JLabel(String.format("%.2f", precentage) + "%");
 
-		// accuracy.setFont(new Font("Serif", Font.BOLD, 100));
-		// panel.add(accuracy);
-
-		exit = new JButton("Exit");
+		accuracy.setFont(new Font("Serif", Font.BOLD, 150));
+		
+		accuracy.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		accuracy.setHorizontalAlignment(JLabel.CENTER);
+		
+		panel.add(accuracy);
+		panel.add(Box.createRigidArea(new Dimension(0, 200)));
+		
+		exit = new JButton("        Exit        ");
 		redo = new JButton("Redo Wrong Questions");
 		
 		redo.addActionListener( new RedoListener());
-
-		panel.add(redo);
-
+		
+		
+		JPanel panel1 = new JPanel();
+		panel1.add(exit);
+		panel1.add(Box.createRigidArea(new Dimension(100, 0)));
+		panel1.add(redo);
+		panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
+		panel1.setAlignmentX(CENTER_ALIGNMENT);
+		panel.add(panel1);
+		
 		this.wrongQuestions = QuizTakerDisplay.wrongQuestions;
 
 
