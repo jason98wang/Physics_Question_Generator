@@ -45,6 +45,9 @@ class QuizTakerDisplay extends JFrame {
 	Font font1 = new Font("Serif", Font.BOLD, 100);
 	Font font2 = new Font("Arial", Font.ITALIC, 50);
 	Font font3 = new Font("Serif", Font.BOLD, 25);
+	Color indigo = new Color(56, 53, 74);
+	Color lightBlue = new Color(162, 236, 250);
+	
 	int questionNum = 0;
 	String[] ids;
 	double[] values;
@@ -154,6 +157,7 @@ class QuizTakerDisplay extends JFrame {
 
 		panel1.add(answer4);
 		panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
+		panel1.setBackground(indigo);
 
 		panel2 = new JPanel();
 		ids = variableIDs.get(0);
@@ -167,6 +171,7 @@ class QuizTakerDisplay extends JFrame {
 							new JLabel(new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
 					JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
 					value.setFont(font2);
+					value.setForeground(lightBlue);
 					panel2.add(value);
 				}
 			} catch (IOException e) {
@@ -174,6 +179,7 @@ class QuizTakerDisplay extends JFrame {
 			}
 		}
 		panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
+		panel2.setBackground(indigo);
 		nextButton = new JButton();
 		try {
 			nextButton = new JButton(new ImageIcon(ImageIO.read(new File("nextButton.png"))));
@@ -197,9 +203,11 @@ class QuizTakerDisplay extends JFrame {
 		//		questionLabel.setRows(2);
 
 		questionLabel.setFont(new Font("Serif", Font.BOLD, size));
+		questionLabel.setForeground(lightBlue);
 
 		label = new JLabel("Question #" + Integer.toString(questionNum + 1));
 		label.setFont(font2);
+		label.setForeground(lightBlue);
 		nextButton.addActionListener(new NextButtonListener());
 		int x = 50;
 		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -220,17 +228,20 @@ class QuizTakerDisplay extends JFrame {
 		panel1.setAlignmentX(JPanel.CENTER_ALIGNMENT);
 		panel.add(panel1);
 		panel.add(Box.createRigidArea(new Dimension(0, x)));
+		panel.setBackground(indigo);
 		JPanel flowPanel = new JPanel();
 		flowPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
 
 		nextButton.setAlignmentX(JButton.LEFT_ALIGNMENT);
 		flowPanel.add(nextButton);
 		panel.add(flowPanel);
+		flowPanel.setBackground(indigo);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
 		JScrollPane scroll = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
+
 		this.setContentPane(scroll);
 		java.awt.Rectangle r = flowPanel.getBounds();
 		panel.setPreferredSize(
@@ -350,6 +361,7 @@ class QuizTakerDisplay extends JFrame {
 								new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
 						JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
 						value.setFont(font2);
+						value.setForeground(lightBlue);
 						panel2.add(value);
 					} catch (IOException ex) {
 						ex.printStackTrace();
