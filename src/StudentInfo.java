@@ -56,6 +56,7 @@ public class StudentInfo {
 
 	private JComboBox<String> subjectMenu;
 	private HashMap<Integer, Student> intToStudent;
+	private HashMap<String, Subject> strToSubject;
 	JButton save;
 
 	// JComponents for adding a student
@@ -83,6 +84,13 @@ public class StudentInfo {
 		table = new JTable(tableModel);
 		subjectMenu = new JComboBox<String>();
 		intToStudent = new HashMap<Integer, Student>();
+		strToSubject = new HashMap<String, Subject>();
+
+		for (int i = 0; i < subjects.size(); i++) {
+			Subject s = subjects.get(i);
+			String str = s.getName() + " " + s.getGrade() + " " + s.getLevel();
+			strToSubject.put(str, s);
+		}
 
 		JFrame frame = new JFrame("PLAP Student Centre");
 		JPanel panel = new JPanel();
@@ -168,33 +176,18 @@ public class StudentInfo {
 		subjectMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String chosenSubject = (String) subjectMenu.getSelectedItem();
+				curSubject = strToSubject.get(chosenSubject);
+				clearTable();
 
-				String name = chosenSubject.substring(0, chosenSubject.indexOf(" "));
-				int grade = Integer.parseInt(chosenSubject.substring(chosenSubject.indexOf(" ") + 1, chosenSubject.lastIndexOf(" ")));
-				String level = chosenSubject.substring(chosenSubject.lastIndexOf(" ") + 1);
-
-				int i = 0;
-				boolean found = false;
-				while (i < subjects.size() && !found) {
-					Subject s = subjects.get(i);
-					if (s.getName().equals(name) && s.getGrade() == grade && s.getLevel().equals(level)) {
-						curSubject = s;
-						clearTable();
-
-						SimpleLinkedList<Student> students = s.getStudents();
-						for (int j = 0; j < students.size(); j++) {
-							Student st = students.get(j);
-							objs[0] = st.getName();
-							objs[1] = st.getStudentNumber();
-							objs[2] = st.getPassword();
-							objs[3] = st.getPercentage();
-							tableModel.addRow(objs);
-							intToStudent.put(j, st);
-						}
-
-						found = true;
-					}
-					i++;
+				SimpleLinkedList<Student> students = curSubject.getStudents();
+				for (int j = 0; j < students.size(); j++) {
+					Student st = students.get(j);
+					objs[0] = st.getName();
+					objs[1] = st.getStudentNumber();
+					objs[2] = st.getPassword();
+					objs[3] = st.getPercentage();
+					tableModel.addRow(objs);
+					intToStudent.put(j, st);
 				}
 			}
 		});
@@ -209,7 +202,7 @@ public class StudentInfo {
 			Student st = intToStudent.get(rows[i]);
 			curSubject.getStudents().remove(st);
 			tableModel.removeRow(rows[i]);
-			
+
 			for (int j = rows[i]; j < table.getRowCount(); j++) {
 				intToStudent.put(j, intToStudent.get(j + 1));
 			}
