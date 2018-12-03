@@ -184,7 +184,8 @@ class QuizTakerDisplay extends JFrame {
 		
 		double lengthOnRow = Math.ceil(questions.get(questionNum).length() / 3.00);
 
-		int size;	
+		int size;
+		
 		if(lengthOnRow < 47) {
 			size = 100;
 		}else {
@@ -193,11 +194,12 @@ class QuizTakerDisplay extends JFrame {
 
 //		questionLabel.setRows(2);
 		
-				
+		
+		
 		questionLabel.setFont(new Font("Serif", Font.BOLD, size));
 		
 		label = new JLabel("Question #" + Integer.toString(questionNum + 1));
-		label.setFont(font1);
+		label.setFont(font2);
 		nextButton.addActionListener(new NextButtonListener());
 		int x = 50;
 		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -249,6 +251,8 @@ class QuizTakerDisplay extends JFrame {
 				questionRight = false;
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
+
+					System.out.println("added");
 				}
 			}
 
@@ -271,6 +275,7 @@ class QuizTakerDisplay extends JFrame {
 				questionRight = false;
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
+					System.out.println("added");
 				}
 			}
 
@@ -293,6 +298,7 @@ class QuizTakerDisplay extends JFrame {
 				questionRight = false;
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
+					System.out.println("added");
 				}
 
 			}
@@ -316,6 +322,7 @@ class QuizTakerDisplay extends JFrame {
 				questionRight = false;
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
+					System.out.println("added");
 				}
 			}
 
