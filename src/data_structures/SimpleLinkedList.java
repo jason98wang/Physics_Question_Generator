@@ -1,4 +1,6 @@
-class SimpleLinkedList<E> {
+package data_structures;
+
+public class SimpleLinkedList<E> {
 	private Node<E> head;
 	private Node<E> tail;
 

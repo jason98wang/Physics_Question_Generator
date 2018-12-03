@@ -28,6 +28,8 @@ import javax.swing.JTextField;
 
 import org.imgscalr.Scalr;
 
+import data_structures.SimpleLinkedList;
+
 import javax.swing.JComboBox;
 
 public class QuizTaker {

@@ -1,3 +1,5 @@
+package data_structures;
+
 public class Stack<T> {
 
     private Node<T> head = null;

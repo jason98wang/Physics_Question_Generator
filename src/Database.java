@@ -10,7 +10,8 @@ import org.eclipse.egit.github.core.service.GistService;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;;
+import org.json.simple.parser.ParseException;
+import data_structures.SimpleLinkedList;
 
 public class Database {
 

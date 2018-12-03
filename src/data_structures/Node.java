@@ -1,4 +1,6 @@
-class Node<T>{
+package data_structures;
+
+public class Node<T>{
 	
 	// jason98wang suck de de
 	

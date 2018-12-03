@@ -10,6 +10,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
+import data_structures.SimpleLinkedList;
+
 import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Dimension;

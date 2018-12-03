@@ -30,6 +30,8 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 
+import data_structures.SimpleLinkedList;
+
 
 
 // Main JFrame

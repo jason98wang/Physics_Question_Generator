@@ -1,3 +1,5 @@
+import data_structures.SimpleLinkedList;
+
 public class Subject {
 
 	private String name;

@@ -1,3 +1,7 @@
+import data_structures.SimpleLinkedList;
+import data_structures.SimpleQueue;
+import data_structures.Stack;
+
 public class Question {
 
 	// init vars

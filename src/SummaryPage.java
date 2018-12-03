@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import data_structures.SimpleLinkedList;
+
 class SummaryPage extends JFrame {
 
 	private static JFrame window;

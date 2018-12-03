@@ -28,6 +28,8 @@ import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
+import data_structures.SimpleLinkedList;
+
 /*
  * [ManagementSystem.java]
  * The UI and management system for the tournament generator

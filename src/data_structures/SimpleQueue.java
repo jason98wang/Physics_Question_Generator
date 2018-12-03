@@ -1,3 +1,5 @@
+package data_structures;
+
 public class SimpleQueue<T> {
 
     private Node<T> head = null;
