@@ -8,26 +8,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -41,29 +37,23 @@ import javax.swing.table.TableCellRenderer;
 
 public class StudentInfo {
 
-	private String teamName;
-	private String teamSeed;
-	private ArrayList<String> teamNames = new ArrayList();
-	private boolean seed = true;
-	private boolean singleBracket = true;
-	private boolean doubleBracket = false;
-	private boolean validSeed;
-	//	private Bracket bracket;
-	//	private SingleGenerator singleGenerator;
-	//	private DoubleGenerator doubleGenerator;
-	//	private Display display;
-	private Object[] objs = new Object[3];
-	private Object col[] = { "Team", "Seed", "" };
-	private DefaultTableModel tableModel = new DefaultTableModel(new Object[0][0], col);
-	private JTable table = new JTable(tableModel);
+	private Database database;
+	private SimpleLinkedList<Subject> subjects;
+	private Subject curSubject;
 
-	private int match;
-	private int round;
-	private int numRounds;
-	private int numMatches;
-	private String[][] teamsInMatch = new String[2][1];
-	private String team1Name;
-	private String team2Name;
+	private Object[] objs;
+	private Object[] col = {"Name", "Student Number", "Password", "%"};
+	private DefaultTableModel tableModel;
+	private JTable table;
+
+	private Font font = new Font("Serif", Font.BOLD, 30);
+	private Font small = new Font("Serif", Font.BOLD, 20);
+	private Color indigo = new Color(56, 53, 74);
+	private Color lightBlue = new Color(162, 236, 250);
+	private Color orange = new Color(232, 167, 55);
+
+	private JComboBox<String> subjectMenu;
+	private HashMap<Integer, Student> intToStudent;
 	
 	public static void main(String[] args) {
 		new StudentInfo();
@@ -71,216 +61,167 @@ public class StudentInfo {
 
 	//Constructor 
 	public StudentInfo() {
-		JFrame firstFrame = new JFrame("Tournament Generator");
-		JButton generate = new JButton("Generate");
-		JButton addTeam = new JButton("Add Team");
-		JButton removeAllTeams = new JButton("Remove All Teams");
-		JRadioButton singleButton = new JRadioButton("Single Elimination");
-		JRadioButton doubleButton = new JRadioButton("Double Elimination");
-		JCheckBox seedButton = new JCheckBox("Seed");
-		JLabel tournamentOptionsLabel = new JLabel("Tournament Options");
-		JLabel teamOptionsLabel = new JLabel("Team Options");
-		JPanel tournamentOptions = new JPanel();
-		JPanel teamOptions = new JPanel();
-		JPanel mainPanel = new JPanel();
+		database = new Database();
+		subjects = database.getSubjects();
+		objs = new Object[4];
+		tableModel = new DefaultTableModel(new Object[0][0], col){
+			public boolean isCellEditable(int row, int column){
+				return false;
+			}
+		};
+		table = new JTable(tableModel);
+		subjectMenu = new JComboBox<String>();
+		intToStudent = new HashMap<Integer, Student>();
+
+		JFrame frame = new JFrame("PLAP Student Centre");
+		JPanel panel = new JPanel();
+		JButton save = new JButton("Save");
+		JButton addStudent = new JButton("Add Student");
+		JButton deleteStudent = new JButton("Delete Student");
 		Border padding = BorderFactory.createEmptyBorder(50, 200, 50, 200);
-		ButtonGroup group = new ButtonGroup();
+		
+		// ButtonGroup group = new ButtonGroup();
+
+		initDropDownMenu();
 
 		//Add JButton to table and format table
-		table.getColumnModel().getColumn(2).setCellRenderer(new ButtonRenderer());
-		table.getColumnModel().getColumn(2).setCellEditor(new ButtonEditor(new JTextField()));
+//		table.getColumnModel().getColumn(3).setCellRenderer(new ButtonRenderer());
+//		table.getColumnModel().getColumn(3).setCellEditor(new ButtonEditor(new JTextField()));
 		table.setRowHeight(30);
 		table.setFillsViewportHeight(true);
 		table.setOpaque(true);
 		table.setBackground(Color.DARK_GRAY);
 		table.setForeground(Color.WHITE);
 
-		//Start with seed selected and set colours
-		seedButton.setSelected(true);
-		seedButton.setBackground(Color.BLACK);
-		seedButton.setForeground(Color.WHITE);
-
-		//Start with single elimination selected and set colours
-		singleButton.setSelected(true);
-		singleButton.setForeground(Color.WHITE);
-		singleButton.setBackground(Color.BLACK);
-
-		//Set doubleButton colours
-		doubleButton.setBackground(Color.BLACK);
-		doubleButton.setForeground(Color.WHITE);
-
-		//Add single and double radio buttons to button group
-		group.add(singleButton);
-		group.add(doubleButton);
-
 		//Format generate button
-		generate.setPreferredSize(new Dimension(100, 50));
-		generate.setAlignmentX(Component.CENTER_ALIGNMENT);
+		save.setPreferredSize(new Dimension(100, 50));
+		save.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
+		addStudent.setAlignmentX(Component.CENTER_ALIGNMENT);
+		deleteStudent.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		//Format tournamentOptions panel
-		tournamentOptions.setLayout(new FlowLayout());
-		tournamentOptions.add(singleButton);
-		tournamentOptions.add(doubleButton);
-		tournamentOptions.add(seedButton);
-		tournamentOptions.setBackground(Color.BLACK);
-		tournamentOptions.setVisible(true);
-		tournamentOptions.setPreferredSize(new Dimension(750, 75));
-
-		//Format teamOptions panel
-		teamOptions.setLayout(new FlowLayout());
-		teamOptions.add(addTeam);
-		teamOptions.add(removeAllTeams);
-		teamOptions.setBackground(Color.BLACK);
-		teamOptions.setVisible(true);
-		teamOptions.setPreferredSize(new Dimension(750, 75));
-
-		//Format tournamentOptionsLabel
-		tournamentOptionsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		tournamentOptionsLabel.setFont(new Font("Serif", Font.PLAIN, 30));
-		tournamentOptionsLabel.setForeground(Color.GREEN);
-
-		//Format teamOptionsLabel
-		teamOptionsLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		teamOptionsLabel.setFont(new Font("Serif", Font.PLAIN, 30));
-		teamOptionsLabel.setForeground(Color.GREEN);
-
-		//Format mainPanel
-		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-		mainPanel.add(tournamentOptionsLabel);
-		mainPanel.add(tournamentOptions);
-		mainPanel.add(new JScrollPane(table));
-		mainPanel.add(teamOptionsLabel);
-		mainPanel.add(teamOptions);
-		mainPanel.add(generate);
-		mainPanel.setBorder(padding);
-		mainPanel.setBackground(Color.BLACK);
+		//Format panel
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(subjectMenu);
+		panel.add(new JScrollPane(table));
+		panel.add(addStudent);
+		panel.add(deleteStudent);
+		panel.add(save);
+		panel.setBorder(padding);
+		panel.setBackground(Color.BLACK);
 
 		//Format main window
-		firstFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		firstFrame.setLayout(new BorderLayout());
-		firstFrame.add(mainPanel, BorderLayout.CENTER);
-		firstFrame.setResizable(false);
-		firstFrame.setSize(1200, 850);
-		firstFrame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setLayout(new BorderLayout());
+		frame.add(panel, BorderLayout.CENTER);
+		frame.setResizable(false);
+		frame.setSize(1200, 850);
+		frame.setVisible(true);
 
-		//ActionListener for seed checkbox
-		seedButton.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getItemSelectable() == seedButton) {
-					if (e.getStateChange() == ItemEvent.DESELECTED) { //If checkbox is selected, set seed to true; false otherwise
-						seed = false;
-					} else if (e.getStateChange() == ItemEvent.SELECTED) {
-						seed = true;
-					}
-				}
-			}
-		});
-
-		//ActionListener for double radio button
-		doubleButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				singleBracket = false; //set doubleBracket to true, single to false, and disable seed checkbox
-				doubleBracket = true;
-				seedButton.setSelected(false);
-				seedButton.setEnabled(false);
-			}
-		});
-
-		//ActionListener for single radio button
-		singleButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				singleBracket = true;
-				doubleBracket = false; //Set single to true, double to false, and enable seed checkbox
-				seedButton.setEnabled(true);
-			}
-		});
-
-		//ActionListener for addTeam button
-		addTeam.addActionListener(new ActionListener() {
+		//ActionListener for addStudent button
+		addStudent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				add(); //open add team window
 			}
 		});
-
-		//ActionListener for removeAll button
-		removeAllTeams.addActionListener(new ActionListener() {
+		
+		//ActionListener for deleteStudent button
+		deleteStudent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				removeAll(); //call removeAll method
+				delete();
 			}
 		});
 
 		//ActionListener for generate button
-		generate.addActionListener(new ActionListener() {
+		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				edit(); //open edit window
+				database.update();
 			}
 		});
 	}
 
-	//Window for choosing winners of each match and updating the display
-	private void edit() {
-		JFrame frame = new JFrame("Update Teams");
-		JButton team1 = new JButton(team1Name);
-		JButton team2 = new JButton(team2Name);
-		JLabel roundMatch = new JLabel("Round 1 Match 1");
-		JLabel instructions = new JLabel("Click on winner");
-		JPanel buttons = new JPanel();
-		JPanel panel = new JPanel();
+	private void initDropDownMenu() {
+		// drop down menu
+		subjectMenu.setFont(font);
+		subjectMenu.setBackground(lightBlue);
+		subjectMenu.setPreferredSize(new Dimension(100, 100));
+		((JLabel) subjectMenu.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
 
-		//Set sizes of team buttons
-		team1.setPreferredSize(new Dimension(100, 50));
-		team2.setPreferredSize(new Dimension(100, 50));
+		// Adding all subjects
+		subjectMenu.addItem("Choose a subject");
+		for (int i = 0; i < subjects.size(); i++) {
+			subjectMenu.addItem(subjects.get(i).getName() + " " + subjects.get(i).getGrade() + " " + subjects.get(i).getLevel());
+		}
 
-		//Format main panel
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		panel.add(roundMatch);
-		panel.add(instructions);
-		panel.add(buttons);
-		panel.setBackground(Color.BLACK);
+		// Subject combobox
+		subjectMenu.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String chosenSubject = (String) subjectMenu.getSelectedItem();
 
-		//Format buttons panel
-		buttons.setLayout(new FlowLayout());
-		buttons.add(team1);
-		buttons.add(team2);
-		buttons.setBackground(Color.BLACK);
-		buttons.setVisible(true);
-		buttons.setPreferredSize(new Dimension(750, 75));
-		buttons.setAlignmentX(Component.CENTER_ALIGNMENT);
+				String name = chosenSubject.substring(0, chosenSubject.indexOf(" "));
+				int grade = Integer.parseInt(chosenSubject.substring(chosenSubject.indexOf(" ") + 1, chosenSubject.lastIndexOf(" ")));
+				String level = chosenSubject.substring(chosenSubject.lastIndexOf(" ") + 1);
 
-		//Format roundMatch label
-		roundMatch.setPreferredSize(new Dimension(750, 25));
-		roundMatch.setAlignmentX(Component.CENTER_ALIGNMENT);
-		roundMatch.setForeground(Color.GREEN);
-		roundMatch.setFont(new Font("Serif", Font.PLAIN, 20));
-		roundMatch.setVisible(true);
+				int i = 0;
+				boolean found = false;
+				while (i < subjects.size() && !found) {
+					Subject s = subjects.get(i);
+					if (s.getName().equals(name) && s.getGrade() == grade && s.getLevel().equals(level)) {
+						curSubject = s;
+						clearTable();
 
-		//Format instructions label
-		instructions.setPreferredSize(new Dimension(750, 25));
-		instructions.setAlignmentX(Component.CENTER_ALIGNMENT);
-		instructions.setForeground(Color.WHITE);
-		instructions.setVisible(true);
+						SimpleLinkedList<Student> students = s.getStudents();
+						for (int j = 0; j < students.size(); j++) {
+							Student st = students.get(j);
+							objs[0] = st.getName();
+							objs[1] = st.getStudentNumber();
+							objs[2] = st.getPassword();
+							objs[3] = st.getPercentage();
+							tableModel.addRow(objs);
+							intToStudent.put(j, st);
+						}
+						
+						found = true;
+					}
+					i++;
+				}
+			}
+		});
 
-		//Format main window
-		frame.add(panel);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setSize(500, 150);
-		frame.setVisible(true);
+		subjectMenu.setVisible(true);
+	}
+	
+	private void delete() {
+		int[] rows = table.getSelectedRows();
+		
+		for (int i = rows.length - 1; i >= 0; i--) {
+			Student st = intToStudent.get(rows[i]);
+			curSubject.getStudents().remove(st);
+			tableModel.removeRow(rows[i]);
+		}
+	}
+	
+	private void clearTable() {
+		while (tableModel.getRowCount() > 0) {
+			tableModel.removeRow(0);
+		}
 	}
 
 	//Window for adding teams into system
 	private void add() {
-
-		JFrame frame = new JFrame("Add Teams");
+		JFrame frame = new JFrame("Add Student");
 		JPanel panel = new JPanel();
-		JTextField nameField = new JTextField("Team name");
-		JTextField seedField = new JTextField("Team seed");
+		JTextField nameField = new JTextField("    Name    ");
+		JTextField studentNumberField = new JTextField("Student Number");
+		JTextField passwordField = new JTextField("  Password  ");
 		JButton enterButton = new JButton("ENTER");
-
+		
 		//Format panel
 		panel.setLayout(new FlowLayout());
 		panel.setBackground(Color.BLACK);
 		panel.add(nameField);
-		panel.add(seedField);
+		panel.add(studentNumberField);
+		panel.add(passwordField);
 		panel.add(enterButton);
 
 		//Format frame
@@ -289,240 +230,115 @@ public class StudentInfo {
 		frame.setSize(500, 100);
 		frame.setVisible(true);
 
-		//Enable or disable seed text field based on if seed checkbox is checked or not
-		if (seed) {
-			seedField.setEditable(true);
-		} else {
-			seedField.setEditable(false);
-		}
 
-		//Focus listeners for textfields for visual effect
-		//Will have "Team/seed name" in field by default
-		//When the field is selected, the text will disappear
-		//When the field is deselected and the field is empty, text reappears
+		//Actionlistener for enter button
+		enterButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				objs[0] = nameField.getText();
+				objs[1] = studentNumberField.getText();
+				objs[2] = passwordField.getText();
+				objs[3] = "Remove";
+				tableModel.addRow(objs);
+				curSubject.getStudents().add(new Student((String) objs[0], (String) objs[1], (String) objs[2]));
+			}
+		});
+
 		nameField.addFocusListener(new FocusListener() {
 			public void focusGained(FocusEvent e) {
-				if (nameField.getText().trim().equals("Team name")) {
+				if (nameField.getText().trim().equals("Name")) {
 					nameField.setText("");
 				}
 			}
 
 			public void focusLost(FocusEvent e) {
 				if (nameField.getText().trim().equals("")) {
-					nameField.setText("Team name");
+					nameField.setText("Name");
 				}
 			}
 		});
-		seedField.addFocusListener(new FocusListener() {
+		studentNumberField.addFocusListener(new FocusListener() {
 			public void focusGained(FocusEvent e) {
-				if (seedField.getText().trim().equals("Team seed")) {
-					seedField.setText("");
+				if (studentNumberField.getText().trim().equals("Student Number")) {
+					studentNumberField.setText("");
 				}
 			}
 
 			public void focusLost(FocusEvent e) {
-				if (seedField.getText().trim().equals("")) {
-					seedField.setText("Team seed");
+				if (studentNumberField.getText().trim().equals("")) {
+					studentNumberField.setText("Student Number");
 				}
 			}
 		});
+		passwordField.addFocusListener(new FocusListener() {
+			public void focusGained(FocusEvent e) {
+				if (passwordField.getText().trim().equals("Password")) {
+					passwordField.setText("");
+				}
+			}
 
-		//Actionlistener for enter button
-		enterButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-
-				teamName = nameField.getText(); //Get team name from text field
-
-				nameField.requestFocus(); //Set focus back to nameField for user friendliness
-				if (!checkDuplicate(teamName)) { //Check for duplicate team
-					if (!teamName.equals("")) { //Check if team name is empty
-						if (seed) { //If seed checkbox is selected
-							teamSeed = seedField.getText();
-
-							validSeed = true;
-
-							try {
-								Integer.parseInt(teamSeed); //Check for valid seed
-							} catch (Exception s) {
-								validSeed = false;
-							}
-
-							if (validSeed) { //If name and seed are valid
-								seedField.setText("");
-								nameField.setText(""); //Empty the fields
-
-								teamNames.add(teamName); //Add teams to the arraylists
-
-								objs[0] = teamName;
-								objs[1] = teamSeed; //Add teams and seeds to table
-								objs[2] = "Remove";
-								tableModel.addRow(objs);
-							} else { //If invalid seed
-								JOptionPane.showMessageDialog(null, "Invalid seed");
-								seedField.requestFocus();
-							}
-						} else { //If seed checkbox not selected
-							nameField.setText("");
-
-							teamNames.add(teamName);
-
-							objs[0] = teamName;
-							objs[1] = "N/A";
-							objs[2] = "Remove";
-							tableModel.addRow(objs);
-						}
-					} else { //If team name is empty
-						JOptionPane.showMessageDialog(null, "Team name is empty");
-					}
-				} else { //If duplicate team
-					JOptionPane.showMessageDialog(null, "Duplicate Team");
+			public void focusLost(FocusEvent e) {
+				if (passwordField.getText().trim().equals("")) {
+					passwordField.setText("Password");
 				}
 			}
 		});
 
 		//Keylisteners for text field that have same function as the enter button when the enter key is pressed
 		nameField.addKeyListener(new KeyListener() {
-
-			public void keyTyped(KeyEvent e) {
-
-			}
-
+			public void keyTyped(KeyEvent e) {}
 			public void keyPressed(KeyEvent e) {
-
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					teamName = nameField.getText();
-
-					nameField.requestFocus();
-					if (!checkDuplicate(teamName)) {
-						if (!teamName.equals("")) {
-							if (seed) {
-								teamSeed = seedField.getText();
-
-								validSeed = true;
-
-								try {
-									Integer.parseInt(teamSeed);
-								} catch (Exception s) {
-									validSeed = false;
-								}
-
-								if (validSeed) {
-									seedField.setText("");
-									nameField.setText("");
-
-									teamNames.add(teamName);
-
-									objs[0] = teamName;
-									objs[1] = teamSeed;
-									objs[2] = "Remove";
-									tableModel.addRow(objs);
-								} else {
-									JOptionPane.showMessageDialog(null, "Invalid seed");
-									seedField.requestFocus();
-								}
-							} else {
-								nameField.setText("");
-
-								teamNames.add(teamName);
-
-								objs[0] = teamName;
-								objs[1] = "N/A";
-								objs[2] = "Remove";
-								tableModel.addRow(objs);
-							}
-						} else {
-							JOptionPane.showMessageDialog(null, "Team name is empty");
-						}
-					} else {
-						JOptionPane.showMessageDialog(null, "Duplicate Team");
-					}
+					objs[0] = nameField.getText();
+					objs[1] = studentNumberField.getText();
+					objs[2] = passwordField.getText();
+					objs[3] = -1;
+					tableModel.addRow(objs);
+					curSubject.getStudents().add(new Student((String) objs[0], (String) objs[1], (String) objs[2]));
 				}
 			}
-
 			public void keyReleased(KeyEvent e) {}
 		});
-		
-		seedField.addKeyListener(new KeyListener() {
 
+		studentNumberField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) {}
-
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					teamName = nameField.getText();
-
-					nameField.requestFocus();
-					if (!checkDuplicate(teamName)) {
-						if (!teamName.equals("")) {
-							if (seed) {
-								teamSeed = seedField.getText();
-
-								validSeed = true;
-
-								try {
-									Integer.parseInt(teamSeed);
-								} catch (Exception s) {
-									validSeed = false;
-								}
-
-								if (validSeed) {
-									seedField.setText("");
-									nameField.setText("");
-
-									teamNames.add(teamName);
-
-									objs[0] = teamName;
-									objs[1] = teamSeed;
-									objs[2] = "Remove";
-									tableModel.addRow(objs);
-								} else {
-									JOptionPane.showMessageDialog(null, "Invalid seed");
-									seedField.requestFocus();
-								}
-							} else {
-								nameField.setText("");
-
-								teamNames.add(teamName);
-
-								objs[0] = teamName;
-								objs[1] = "N/A";
-								objs[2] = "Remove";
-								tableModel.addRow(objs);
-							}
-						} else {
-							JOptionPane.showMessageDialog(null, "Team name is empty");
-						}
-					} else {
-						JOptionPane.showMessageDialog(null, "Duplicate Team");
-					}
+					objs[0] = nameField.getText();
+					objs[1] = studentNumberField.getText();
+					objs[2] = passwordField.getText();
+					objs[3] = -1;
+					tableModel.addRow(objs);
+					curSubject.getStudents().add(new Student((String) objs[0], (String) objs[1], (String) objs[2]));
 				}
 			}
+			public void keyReleased(KeyEvent e) {}
+		});
 
-			public void keyReleased(KeyEvent e) {
-
+		passwordField.addKeyListener(new KeyListener() {
+			public void keyTyped(KeyEvent e) {}
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					objs[0] = nameField.getText();
+					objs[1] = studentNumberField.getText();
+					objs[2] = passwordField.getText();
+					objs[3] = -1;
+					tableModel.addRow(objs);
+					curSubject.getStudents().add(new Student((String) objs[0], (String) objs[1], (String) objs[2]));
+				}
 			}
+			public void keyReleased(KeyEvent e) {}
 		});
 	}
 
-	//Method for removing all teams in system
-	private void removeAll() {
-		teamNames.clear();
 
-		for (int i = tableModel.getRowCount() - 1; i >= 0; i--) {
-			tableModel.removeRow(i);
-		}
-	}
 
 	//Method for removing a specific team from system
-	private void removeTeam(int index) {
-		teamNames.remove(index);
+	private void removeStudent(int index) {
 	}
 
 	//Method for checking for duplicate team names
 	private boolean checkDuplicate(String teamName) {
-		if (teamNames.contains(teamName)) {
-			return true;
-		}
-		return false;
+		return true;
 	}
 
 	//Inner classes for adding a JButton to the JTable
@@ -563,7 +379,7 @@ public class StudentInfo {
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					fireEditingStopped();
-					removeTeam(table.getSelectedRow()); //Remove team from arraylists and table
+					removeStudent(table.getSelectedRow()); //Remove team from arraylists and table
 					tableModel.removeRow(table.getSelectedRow());
 				}
 			});

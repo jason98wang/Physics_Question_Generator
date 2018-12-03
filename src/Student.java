@@ -69,7 +69,14 @@ public class Student {
 	
 	public double getPercentage() {
 		if (totalQuestions != 0) {
-			return (double)(incorrectQuestions) / totalQuestions;
+			double output = (double)(incorrectQuestions) / totalQuestions * 100;
+			
+			// round to 2 decimal places
+			output *= 100;
+			output = Math.round(output);
+			output /= 100;
+						
+			return output;
 		}
 		return -1;
 	}
