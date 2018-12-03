@@ -31,14 +31,6 @@ public class Database {
 
 	public static void main(String[] args) {
 		Database db = new Database();
-
-		//		Subject s = new Subject("Physics", 12, "U"); 
-		//		subjects.add(s);
-		//		Unit u = new Unit("TLAP", 1);
-		//		s.addUnit(u);
-		//		Question q = new Question("What is TLAP?", null);
-		//		u.addQuestion(q);
-
 		db.update();
 	}
 
@@ -53,6 +45,8 @@ public class Database {
 		// setup gist and get data
 		initGist();
 	}
+	
+	// private methods
 
 	private void initGist() {
 		// set user info
@@ -154,7 +148,7 @@ public class Database {
 				s.getStudents().add(st);
 			}
 		}
-		
+
 		JSONArray array2 = (JSONArray) all.get("operations");
 		for (Object a : array2) {
 			JSONObject symbol = (JSONObject) a;
@@ -162,10 +156,9 @@ public class Database {
 			// get its id
 			String id = (String) symbol.get("id");
 			Symbol s = new Operation(id);
-			
 			symbols.add(s);
 		}
-		
+
 		JSONArray array3 = (JSONArray) all.get("variables");
 		for (Object a : array3) {
 			JSONObject symbol = (JSONObject) a;
@@ -193,10 +186,11 @@ public class Database {
 
 		return formula;
 	}
-
+	
+	// public methods
 	public void update() {
 		JSONObject all = new JSONObject();
-		
+
 		JSONArray array1 = new JSONArray();
 		for (int i = 0; i < subjects.size(); i++) {
 			Subject subject = subjects.get(i);
@@ -240,10 +234,10 @@ public class Database {
 			sobj.put("students", d);
 			array1.add(sobj);
 		}
-		
+
 		JSONArray array2 = new JSONArray();
 		JSONArray array3 = new JSONArray();
-		
+
 		for (int i = 0; i < symbols.size(); i++) {
 			Symbol s = symbols.get(i);
 			JSONObject sobj = new JSONObject();
@@ -258,7 +252,7 @@ public class Database {
 		all.put("subjects", array1);
 		all.put("operations", array2);
 		all.put("variables", array3);
-		
+
 		try {
 			// write to file
 			FileWriter file = new FileWriter(jsonFile);
