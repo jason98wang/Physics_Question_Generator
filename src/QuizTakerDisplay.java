@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-
 class QuizTakerDisplay extends JFrame {
 
 	// Class variables
@@ -41,11 +40,14 @@ class QuizTakerDisplay extends JFrame {
 
 	JLabel label;
 	JLabel questionLabel;
-	
+
 	JPanel panel2;
 	Font font1 = new Font("Serif", Font.BOLD, 100);
 	Font font2 = new Font("Arial", Font.ITALIC, 50);
 	Font font3 = new Font("Serif", Font.BOLD, 25);
+	Color indigo = new Color(56, 53, 74);
+	Color lightBlue = new Color(162, 236, 250);
+	
 	int questionNum = 0;
 	String[] ids;
 	double[] values;
@@ -110,10 +112,11 @@ class QuizTakerDisplay extends JFrame {
 			}
 		};
 		panel.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-		//		panel.setBackground(new Color(56, 53, 74));
+		
 
 		// Focus the frame
 		this.requestFocusInWindow();
+		this.setUndecorated(true);
 
 		// Make the frame visible
 		this.setVisible(true);
@@ -124,10 +127,6 @@ class QuizTakerDisplay extends JFrame {
 		this.variableIDs = variableIDs;
 		this.variableValues = variableValues;
 		this.rootQuestions = rootQuestions;
-
-		// if (questions.size() == 0) {
-		// dispose();
-		// }
 
 		// creating buttons for each choice
 
@@ -158,6 +157,8 @@ class QuizTakerDisplay extends JFrame {
 
 		panel1.add(answer4);
 		panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
+		panel1.setBackground(indigo);
+
 		panel2 = new JPanel();
 		ids = variableIDs.get(0);
 		values = variableValues.get(0);
@@ -166,9 +167,11 @@ class QuizTakerDisplay extends JFrame {
 				try {
 					Double.parseDouble(ids[j]);
 				} catch (NumberFormatException e) {
-					panel2.add(new JLabel(new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
+					panel2.add(
+							new JLabel(new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
 					JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
 					value.setFont(font2);
+					value.setForeground(lightBlue);
 					panel2.add(value);
 				}
 			} catch (IOException e) {
@@ -176,33 +179,35 @@ class QuizTakerDisplay extends JFrame {
 			}
 		}
 		panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
+		panel2.setBackground(indigo);
 		nextButton = new JButton();
 		try {
 			nextButton = new JButton(new ImageIcon(ImageIO.read(new File("nextButton.png"))));
 		} catch (Exception ex) {
 		}
-		questionLabel = new JLabel("<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
+		questionLabel = new JLabel(
+				"<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
 		questionLabel.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
 		questionLabel.setHorizontalAlignment(JLabel.CENTER);
-		
+
 		double lengthOnRow = Math.ceil(questions.get(questionNum).length() / 3.00);
 
 		int size;
-		
-		if(lengthOnRow < 47) {
+
+		if (lengthOnRow < 47) {
 			size = 100;
-		}else {
-			size = (int)(100 - (lengthOnRow - 46));
+		} else {
+			size = (int) (100 - (lengthOnRow - 46));
 		}
 
-//		questionLabel.setRows(2);
-		
-		
-		
+		//		questionLabel.setRows(2);
+
 		questionLabel.setFont(new Font("Serif", Font.BOLD, size));
-		
+		questionLabel.setForeground(lightBlue);
+
 		label = new JLabel("Question #" + Integer.toString(questionNum + 1));
 		label.setFont(font2);
+		label.setForeground(lightBlue);
 		nextButton.addActionListener(new NextButtonListener());
 		int x = 50;
 		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -210,7 +215,10 @@ class QuizTakerDisplay extends JFrame {
 		panel.add(label);
 		panel.add(Box.createRigidArea(new Dimension(0, x)));
 		questionLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		questionLabel.setPreferredSize(new Dimension((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(), 100 + (int)(Math.ceil(questionLabel.getPreferredSize().getHeight() * (questionLabel.getPreferredSize().getWidth() / Toolkit.getDefaultToolkit().getScreenSize().getWidth())))));
+		questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
+				100 + (int) (Math.ceil(
+						questionLabel.getPreferredSize().getHeight() * (questionLabel.getPreferredSize().getWidth()
+								/ Toolkit.getDefaultToolkit().getScreenSize().getWidth())))));
 		questionLabel.setMinimumSize(questionLabel.getPreferredSize());
 		panel.add(questionLabel);
 		panel.add(Box.createRigidArea(new Dimension(0, x)));
@@ -220,21 +228,24 @@ class QuizTakerDisplay extends JFrame {
 		panel1.setAlignmentX(JPanel.CENTER_ALIGNMENT);
 		panel.add(panel1);
 		panel.add(Box.createRigidArea(new Dimension(0, x)));
+		panel.setBackground(indigo);
 		JPanel flowPanel = new JPanel();
 		flowPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		
+
 		nextButton.setAlignmentX(JButton.LEFT_ALIGNMENT);
 		flowPanel.add(nextButton);
 		panel.add(flowPanel);
+		flowPanel.setBackground(indigo);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		
-		JScrollPane scroll = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+		JScrollPane scroll = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
+
 		this.setContentPane(scroll);
 		java.awt.Rectangle r = flowPanel.getBounds();
-		panel.setPreferredSize(new Dimension((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(),r.y + r.height + 50));
-		
-
+		panel.setPreferredSize(
+				new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), r.y + r.height + 50));
 
 	} // End of constructor
 
@@ -254,8 +265,6 @@ class QuizTakerDisplay extends JFrame {
 				questionRight = false;
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
-
-					System.out.println("added");
 				}
 			}
 
@@ -301,7 +310,6 @@ class QuizTakerDisplay extends JFrame {
 				questionRight = false;
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
-					System.out.println("added");
 				}
 
 			}
@@ -325,7 +333,6 @@ class QuizTakerDisplay extends JFrame {
 				questionRight = false;
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
-					System.out.println("added");
 				}
 			}
 
@@ -336,43 +343,45 @@ class QuizTakerDisplay extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			panel2.removeAll();
-			questionNum++;
-			questionRight = true;
-			if (questionNum == questions.size()) {
+				panel2.removeAll();
+				questionNum++;
+				questionRight = true;
+				if (questionNum == questions.size()) {
 
-				new SummaryPage(wrongQuestions);
-				dispose();
-				return;
-			}
-			ids = variableIDs.get(questionNum);
-			values = variableValues.get(questionNum);
-
-			for (int j = 0; j < ids.length; j++) {
-				try {
-					panel2.add(
-							new JLabel(new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
-					JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
-					value.setFont(font2);
-					panel2.add(value);
-				} catch (IOException ex) {
-					ex.printStackTrace();
+					new SummaryPage(wrongQuestions);
+					dispose();
+					return;
 				}
+				ids = variableIDs.get(questionNum);
+				values = variableValues.get(questionNum);
+
+				for (int j = 0; j < ids.length; j++) {
+					try {
+						panel2.add(new JLabel(
+								new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
+						JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
+						value.setFont(font2);
+						value.setForeground(lightBlue);
+						panel2.add(value);
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+				}
+
+				answer2.setBackground(null);
+				answer1.setBackground(null);
+				answer3.setBackground(null);
+				answer4.setBackground(null);
+
+				questionLabel.setText(
+						"<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
+				label.setText("Question #" + Integer.toString(questionNum + 1));
+				answer1.setText(Double.toString(round(choices.get(questionNum)[0], 2)));
+				answer2.setText(Double.toString(round(choices.get(questionNum)[1], 2)));
+				answer3.setText(Double.toString(round(choices.get(questionNum)[2], 2)));
+				answer4.setText(Double.toString(round(choices.get(questionNum)[3], 2)));
+				revalidate();
 			}
-
-			answer2.setBackground(null);
-			answer1.setBackground(null);
-			answer3.setBackground(null);
-			answer4.setBackground(null);
-
-			questionLabel.setText("<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
-			label.setText("Question #" + Integer.toString(questionNum + 1));
-			answer1.setText(Double.toString(round(choices.get(questionNum)[0], 2)));
-			answer2.setText(Double.toString(round(choices.get(questionNum)[1], 2)));
-			answer3.setText(Double.toString(round(choices.get(questionNum)[2], 2)));
-			answer4.setText(Double.toString(round(choices.get(questionNum)[3], 2)));
-			revalidate();
-		}
 	}
 
 	public double round(double value, int places) {
