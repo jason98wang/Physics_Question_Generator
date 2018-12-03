@@ -54,7 +54,16 @@ public class StudentInfo {
 
 	private JComboBox<String> subjectMenu;
 	private HashMap<Integer, Student> intToStudent;
-	
+	JButton save;
+
+	// JComponents for adding a student
+	private JFrame addFrame;
+	private JPanel addPanel;
+	private JTextField addNameField;
+	private JTextField addStudentNumberField;
+	private JTextField addPasswordField;
+	private JButton addEnterButton;
+
 	public static void main(String[] args) {
 		new StudentInfo();
 	}
@@ -75,18 +84,16 @@ public class StudentInfo {
 
 		JFrame frame = new JFrame("PLAP Student Centre");
 		JPanel panel = new JPanel();
-		JButton save = new JButton("Save");
+		save = new JButton("Save");
 		JButton addStudent = new JButton("Add Student");
 		JButton deleteStudent = new JButton("Delete Student");
 		Border padding = BorderFactory.createEmptyBorder(50, 200, 50, 200);
-		
+
 		// ButtonGroup group = new ButtonGroup();
 
 		initDropDownMenu();
 
 		//Add JButton to table and format table
-//		table.getColumnModel().getColumn(3).setCellRenderer(new ButtonRenderer());
-//		table.getColumnModel().getColumn(3).setCellEditor(new ButtonEditor(new JTextField()));
 		table.setRowHeight(30);
 		table.setFillsViewportHeight(true);
 		table.setOpaque(true);
@@ -95,8 +102,9 @@ public class StudentInfo {
 
 		//Format generate button
 		save.setPreferredSize(new Dimension(100, 50));
+		save.setVisible(false);
 		save.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
+
 		addStudent.setAlignmentX(Component.CENTER_ALIGNMENT);
 		deleteStudent.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -111,7 +119,7 @@ public class StudentInfo {
 		panel.setBackground(Color.BLACK);
 
 		//Format main window
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new BorderLayout());
 		frame.add(panel, BorderLayout.CENTER);
 		frame.setResizable(false);
@@ -121,10 +129,10 @@ public class StudentInfo {
 		//ActionListener for addStudent button
 		addStudent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				add(); //open add team window
+				add(); //open add student window
 			}
 		});
-		
+
 		//ActionListener for deleteStudent button
 		deleteStudent.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -136,6 +144,7 @@ public class StudentInfo {
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				database.update();
+				save.setVisible(false);
 			}
 		});
 	}
@@ -180,7 +189,7 @@ public class StudentInfo {
 							tableModel.addRow(objs);
 							intToStudent.put(j, st);
 						}
-						
+
 						found = true;
 					}
 					i++;
@@ -190,226 +199,152 @@ public class StudentInfo {
 
 		subjectMenu.setVisible(true);
 	}
-	
+
 	private void delete() {
 		int[] rows = table.getSelectedRows();
-		
+
 		for (int i = rows.length - 1; i >= 0; i--) {
 			Student st = intToStudent.get(rows[i]);
 			curSubject.getStudents().remove(st);
 			tableModel.removeRow(rows[i]);
+			
+			for (int j = rows[i]; j < table.getRowCount(); j++) {
+				intToStudent.put(j, intToStudent.get(j + 1));
+			}
 		}
+
+		save.setVisible(true);
 	}
-	
+
 	private void clearTable() {
 		while (tableModel.getRowCount() > 0) {
 			tableModel.removeRow(0);
 		}
 	}
 
+	private void enterStudent() {
+		objs[0] = addNameField.getText();
+		objs[1] = addStudentNumberField.getText();
+		objs[2] = addPasswordField.getText();
+		objs[3] = -1;
+		Student st = new Student((String) objs[0], (String) objs[1], (String) objs[2]);
+		intToStudent.put(tableModel.getRowCount(), st);
+		tableModel.addRow(objs);
+		curSubject.getStudents().add(st);
+		save.setVisible(true);
+	}
+
 	//Window for adding teams into system
 	private void add() {
-		JFrame frame = new JFrame("Add Student");
-		JPanel panel = new JPanel();
-		JTextField nameField = new JTextField("    Name    ");
-		JTextField studentNumberField = new JTextField("Student Number");
-		JTextField passwordField = new JTextField("  Password  ");
-		JButton enterButton = new JButton("ENTER");
-		
+		addFrame = new JFrame("Add Student");
+		addPanel = new JPanel();
+		addNameField = new JTextField("    Name    ");
+		addStudentNumberField = new JTextField("Student Number");
+		addPasswordField = new JTextField("  Password  ");
+		addEnterButton = new JButton("ENTER");
+
 		//Format panel
-		panel.setLayout(new FlowLayout());
-		panel.setBackground(Color.BLACK);
-		panel.add(nameField);
-		panel.add(studentNumberField);
-		panel.add(passwordField);
-		panel.add(enterButton);
+		addPanel.setLayout(new FlowLayout());
+		addPanel.setBackground(Color.BLACK);
+		addPanel.add(addNameField);
+		addPanel.add(addStudentNumberField);
+		addPanel.add(addPasswordField);
+		addPanel.add(addEnterButton);
 
 		//Format frame
-		frame.add(panel);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setSize(500, 100);
-		frame.setVisible(true);
+		addFrame.add(addPanel);
+		addFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		addFrame.setSize(500, 100);
+		addFrame.setVisible(true);
 
 
 		//Actionlistener for enter button
-		enterButton.addActionListener(new ActionListener() {
+		addEnterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				objs[0] = nameField.getText();
-				objs[1] = studentNumberField.getText();
-				objs[2] = passwordField.getText();
-				objs[3] = "Remove";
-				tableModel.addRow(objs);
-				curSubject.getStudents().add(new Student((String) objs[0], (String) objs[1], (String) objs[2]));
+				enterStudent();
 			}
 		});
 
-		nameField.addFocusListener(new FocusListener() {
+		addNameField.addFocusListener(new FocusListener() {
 			public void focusGained(FocusEvent e) {
-				if (nameField.getText().trim().equals("Name")) {
-					nameField.setText("");
+				if (addNameField.getText().trim().equals("Name")) {
+					addNameField.setText("");
 				}
 			}
 
 			public void focusLost(FocusEvent e) {
-				if (nameField.getText().trim().equals("")) {
-					nameField.setText("Name");
+				if (addNameField.getText().trim().equals("")) {
+					addNameField.setText("Name");
 				}
 			}
 		});
-		studentNumberField.addFocusListener(new FocusListener() {
+		addStudentNumberField.addFocusListener(new FocusListener() {
 			public void focusGained(FocusEvent e) {
-				if (studentNumberField.getText().trim().equals("Student Number")) {
-					studentNumberField.setText("");
+				if (addStudentNumberField.getText().trim().equals("Student Number")) {
+					addStudentNumberField.setText("");
 				}
 			}
 
 			public void focusLost(FocusEvent e) {
-				if (studentNumberField.getText().trim().equals("")) {
-					studentNumberField.setText("Student Number");
+				if (addStudentNumberField.getText().trim().equals("")) {
+					addStudentNumberField.setText("Student Number");
 				}
 			}
 		});
-		passwordField.addFocusListener(new FocusListener() {
+		addPasswordField.addFocusListener(new FocusListener() {
 			public void focusGained(FocusEvent e) {
-				if (passwordField.getText().trim().equals("Password")) {
-					passwordField.setText("");
+				if (addPasswordField.getText().trim().equals("Password")) {
+					addPasswordField.setText("");
 				}
 			}
 
 			public void focusLost(FocusEvent e) {
-				if (passwordField.getText().trim().equals("")) {
-					passwordField.setText("Password");
+				if (addPasswordField.getText().trim().equals("")) {
+					addPasswordField.setText("Password");
 				}
 			}
 		});
 
 		//Keylisteners for text field that have same function as the enter button when the enter key is pressed
-		nameField.addKeyListener(new KeyListener() {
+		addNameField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) {}
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					objs[0] = nameField.getText();
-					objs[1] = studentNumberField.getText();
-					objs[2] = passwordField.getText();
-					objs[3] = -1;
-					tableModel.addRow(objs);
-					curSubject.getStudents().add(new Student((String) objs[0], (String) objs[1], (String) objs[2]));
+					enterStudent();
 				}
 			}
 			public void keyReleased(KeyEvent e) {}
 		});
 
-		studentNumberField.addKeyListener(new KeyListener() {
+		addStudentNumberField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) {}
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					objs[0] = nameField.getText();
-					objs[1] = studentNumberField.getText();
-					objs[2] = passwordField.getText();
-					objs[3] = -1;
-					tableModel.addRow(objs);
-					curSubject.getStudents().add(new Student((String) objs[0], (String) objs[1], (String) objs[2]));
+					enterStudent();
 				}
 			}
 			public void keyReleased(KeyEvent e) {}
 		});
 
-		passwordField.addKeyListener(new KeyListener() {
+		addPasswordField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) {}
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					objs[0] = nameField.getText();
-					objs[1] = studentNumberField.getText();
-					objs[2] = passwordField.getText();
-					objs[3] = -1;
-					tableModel.addRow(objs);
-					curSubject.getStudents().add(new Student((String) objs[0], (String) objs[1], (String) objs[2]));
+					enterStudent();
 				}
 			}
 			public void keyReleased(KeyEvent e) {}
 		});
 	}
 
-
-
-	//Method for removing a specific team from system
-	private void removeStudent(int index) {
-	}
-
-	//Method for checking for duplicate team names
-	private boolean checkDuplicate(String teamName) {
-		return true;
-	}
-
-	//Inner classes for adding a JButton to the JTable
-	private class ButtonRenderer extends JButton implements TableCellRenderer {
-
-		public ButtonRenderer() {
-			setOpaque(true);
-			setBackground(Color.LIGHT_GRAY); //Format button colours
-			setForeground(Color.BLACK);
-		}
-
-		public Component getTableCellRendererComponent(JTable table, Object obj, boolean selected, boolean focused,
-				int row, int col) {
-
-			if(obj == null){
-				setText("");
-			} else {
-				setText(obj.toString());
+	//Method for checking for duplicate student names
+	private boolean checkDuplicate(String name, String studentNumber, String password) {
+		for (int i = 0; i < curSubject.getStudents().size(); i++) {
+			Student st = curSubject.getStudents().get(i);
+			if (st.getName().equals(name) && st.getStudentNumber().equals(studentNumber) && st.getPassword().equals(password)) {
+				return true;
 			}
-
-			return this;
 		}
-
-	}
-	private class ButtonEditor extends DefaultCellEditor {
-
-		protected JButton button;
-		private String label;
-		private boolean clicked;
-
-		public ButtonEditor(JTextField txt) {
-			super(txt);
-
-			button = new JButton();
-			button.setOpaque(false);
-
-			//Actionlistener for the remove buttons
-			button.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					fireEditingStopped();
-					removeStudent(table.getSelectedRow()); //Remove team from arraylists and table
-					tableModel.removeRow(table.getSelectedRow());
-				}
-			});
-		}
-
-		public Component getTableCellEditorComponent(JTable table, Object obj, boolean selected, int row, int col) {
-
-			if(obj == null){
-				label = "";
-			} else {
-				label = obj.toString();
-			}
-			button.setText(label); //Set text on button to "Remove"
-			clicked = true;
-
-			return button;
-		}
-
-		public Object getCellEditorValue() {
-			clicked = false;
-			return new String(label);
-		}
-
-		public boolean stopCellEditing() {
-			clicked = false;
-			return super.stopCellEditing();
-		}
-
-		protected void fireEditingStopped() {
-			super.fireEditingStopped();
-		}
+		return false;
 	}
 }
