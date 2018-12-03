@@ -55,8 +55,7 @@ public class StudentInfo {
 	private Color orange = new Color(232, 167, 55);
 
 	private JComboBox<String> subjectMenu;
-	private HashMap<Integer, Student> intToStudent;
-	private HashMap<String, Subject> strToSubject;
+	// private HashMap<Integer, Student> intToStudent;
 	JButton save;
 
 	// JComponents for adding a student
@@ -83,14 +82,6 @@ public class StudentInfo {
 		};
 		table = new JTable(tableModel);
 		subjectMenu = new JComboBox<String>();
-		intToStudent = new HashMap<Integer, Student>();
-		strToSubject = new HashMap<String, Subject>();
-
-		for (int i = 0; i < subjects.size(); i++) {
-			Subject s = subjects.get(i);
-			String str = s.getName() + " " + s.getGrade() + " " + s.getLevel();
-			strToSubject.put(str, s);
-		}
 
 		JFrame frame = new JFrame("PLAP Student Centre");
 		JPanel panel = new JPanel();
@@ -107,8 +98,8 @@ public class StudentInfo {
 		table.setRowHeight(30);
 		table.setFillsViewportHeight(true);
 		table.setOpaque(true);
-		table.setBackground(Color.DARK_GRAY);
-		table.setForeground(Color.WHITE);
+		table.setBackground(indigo);
+		table.setForeground(lightBlue);
 
 		//Format generate button
 		save.setPreferredSize(new Dimension(100, 50));
@@ -126,7 +117,7 @@ public class StudentInfo {
 		panel.add(deleteStudent);
 		panel.add(save);
 		panel.setBorder(padding);
-		panel.setBackground(Color.BLACK);
+		panel.setBackground(indigo);
 
 		//Format main window
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -162,7 +153,7 @@ public class StudentInfo {
 	private void initDropDownMenu() {
 		// drop down menu
 		subjectMenu.setFont(font);
-		subjectMenu.setBackground(lightBlue);
+		// subjectMenu.setBackground(orange);
 		subjectMenu.setPreferredSize(new Dimension(100, 100));
 		((JLabel) subjectMenu.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -176,36 +167,45 @@ public class StudentInfo {
 		subjectMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String chosenSubject = (String) subjectMenu.getSelectedItem();
-				curSubject = strToSubject.get(chosenSubject);
-				clearTable();
 
-				SimpleLinkedList<Student> students = curSubject.getStudents();
-				for (int j = 0; j < students.size(); j++) {
-					Student st = students.get(j);
-					objs[0] = st.getName();
-					objs[1] = st.getStudentNumber();
-					objs[2] = st.getPassword();
-					objs[3] = st.getPercentage();
-					tableModel.addRow(objs);
-					intToStudent.put(j, st);
+				String level = chosenSubject.substring(chosenSubject.lastIndexOf(" ") + 1);
+				chosenSubject = chosenSubject.substring(0, chosenSubject.lastIndexOf(" "));
+				String name = chosenSubject.substring(0, chosenSubject.lastIndexOf(" "));
+				int grade = Integer.parseInt(chosenSubject.substring(chosenSubject.lastIndexOf(" ") + 1));
+				
+				int i = 0;
+				boolean found = false;
+				while (i < subjects.size() && !found) {
+					Subject s = subjects.get(i);
+					if (s.getName().equals(name) && s.getGrade() == grade && s.getLevel().equals(level)) {
+						curSubject = s;
+						clearTable();
+
+						SimpleLinkedList<Student> students = curSubject.getStudents();
+						for (int j = 0; j < students.size(); j++) {
+							Student st = students.get(j);
+							objs[0] = st.getName();
+							objs[1] = st.getStudentNumber();
+							objs[2] = st.getPassword();
+							objs[3] = st.getPercentage();
+							tableModel.addRow(objs);
+							// intToStudent.put(j, st);
+						}
+						found = true;
+					}
+					i++;
 				}
 			}
 		});
-
-		subjectMenu.setVisible(true);
 	}
 
 	private void delete() {
 		int[] rows = table.getSelectedRows();
 
 		for (int i = rows.length - 1; i >= 0; i--) {
-			Student st = intToStudent.get(rows[i]);
+			Student st = curSubject.getStudents().get(rows[i]);
 			curSubject.getStudents().remove(st);
 			tableModel.removeRow(rows[i]);
-
-			for (int j = rows[i]; j < table.getRowCount(); j++) {
-				intToStudent.put(j, intToStudent.get(j + 1));
-			}
 		}
 
 		save.setVisible(true);
@@ -223,7 +223,6 @@ public class StudentInfo {
 		objs[2] = addPasswordField.getText();
 		objs[3] = -1;
 		Student st = new Student((String) objs[0], (String) objs[1], (String) objs[2]);
-		intToStudent.put(tableModel.getRowCount(), st);
 		tableModel.addRow(objs);
 		curSubject.getStudents().add(st);
 		save.setVisible(true);
@@ -240,7 +239,7 @@ public class StudentInfo {
 
 		//Format panel
 		addPanel.setLayout(new FlowLayout());
-		addPanel.setBackground(Color.BLACK);
+		addPanel.setBackground(lightBlue);
 		addPanel.add(addNameField);
 		addPanel.add(addStudentNumberField);
 		addPanel.add(addPasswordField);
