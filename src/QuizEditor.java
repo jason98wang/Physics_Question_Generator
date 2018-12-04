@@ -180,7 +180,7 @@ public class QuizEditor extends JFrame {
 		
 		logo.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		
-		
+		list.setBackground(lightBlue);
 		
 		// Initializing variables
 		addQ = false;
@@ -292,17 +292,17 @@ public class QuizEditor extends JFrame {
 				
 				// Setting up add interface
 				displayFormula.add(currentFormula);
-				displayFormula.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+				displayFormula.add(Box.createVerticalStrut(addingoffset));
 				currentFormula.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 				displayFormula.add(currentFormulaDisplay);
-				displayFormula.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+				displayFormula.add(Box.createVerticalStrut(addingoffset));
 				displayFormula.setLayout(new BoxLayout(displayFormula, BoxLayout.Y_AXIS));
 				JScrollPane scroll = new JScrollPane(displayFormula, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 				scroll.getVerticalScrollBar().setUnitIncrement(16);
 				scroll.getHorizontalScrollBar().setUnitIncrement(16);
 				scroll.setMinimumSize(new Dimension((int)displayPane.getPreferredSize().getWidth(),200));
 				displayPane.add(scroll);
-				displayPane.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+				displayPane.add(Box.createVerticalStrut(addingoffset));
 				problemStatement.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 				displayPane.add(problemStatement);
 				enter.setEditable(true);
@@ -461,17 +461,17 @@ public class QuizEditor extends JFrame {
 					// Formatting
 					displayPane.add(formula);
 					displayFormula.add(currentFormula);
-					displayFormula.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+					displayFormula.add(Box.createVerticalStrut(addingoffset));
 					currentFormula.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 					displayFormula.add(currentFormulaDisplay);
-					displayFormula.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+					displayFormula.add(Box.createVerticalStrut(addingoffset));
 					displayFormula.setLayout(new BoxLayout(displayFormula, BoxLayout.Y_AXIS));
 					JScrollPane scroll = new JScrollPane(displayFormula, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 					scroll.getVerticalScrollBar().setUnitIncrement(16);
 					scroll.getHorizontalScrollBar().setUnitIncrement(16);
 					scroll.setPreferredSize(new Dimension((int)displayPane.getPreferredSize().getWidth(),200));
 					displayPane.add(scroll);
-					displayPane.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+					displayPane.add(Box.createVerticalStrut(addingoffset));
 					problemStatement.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 					displayPane.add(problemStatement);
 					enter.setEditable(true);
@@ -579,9 +579,9 @@ public class QuizEditor extends JFrame {
 		remove.setAlignmentY(JButton.CENTER_ALIGNMENT);
 		edit.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		buttons.add(add);
-		buttons.add(Box.createRigidArea(new Dimension(100,0)));
+		buttons.add(Box.createHorizontalStrut(100));
 		buttons.add(remove);
-		buttons.add(Box.createRigidArea(new Dimension(100,0)));
+		buttons.add(Box.createHorizontalStrut(100));
 		buttons.add(edit);
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
 		buttons.setBackground(indigo);
@@ -592,15 +592,15 @@ public class QuizEditor extends JFrame {
 		offset = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() - (int)displayPane.getPreferredSize().getHeight() - (int)buttons.getPreferredSize().getHeight() - (int)subject.getMinimumSize().getHeight() - (int)unit.getMinimumSize().getHeight() - (int)confirm.getPreferredSize().getHeight() - (int)exit.getPreferredSize().getHeight();
 		offset /= 6;
 		offset += 50;
-		midPane.add(Box.createRigidArea(new Dimension(0,offset)));
+		midPane.add(Box.createVerticalStrut(offset));
 		
 		
 		// Panel to store subject related components
 		JPanel subjectPane = new JPanel();
 		subjectPane.add(subject);
-		subjectPane.add(Box.createRigidArea(new Dimension(100,0)));
+		subjectPane.add(Box.createHorizontalStrut(100));
 		subjectPane.add(addSubject);
-		subjectPane.add(Box.createRigidArea(new Dimension(100,0)));
+		subjectPane.add(Box.createHorizontalStrut(100));
 		subjectPane.add(removeSubject);
 		subjectPane.setLayout(new BoxLayout(subjectPane, BoxLayout.X_AXIS));
 		subjectPane.setPreferredSize(new Dimension((int) midPane.getPreferredSize().getWidth(), (int)subject.getMinimumSize().getHeight()));
@@ -609,15 +609,15 @@ public class QuizEditor extends JFrame {
 		midPane.add(subjectPane);
 		
 		
-		midPane.add(Box.createRigidArea(new Dimension(0,offset)));
+		midPane.add(Box.createVerticalStrut(offset));
 		
 		
 		// Panel to store unit related components
 		JPanel unitPane = new JPanel();
 		unitPane.add(unit);
-		unitPane.add(Box.createRigidArea(new Dimension(100,0)));
+		unitPane.add(Box.createHorizontalStrut(100));
 		unitPane.add(addUnit);
-		unitPane.add(Box.createRigidArea(new Dimension(100,0)));
+		unitPane.add(Box.createHorizontalStrut(100));
 		unitPane.add(removeUnit);
 		unitPane.setLayout(new BoxLayout(unitPane, BoxLayout.X_AXIS));
 		unitPane.setPreferredSize(new Dimension((int) midPane.getPreferredSize().getWidth(), (int)unit.getMinimumSize().getHeight()));
@@ -628,20 +628,20 @@ public class QuizEditor extends JFrame {
 		
 		// Adding everything to the main panel
 		displayPane.setLayout(new BoxLayout(displayPane, BoxLayout.Y_AXIS));
-		midPane.add(Box.createRigidArea(new Dimension(0,offset)));
+		midPane.add(Box.createVerticalStrut(offset));
 		midPane.add(displayPane);
-		midPane.add(Box.createRigidArea(new Dimension(0,offset)));
+		midPane.add(Box.createVerticalStrut(offset));
 		midPane.add(confirm);
-		midPane.add(Box.createRigidArea(new Dimension(0,offset)));
+		midPane.add(Box.createVerticalStrut(offset));
 		midPane.add(exit);
-		midPane.add(Box.createRigidArea(new Dimension(0,offset)));
+		midPane.add(Box.createVerticalStrut(offset));
 		midPane.setBackground(indigo);
 		midPane.setLayout(new BoxLayout(midPane, BoxLayout.Y_AXIS));
 		
 		
 		// main jpanel
 		this.setVisible(true);
-		contentPane.add(Box.createRigidArea(new Dimension(100,0)));
+		contentPane.add(Box.createHorizontalStrut(100));
 		
 		// Scrollable
 		midPane.setPreferredSize(new Dimension((int)midPane.getMinimumSize().getWidth(),(int)exit.getLocation().getY() + 50));
@@ -650,7 +650,7 @@ public class QuizEditor extends JFrame {
 		scrollpane.getVerticalScrollBar().setBackground(lightBlue);
 		scrollpane.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
 		contentPane.add(scrollpane);
-		contentPane.add(Box.createRigidArea(new Dimension(100,0)));
+		contentPane.add(Box.createHorizontalStrut(100));
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
 		contentPane.setBackground(indigo);
 		this.setContentPane(contentPane);
@@ -770,22 +770,22 @@ public class QuizEditor extends JFrame {
 		contentPanel.add(logo);
 		contentPanel.add(enterName);
 		contentPanel.add(name);
-		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.add(enterGrade);
 		contentPanel.add(grade);
-		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.add(enterLevel);
 		contentPanel.add(level);
-		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.add(unitLabel);
 		contentPanel.add(scroll);
-		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.add(addUnit);
-		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.add(confirm);
-		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.add(cancel);
-		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.setBackground(indigo);
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		// this.setPreferredSize(preferredSize);
@@ -888,14 +888,14 @@ public class QuizEditor extends JFrame {
 		contentPanel.add(logo);
 		contentPanel.add(enterName);
 		contentPanel.add(name);
-		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.add(enterNum);
 		contentPanel.add(num);
-		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.add(confirm);
-		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.add(cancel);
-		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		contentPanel.setBackground(indigo);
 		JScrollPane scroll = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -1041,16 +1041,16 @@ public class QuizEditor extends JFrame {
 		});
 		JPanel buttons = new JPanel();
 		buttons.add(confirm);
-		buttons.add(Box.createRigidArea(new Dimension(offset,0)));
+		buttons.add(Box.createHorizontalStrut(offset));
 		buttons.add(cancel);
 		buttons.setBackground(indigo);
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
 		// Adding components onto frame
 		contentPanel.add(logo);
 		contentPanel.add(scroll);
-		contentPanel.add(Box.createRigidArea(new Dimension(0, addingoffset)));
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.add(buttons);
-		contentPanel.add(Box.createRigidArea(new Dimension(0, addingoffset)));
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		contentPanel.setBackground(indigo);
 		Dimension fullscreen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -1058,9 +1058,9 @@ public class QuizEditor extends JFrame {
 		scrollpane.getVerticalScrollBar().setUnitIncrement(16);
 		scrollpane.getHorizontalScrollBar().setUnitIncrement(16);
 		scrollpane.setPreferredSize(new Dimension((int)fullscreen.getWidth() - 100, (int)fullscreen.getHeight()));
-		contentPane.add(Box.createRigidArea(new Dimension(50,0)));
+		contentPane.add(Box.createHorizontalStrut(50));
 		contentPane.add(scrollpane);
-		contentPane.add(Box.createRigidArea(new Dimension(50,0)));
+		contentPane.add(Box.createHorizontalStrut(50));
 		contentPane.setBackground(indigo);
 		previousFormulaFrame.setContentPane(contentPane);
 		previousFormulaFrame.setVisible(true);
@@ -1227,30 +1227,30 @@ public class QuizEditor extends JFrame {
 		JLabel logo = new JLabel(new ImageIcon("logo.png"));
 		contentPane.add(logo);
 		contentPanel.add(buttons);
-		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		
 		JScrollPane scroll = new JScrollPane(enteredFormula, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
 		scroll.getHorizontalScrollBar().setUnitIncrement(16);
 		scroll.setPreferredSize(new Dimension((int)contentPanel.getPreferredSize().getWidth(),(int)enteredFormula.getPreferredSize().getHeight() + 50));
 		contentPanel.add(scroll);
-		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		JPanel button = new JPanel();
 		button.add(confirm);
-		button.add(Box.createRigidArea(new Dimension(50,0)));
+		button.add(Box.createHorizontalStrut(50));
 		button.add(cancel);
 		button.setBackground(indigo);
 		contentPanel.add(button);
-		contentPanel.add(Box.createRigidArea(new Dimension(0,addingoffset)));
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.setBackground(indigo);
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-		contentPane.add(Box.createRigidArea(new Dimension(50,0)));
+		contentPane.add(Box.createHorizontalStrut(50));
 		JScrollPane scrollpane = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollpane.getVerticalScrollBar().setUnitIncrement(16);
 		Dimension fullscreen = Toolkit.getDefaultToolkit().getScreenSize();
 		scrollpane.setPreferredSize(new Dimension((int)fullscreen.getWidth() - 100, (int)fullscreen.getHeight()));
 		contentPane.add(scrollpane);
-		contentPane.add(Box.createRigidArea(new Dimension(50,0)));
+		contentPane.add(Box.createHorizontalStrut(50));
 		contentPane.setBackground(indigo);
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
 		createFormulaFrame.setContentPane(contentPane);

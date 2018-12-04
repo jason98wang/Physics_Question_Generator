@@ -26,7 +26,8 @@ class SummaryPage extends JFrame {
 	SimpleLinkedList<Question> wrongQuestions;
 	Color indigo = new Color(56, 53, 74);
 	Color lightBlue = new Color(162, 236, 250);
-
+	Font font = new Font("Arial",Font.BOLD,30);
+	
 	// Constructor
 	SummaryPage(SimpleLinkedList<Question> wrongQuestions) {
 		super("Summary Page");
@@ -72,8 +73,11 @@ class SummaryPage extends JFrame {
 		panel.add(Box.createRigidArea(new Dimension(0, 200)));
 		
 		exit = new JButton("        Exit        ");
+		exit.setFont(font);
 		redo = new JButton("Redo Wrong Questions");
+		redo.setFont(font);
 		homePage= new JButton("Back to Main Page");
+		homePage.setFont(font);
 		
 		redo.addActionListener( new RedoListener());
 		exit.addActionListener( new ExitListener());
@@ -115,7 +119,7 @@ class SummaryPage extends JFrame {
 			QuizTaker.startQuiz(wrongQuestions);
 			dispose();
 			}else {
-				JOptionPane.showMessageDialog(null, "No wrong question to do! Choose a new unit and pracitce again.");
+				JOptionPane.showMessageDialog(null, "No wrong question to do! Choose a new unit and practice again.");
 			}
 			
 		}
