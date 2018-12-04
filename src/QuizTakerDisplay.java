@@ -239,7 +239,7 @@ class QuizTakerDisplay extends JFrame {
 //		nextButton.setAlignmentX(JButton.LEFT_ALIGNMENT);
 		exitButton.setFont(font3);
 		exitButton.addActionListener(new ExitButtonListener());
-		panel3.setBackground(Color.RED);
+		panel3.setBackground(indigo);
 		panel3.setOpaque(true);
 		panel3.setLayout(new BoxLayout(panel3, BoxLayout.X_AXIS));
 		panel3.add(Box.createHorizontalStrut(50));
