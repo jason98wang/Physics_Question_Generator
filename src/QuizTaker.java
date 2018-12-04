@@ -170,6 +170,7 @@ public class QuizTaker {
 		int tempRand;
 
 		double[] wrongAns;
+		double[] tempWrongAns;
 		double ans;
 		String[] IDs;
 		double[] values;
@@ -185,10 +186,11 @@ public class QuizTaker {
 			ans = tempQ.getAnswer();
 			answers.add(ans);
 
+			tempWrongAns = tempQ.getFalseAnswers();
 			wrongAns = new double[3];
-			wrongAns[0] = tempQ.getFalseAnswers()[0];
-			wrongAns[1] = tempQ.getFalseAnswers()[1];
-			wrongAns[2] = tempQ.getFalseAnswers()[2];
+			wrongAns[0] = tempWrongAns[0];
+			wrongAns[1] = tempWrongAns[1];
+			wrongAns[2] = tempWrongAns[2];
 			tempRand = rand.nextInt(4);
 			if (tempRand == 3) {
 				choices.add(new double[] { ans, wrongAns[0], wrongAns[1], wrongAns[2] });
