@@ -208,7 +208,9 @@ public class QuizTaker {
 			formula = tempQ.getFormula();
 			for (int j = 0; j < formula.size(); j++) {
 				if (formula.get(j) instanceof Variable) {
-					tempVariables.add((Variable) formula.get(j));
+					if(!((Variable) formula.get(j)).isConstant()) {
+						tempVariables.add((Variable) formula.get(j));
+					}
 				}
 			}
 			IDs = new String[tempVariables.size()];
@@ -279,8 +281,9 @@ public class QuizTaker {
 			formula = tempQ.getFormula();
 			for (int j = 0; j < formula.size(); j++) {
 				if (formula.get(j) instanceof Variable) {
-					if(!((Variable) formula.get(j)).isConstant())
-					tempVariables.add((Variable) formula.get(j));
+					if(!((Variable) formula.get(j)).isConstant()) {
+						tempVariables.add((Variable) formula.get(j));
+					}
 				}
 			}
 			IDs = new String[tempVariables.size()];
