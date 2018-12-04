@@ -53,25 +53,16 @@ class QuizTakerDisplay extends JFrame {
 	int questionNum = 0;
 	String[] ids;
 	double[] values;
+	double[][] wrongAnswer;
+	static int questionWrong;
 	static SimpleLinkedList<String> questions;
+	static SimpleLinkedList<Question> wrongQuestions;
 	SimpleLinkedList<Double> answers;
 	SimpleLinkedList<double[]> choices;
 	SimpleLinkedList<String[]> variableIDs;
 	SimpleLinkedList<double[]> variableValues;
-	boolean questionRight = true;
-	static int questionWrong = 0;
-
-	static SimpleLinkedList<Question> wrongQuestions = new SimpleLinkedList<Question>();
-
 	SimpleLinkedList<Question> rootQuestions;
-	URL url;
-
-	//	ImageIcon acceleration, appliedForce, chemicalEnergy, delta, displacement, e, elasticForce, gravationalEnergy,
-	//			gravationalForce, impulse, kineticEnergy, KineticFrictionalForce, lambda, magneticForce, momentum,
-	//			normalForce, nuclearEnergy, soundEnergy, springForce, staticFrictionalForce, tensionalForce, thermalEnergy,
-	//			theta, time, velocity, work, xForce, yForce;
-
-	double[][] wrongAnswer;
+	boolean right = false;
 
 	// Constructor
 	QuizTakerDisplay(SimpleLinkedList<String> question, SimpleLinkedList<double[]> choices,
@@ -114,7 +105,6 @@ class QuizTakerDisplay extends JFrame {
 			}
 		};
 		panel.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-		
 
 		// Focus the frame
 		this.requestFocusInWindow();
@@ -188,7 +178,7 @@ class QuizTakerDisplay extends JFrame {
 		} catch (Exception ex) {
 		}
 		exitButton = new JButton("Exit");
-		
+
 		questionLabel = new JLabel(
 				"<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
 		questionLabel.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
@@ -235,8 +225,7 @@ class QuizTakerDisplay extends JFrame {
 		panel.setBackground(indigo);
 		JPanel panel3 = new JPanel();
 
-
-//		nextButton.setAlignmentX(JButton.LEFT_ALIGNMENT);
+		//		nextButton.setAlignmentX(JButton.LEFT_ALIGNMENT);
 		exitButton.setFont(font3);
 		exitButton.addActionListener(new ExitButtonListener());
 		panel3.setBackground(indigo);
@@ -244,7 +233,7 @@ class QuizTakerDisplay extends JFrame {
 		panel3.setLayout(new BoxLayout(panel3, BoxLayout.X_AXIS));
 		panel3.add(Box.createHorizontalStrut(50));
 		panel3.add(exitButton);
-		Component c = Box.createHorizontalStrut((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()); 
+		Component c = Box.createHorizontalStrut((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth());
 		panel3.add(c);
 		panel3.add(nextButton);
 		panel3.add(Box.createHorizontalStrut(50));
@@ -259,9 +248,13 @@ class QuizTakerDisplay extends JFrame {
 		java.awt.Rectangle r = panel3.getBounds();
 		panel.setPreferredSize(
 				new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), r.y + r.height + 50));
-		c.setPreferredSize(new Dimension((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth() - exitButton.getWidth() - nextButton.getWidth() - 100), 0));
+		c.setPreferredSize(new Dimension((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth()
+				- exitButton.getWidth() - nextButton.getWidth() - 100), 0));
 		System.out.println(exitButton.getBounds());
 		System.out.println(nextButton.getBounds());
+
+		questionWrong = 0;
+		wrongQuestions = new SimpleLinkedList<Question>();
 	} // End of constructor
 
 	private class Answer1Listener implements ActionListener {
@@ -272,15 +265,11 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[0] == answers.get(questionNum)) {
 				answer1.setBackground(Color.GREEN);
 				correct = true;
-				if (questionRight != true) {
-					questionWrong++;
+				if (answer3.getBackground() == defaultColor && answer2.getBackground() == defaultColor && answer4.getBackground() == defaultColor) {
+					right = true;
 				}
 			} else {
 				answer1.setBackground(Color.RED);
-				questionRight = false;
-				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
-					wrongQuestions.add(rootQuestions.get(questionNum));
-				}
 			}
 
 		}
@@ -294,16 +283,11 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[1] == answers.get(questionNum)) {
 				correct = true;
 				answer2.setBackground(Color.GREEN);
-				if (questionRight != true) {
-					questionWrong++;
+				if (answer1.getBackground() == defaultColor && answer3.getBackground() == defaultColor && answer4.getBackground() == defaultColor) {
+					right = true;
 				}
 			} else {
 				answer2.setBackground(Color.RED);
-				questionRight = false;
-				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
-					wrongQuestions.add(rootQuestions.get(questionNum));
-					System.out.println("added");
-				}
 			}
 
 		}
@@ -317,16 +301,11 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[2] == answers.get(questionNum)) {
 				answer3.setBackground(Color.GREEN);
 				correct = true;
-				if (questionRight != true) {
-					questionWrong++;
+				if (answer1.getBackground() == defaultColor && answer2.getBackground() == defaultColor && answer4.getBackground() == defaultColor) {
+					right = true;
 				}
 			} else {
 				answer3.setBackground(Color.RED);
-				questionRight = false;
-				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
-					wrongQuestions.add(rootQuestions.get(questionNum));
-				}
-
 			}
 
 		}
@@ -340,15 +319,11 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[3] == answers.get(questionNum)) {
 				answer4.setBackground(Color.GREEN);
 				correct = true;
-				if (questionRight != true) {
-					questionWrong++;
+				if (answer1.getBackground() == defaultColor && answer2.getBackground() == defaultColor && answer3.getBackground() == defaultColor) {
+					right = true;
 				}
 			} else {
 				answer4.setBackground(Color.RED);
-				questionRight = false;
-				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
-					wrongQuestions.add(rootQuestions.get(questionNum));
-				}
 			}
 
 		}
@@ -358,47 +333,55 @@ class QuizTakerDisplay extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-				panel2.removeAll();
-				questionNum++;
-				questionRight = true;
-				if (questionNum == questions.size()) {
+			panel2.removeAll();
 
-					new SummaryPage(wrongQuestions);
-					dispose();
-					return;
+			if (!right) {
+				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
+					wrongQuestions.add(rootQuestions.get(questionNum));
 				}
-				ids = variableIDs.get(questionNum);
-				values = variableValues.get(questionNum);
-
-				for (int j = 0; j < ids.length; j++) {
-					try {
-						panel2.add(new JLabel(
-								new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
-						JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
-						value.setFont(font2);
-						value.setForeground(lightBlue);
-						panel2.add(value);
-					} catch (IOException ex) {
-						ex.printStackTrace();
-					}
-				}
-
-				answer2.setBackground(defaultColor);
-				answer1.setBackground(defaultColor);
-				answer3.setBackground(defaultColor);
-				answer4.setBackground(defaultColor);
-
-				questionLabel.setText(
-						"<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
-				label.setText("Question #" + Integer.toString(questionNum + 1));
-				answer1.setText(Double.toString(round(choices.get(questionNum)[0], 2)));
-				answer2.setText(Double.toString(round(choices.get(questionNum)[1], 2)));
-				answer3.setText(Double.toString(round(choices.get(questionNum)[2], 2)));
-				answer4.setText(Double.toString(round(choices.get(questionNum)[3], 2)));
-				revalidate();
+				questionWrong++;
 			}
+			right = false;
+			questionNum++;
+
+			if (questionNum == questions.size()) {
+				new SummaryPage(wrongQuestions);
+				dispose();
+				return;
+			}
+
+			ids = variableIDs.get(questionNum);
+			values = variableValues.get(questionNum);
+
+			for (int j = 0; j < ids.length; j++) {
+				try {
+					panel2.add(
+							new JLabel(new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
+					JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
+					value.setFont(font2);
+					value.setForeground(lightBlue);
+					panel2.add(value);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+			}
+
+			answer2.setBackground(defaultColor);
+			answer1.setBackground(defaultColor);
+			answer3.setBackground(defaultColor);
+			answer4.setBackground(defaultColor);
+
+			questionLabel
+					.setText("<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
+			label.setText("Question #" + Integer.toString(questionNum + 1));
+			answer1.setText(Double.toString(round(choices.get(questionNum)[0], 2)));
+			answer2.setText(Double.toString(round(choices.get(questionNum)[1], 2)));
+			answer3.setText(Double.toString(round(choices.get(questionNum)[2], 2)));
+			answer4.setText(Double.toString(round(choices.get(questionNum)[3], 2)));
+			revalidate();
+		}
 	}
-	
+
 	private class ExitButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			window.dispose();

@@ -62,6 +62,8 @@ class SummaryPage extends JFrame {
 
 		double precentage = ((QuizTakerDisplay.questions.size() - QuizTakerDisplay.questionWrong) / (double)QuizTakerDisplay.questions.size()) * 100.00;
 		accuracy = new JLabel(String.format("%.2f", precentage) + "%");
+		
+		System.out.println(QuizTakerDisplay.questionWrong);
 
 		accuracy.setFont(new Font("Serif", Font.BOLD, 150));
 		accuracy.setForeground(lightBlue);
