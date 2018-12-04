@@ -1,6 +1,7 @@
 import data_structures.SimpleLinkedList;
 import data_structures.SimpleQueue;
 import data_structures.Stack;
+import java.awt.image.BufferedImage;
 
 public class Question {
 
@@ -9,6 +10,15 @@ public class Question {
 	private SimpleLinkedList<Symbol> formula;
 	private Double answer = 0.0;
 
+	private SimpleLinkedList<String> specificQuestions;
+	private SimpleLinkedList<String> specificAnswers;
+	private SimpleLinkedList<String> possibleAnswers;
+	
+	private BufferedImage image;
+	
+	private boolean preset;
+	private boolean numerical;
+	
 	//Stacks (for shunting yard alg)
 	private Stack<Operation> operators;
 	private SimpleQueue<Symbol> output;
@@ -19,6 +29,31 @@ public class Question {
 		this.formula = formula;
 		operators = new Stack<>();
 		output = new SimpleQueue<>();
+		numerical = true;
+	}
+	
+	Question(String problemStatement, SimpleLinkedList<Symbol> formula, BufferedImage image){
+		this.image = image;
+		this.problemStatement = problemStatement;
+		this.formula = formula;
+		operators = new Stack<>();
+		output = new SimpleQueue<>();
+		numerical = true;
+	}
+	
+	Question(String problemStatement, SimpleLinkedList<String> specificQuestions, SimpleLinkedList<String> specificAnswers, SimpleLinkedList<String> possibleAnswers) {
+		this.specificQuestions = specificQuestions;
+		this.specificAnswers = specificAnswers;
+		this.possibleAnswers = possibleAnswers;
+		preset = true;
+	}
+	
+	Question(String problemStatement, SimpleLinkedList<String> specificQuestions, SimpleLinkedList<String> specificAnswers, SimpleLinkedList<String> possibleAnswers, BufferedImage image) {
+		this.specificQuestions = specificQuestions;
+		this.specificAnswers = specificAnswers;
+		this.possibleAnswers = possibleAnswers;
+		this.image = image;
+		preset = true;
 	}
 
 	// setters
@@ -37,6 +72,23 @@ public class Question {
 
 	public SimpleLinkedList<Symbol> getFormula() {
 		return formula;
+	}
+	
+	public BufferedImage getImage() {
+		return image;
+	}
+	
+	//Returns in format (for each row): Question, Answer, FalseAnswer1, FalseAnswer2, FalseAnswer3 
+	public String[][] getStringQuestions(int num) {
+		return null;
+	}
+	
+	public boolean isPreset() {
+		return preset;
+	}
+	
+	public boolean isNumerical() {
+		return numerical;
 	}
 
     /**
