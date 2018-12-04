@@ -167,17 +167,13 @@ public class StudentInfo {
 		subjectMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String chosenSubject = (String) subjectMenu.getSelectedItem();
-
-				String level = chosenSubject.substring(chosenSubject.lastIndexOf(" ") + 1);
-				chosenSubject = chosenSubject.substring(0, chosenSubject.lastIndexOf(" "));
-				String name = chosenSubject.substring(0, chosenSubject.lastIndexOf(" "));
-				int grade = Integer.parseInt(chosenSubject.substring(chosenSubject.lastIndexOf(" ") + 1));
 				
 				int i = 0;
 				boolean found = false;
 				while (i < subjects.size() && !found) {
 					Subject s = subjects.get(i);
-					if (s.getName().equals(name) && s.getGrade() == grade && s.getLevel().equals(level)) {
+					String str = s.getName() + " " + s.getGrade() + " " + s.getLevel();
+					if (chosenSubject.equals(str)) {
 						curSubject = s;
 						clearTable();
 
