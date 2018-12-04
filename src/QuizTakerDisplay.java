@@ -10,11 +10,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SpringLayout;
 
 import data_structures.SimpleLinkedList;
 
 import java.awt.Toolkit;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -36,7 +38,7 @@ class QuizTakerDisplay extends JFrame {
 	boolean correct = false, correct1 = false;
 
 	JButton answer1, answer2, answer3, answer4;
-	JButton nextButton;
+	JButton nextButton, exitButton;
 
 	JLabel label;
 	JLabel questionLabel;
@@ -47,7 +49,7 @@ class QuizTakerDisplay extends JFrame {
 	Font font3 = new Font("Serif", Font.BOLD, 25);
 	Color indigo = new Color(56, 53, 74);
 	Color lightBlue = new Color(162, 236, 250);
-	
+	Color defaultColor = new JButton().getBackground();
 	int questionNum = 0;
 	String[] ids;
 	double[] values;
@@ -88,7 +90,7 @@ class QuizTakerDisplay extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setResizable(false);
-
+		window = this;
 		// Set up the game panel
 		JPanel panel = new JPanel() {
 			public void paintComponent(Graphics g) {
@@ -185,6 +187,8 @@ class QuizTakerDisplay extends JFrame {
 			nextButton = new JButton(new ImageIcon(ImageIO.read(new File("nextButton.png"))));
 		} catch (Exception ex) {
 		}
+		exitButton = new JButton("Exit");
+		
 		questionLabel = new JLabel(
 				"<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
 		questionLabel.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
@@ -229,24 +233,35 @@ class QuizTakerDisplay extends JFrame {
 		panel.add(panel1);
 		panel.add(Box.createRigidArea(new Dimension(0, x)));
 		panel.setBackground(indigo);
-		JPanel flowPanel = new JPanel();
-		flowPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		JPanel panel3 = new JPanel();
 
-		nextButton.setAlignmentX(JButton.LEFT_ALIGNMENT);
-		flowPanel.add(nextButton);
-		panel.add(flowPanel);
-		flowPanel.setBackground(indigo);
+
+//		nextButton.setAlignmentX(JButton.LEFT_ALIGNMENT);
+		exitButton.setFont(font3);
+		exitButton.addActionListener(new ExitButtonListener());
+		panel3.setBackground(Color.RED);
+		panel3.setOpaque(true);
+		panel3.setLayout(new BoxLayout(panel3, BoxLayout.X_AXIS));
+		panel3.add(Box.createHorizontalStrut(50));
+		panel3.add(exitButton);
+		Component c = Box.createHorizontalStrut((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth()); 
+		panel3.add(c);
+		panel3.add(nextButton);
+		panel3.add(Box.createHorizontalStrut(50));
+		panel.add(panel3);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
 		JScrollPane scroll = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
 
 		this.setContentPane(scroll);
-		java.awt.Rectangle r = flowPanel.getBounds();
+		java.awt.Rectangle r = panel3.getBounds();
 		panel.setPreferredSize(
 				new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), r.y + r.height + 50));
-
+		c.setPreferredSize(new Dimension((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth() - exitButton.getWidth() - nextButton.getWidth() - 100), 0));
+		System.out.println(exitButton.getBounds());
+		System.out.println(nextButton.getBounds());
 	} // End of constructor
 
 	private class Answer1Listener implements ActionListener {
@@ -368,10 +383,10 @@ class QuizTakerDisplay extends JFrame {
 					}
 				}
 
-				answer2.setBackground(null);
-				answer1.setBackground(null);
-				answer3.setBackground(null);
-				answer4.setBackground(null);
+				answer2.setBackground(defaultColor);
+				answer1.setBackground(defaultColor);
+				answer3.setBackground(defaultColor);
+				answer4.setBackground(defaultColor);
 
 				questionLabel.setText(
 						"<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
@@ -382,6 +397,12 @@ class QuizTakerDisplay extends JFrame {
 				answer4.setText(Double.toString(round(choices.get(questionNum)[3], 2)));
 				revalidate();
 			}
+	}
+	
+	private class ExitButtonListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			window.dispose();
+		}
 	}
 
 	public double round(double value, int places) {
