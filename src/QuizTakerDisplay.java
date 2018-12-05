@@ -49,6 +49,7 @@ class QuizTakerDisplay extends JFrame {
 	Font font3 = new Font("Serif", Font.BOLD, 25);
 	Color indigo = new Color(56, 53, 74);
 	Color lightBlue = new Color(162, 236, 250);
+	Color orange = new Color(255, 168, 104);
 	Color defaultColor = new JButton().getBackground();
 	int questionNum = 0;
 	String[] ids;
@@ -122,10 +123,10 @@ class QuizTakerDisplay extends JFrame {
 
 		// creating buttons for each choice
 
-		answer1 = new JButton(Double.toString(round(choices.get(questionNum)[0], 2)));
-		answer2 = new JButton(Double.toString(round(choices.get(questionNum)[1], 2)));
-		answer3 = new JButton(Double.toString(round(choices.get(questionNum)[2], 2)));
-		answer4 = new JButton(Double.toString(round(choices.get(questionNum)[3], 2)));
+		answer1 = new JButton(String.format("%.2f", choices.get(questionNum)[0]));
+		answer2 = new JButton(String.format("%.2f", choices.get(questionNum)[1]));
+		answer3 = new JButton(String.format("%.2f", choices.get(questionNum)[2]));
+		answer4 = new JButton(String.format("%.2f", choices.get(questionNum)[3]));
 
 		answer1.setFont(font3);
 		answer2.setFont(font3);
@@ -159,8 +160,7 @@ class QuizTakerDisplay extends JFrame {
 				try {
 					Double.parseDouble(ids[j]);
 				} catch (NumberFormatException e) {
-					panel2.add(
-							new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
+					panel2.add(new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
 					JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
 					value.setFont(font2);
 					value.setForeground(lightBlue);
@@ -194,14 +194,12 @@ class QuizTakerDisplay extends JFrame {
 			size = (int) (100 - (lengthOnRow - 46));
 		}
 
-		//		questionLabel.setRows(2);
-
 		questionLabel.setFont(new Font("Serif", Font.BOLD, size));
 		questionLabel.setForeground(lightBlue);
 
 		label = new JLabel("Question #" + Integer.toString(questionNum + 1));
-		label.setFont(font2);
-		label.setForeground(lightBlue);
+		label.setFont(new Font("Serif", Font.BOLD, 100));
+		label.setForeground(orange);
 		nextButton.addActionListener(new NextButtonListener());
 		int x = 50;
 		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -265,7 +263,8 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[0] == answers.get(questionNum)) {
 				answer1.setBackground(Color.GREEN);
 				correct = true;
-				if (answer3.getBackground() == defaultColor && answer2.getBackground() == defaultColor && answer4.getBackground() == defaultColor) {
+				if (answer3.getBackground() == defaultColor && answer2.getBackground() == defaultColor
+						&& answer4.getBackground() == defaultColor) {
 					right = true;
 				}
 			} else {
@@ -283,7 +282,8 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[1] == answers.get(questionNum)) {
 				correct = true;
 				answer2.setBackground(Color.GREEN);
-				if (answer1.getBackground() == defaultColor && answer3.getBackground() == defaultColor && answer4.getBackground() == defaultColor) {
+				if (answer1.getBackground() == defaultColor && answer3.getBackground() == defaultColor
+						&& answer4.getBackground() == defaultColor) {
 					right = true;
 				}
 			} else {
@@ -301,7 +301,8 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[2] == answers.get(questionNum)) {
 				answer3.setBackground(Color.GREEN);
 				correct = true;
-				if (answer1.getBackground() == defaultColor && answer2.getBackground() == defaultColor && answer4.getBackground() == defaultColor) {
+				if (answer1.getBackground() == defaultColor && answer2.getBackground() == defaultColor
+						&& answer4.getBackground() == defaultColor) {
 					right = true;
 				}
 			} else {
@@ -319,7 +320,8 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[3] == answers.get(questionNum)) {
 				answer4.setBackground(Color.GREEN);
 				correct = true;
-				if (answer1.getBackground() == defaultColor && answer2.getBackground() == defaultColor && answer3.getBackground() == defaultColor) {
+				if (answer1.getBackground() == defaultColor && answer2.getBackground() == defaultColor
+						&& answer3.getBackground() == defaultColor) {
 					right = true;
 				}
 			} else {
@@ -355,8 +357,7 @@ class QuizTakerDisplay extends JFrame {
 
 			for (int j = 0; j < ids.length; j++) {
 				try {
-					panel2.add(
-							new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
+					panel2.add(new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
 					JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
 					value.setFont(font2);
 					value.setForeground(lightBlue);
@@ -374,10 +375,10 @@ class QuizTakerDisplay extends JFrame {
 			questionLabel
 					.setText("<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
 			label.setText("Question #" + Integer.toString(questionNum + 1));
-			answer1.setText(Double.toString(round(choices.get(questionNum)[0], 2)));
-			answer2.setText(Double.toString(round(choices.get(questionNum)[1], 2)));
-			answer3.setText(Double.toString(round(choices.get(questionNum)[2], 2)));
-			answer4.setText(Double.toString(round(choices.get(questionNum)[3], 2)));
+			answer1.setText(String.format("%.2f", choices.get(questionNum)[0]));
+			answer2.setText(String.format("%.2f", choices.get(questionNum)[1]));
+			answer3.setText(String.format("%.2f", choices.get(questionNum)[2]));
+			answer4.setText(String.format("%.2f", choices.get(questionNum)[3]));
 			revalidate();
 		}
 	}
