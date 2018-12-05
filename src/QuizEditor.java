@@ -938,32 +938,14 @@ public class QuizEditor extends JFrame {
 	// Testing main class
 	public static void main(String[] args) {
 		try {
-			//			SimpleLinkedList<Subject> subjects = new SimpleLinkedList<Subject>();
-			//			Subject s = new Subject("HI", 11, "S");
-			//			s.addUnit(new Unit("a", 1));
-			//			s.addUnit(new Unit("b", 2));
-			//			s.addUnit(new Unit("c", 3));
-			//			s.addUnit(new Unit("d", 4));
-			//			s.addUnit(new Unit("e", 5));
-			//			subjects.add(s);
 			Database database = new Database();
 			SimpleLinkedList<Subject> subjects = database.getSubjects();
 
 			Symbol add = new Operation("+");
-			Symbol subtract = new Operation("-");
-			Symbol multiply = new Operation("mul");
-			Symbol divide = new Operation("div");
 			Symbol pi = new Variable("pi");
 			Symbol time = new Variable("time");
 			Symbol velocity = new Variable("velocity");
-			SimpleLinkedList<Symbol> symbols = new SimpleLinkedList<Symbol>();
-			symbols.add(add);
-			symbols.add(subtract);
-			symbols.add(multiply);
-			symbols.add(divide);
-			symbols.add(pi);
-			symbols.add(time);
-			symbols.add(velocity);
+			SimpleLinkedList<Symbol> symbols = database.getSymbols();;
 			SimpleLinkedList<SimpleLinkedList<Symbol>> formulas = new SimpleLinkedList<SimpleLinkedList<Symbol>>();
 			SimpleLinkedList<Symbol> tmp = new SimpleLinkedList<Symbol>();
 			tmp.add(time);

@@ -14,7 +14,7 @@ public class Variable extends Symbol{
 		try {
 			setImage(ImageIO.read(new File("Symbols/Variables/" + id + ".png")));
 		} catch (IOException e) {
-			System.out.println("io exception");
+			System.out.println("io exception -> " + id);
 		}
 		if (id.equals("pi")) {
 			value = Math.PI;
