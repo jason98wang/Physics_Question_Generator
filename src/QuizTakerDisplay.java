@@ -3,6 +3,7 @@
 import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -24,6 +25,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 //Keyboard imports
 import java.io.File;
 import java.io.IOException;
@@ -72,11 +74,9 @@ class QuizTakerDisplay extends JFrame {
 
 		super("Practice Like A Physicist");
 
-		//		Icon icon = null;
-		//		try {
-		//			icon = new ImageIcon(ImageIO.read(new File("clapping.gif")));
-		//		} catch (IOException e1) {}
-		//		JLabel clapping = new JLabel(icon);
+	
+		Icon clapping = new ImageIcon("clapping.gif");
+
 
 		// Set the frame to full screen
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -85,21 +85,26 @@ class QuizTakerDisplay extends JFrame {
 		window = this;
 		// Set up the game panel
 		JPanel panel = new JPanel() {
+			JLabel clap = new JLabel(clapping);
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
+	
 
 				if (correct) {
 					correct = false;
 					correct1 = true;
+					
 				} else if (correct1) {
 					correct1 = false;
-					//this.add(clapping);
+					this.add(clap);
+					revalidate();
 					try {
 						Thread.sleep(500);
 					} catch (Exception e) {
 					}
 					ActionEvent e = new ActionEvent(nextButton, 0, "");
 					nextButton.getActionListeners()[0].actionPerformed(e);
+					//this.remove(clap);
 				}
 
 				repaint();
@@ -253,6 +258,9 @@ class QuizTakerDisplay extends JFrame {
 
 		questionWrong = 0;
 		wrongQuestions = new SimpleLinkedList<Question>();
+		
+
+		//panel.remove(clap);
 	} // End of constructor
 
 	private class Answer1Listener implements ActionListener {
