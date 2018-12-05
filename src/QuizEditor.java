@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -913,14 +914,9 @@ public class QuizEditor extends JFrame {
 		int height = 0;
 		int width = 0;
 		for (int i = 0; i < formula.size(); i++) {
-			if (formula.get(i).getImage() == null) {
-				BufferedImage image = stringToImage(formula.get(i).getId());
-				width += image.getWidth();
-				height = Math.max(image.getHeight(), height);
-			} else {
-				width += formula.get(i).getImage().getWidth();
-				height = Math.max(formula.get(i).getImage().getHeight(), height);
-			}
+			BufferedImage image = stringToImage(formula.get(i).getId());
+			height = Math.max(image.getHeight(), height);
+			width += image.getWidth();
 		}
 		BufferedImage connectedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
@@ -929,18 +925,11 @@ public class QuizEditor extends JFrame {
 		Graphics g = connectedImage.createGraphics();
 		int sum = 0;
 		for (int i = 0; i < formula.size(); i++) {
-			if (formula.get(i).getImage() == null) {
-				BufferedImage image = stringToImage(formula.get(i).getId());
-				g.drawImage(stringToImage(formula.get(i).getId()), sum, 0, null);
-				sum += image.getWidth();
-			} else {
-				g.drawImage(formula.get(i).getImage(), sum, 0, null);
-				sum += formula.get(i).getImage().getWidth();
-			}
+			BufferedImage image = stringToImage(formula.get(i).getId());
+			g.drawImage(image, sum, 0, null);
+			sum += image.getWidth();
 		}
 		g.dispose();
-
-
 		return connectedImage;
 	}
 
@@ -1118,7 +1107,7 @@ public class QuizEditor extends JFrame {
 								String prevId = previous.getId();
 								String between = "-";
 								if (prevId.charAt(prevId.length() - 1) >= '0' && prevId.charAt(prevId.length() - 1) <= '9') between = "";
-								formula.add(new Symbol(previous.getId() + between + id, stringToImage(previous.getId() + id)));
+								formula.add(new Symbol(previous.getId() + between + id));
 							} else {
 								formula.add(symbols.get(buttonlist.indexOf(symbol)));
 							}
@@ -1169,20 +1158,19 @@ public class QuizEditor extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					double d = Double.parseDouble(constant.getText());
-					formula.add(new Symbol(constant.getText(),stringToImage(constant.getText())));
 					if (formula.size() > 0 && d % 1 == 0) {
 						Symbol previous = formula.get(formula.size() - 1);
 						formula.remove(formula.size() - 1);
-						if (previous instanceof Variable) {
+						if (previous instanceof Variable) {							
 							String id = previous.getId();
 							String between = "-";
 							if (id.charAt(id.length() - 1) >= '0' && id.charAt(id.length() - 1) <= '9') between = "";
-							formula.add(new Symbol(previous.getId() + between + constant.getText(), stringToImage(previous.getId() + constant.getText())));
+							formula.add(new Symbol(previous.getId() + between + constant.getText()));
 						} else {
-							formula.add(new Symbol(constant.getText(), stringToImage(constant.getText())));
+							formula.add(new Symbol(constant.getText()));
 						}
 					} else {
-						formula.add(new Symbol(constant.getText(), stringToImage(constant.getText())));
+						formula.add(new Symbol(constant.getText()));
 					}
 					enteredFormula.setIcon(new ImageIcon(joinBufferedImages(formula)));
 					createFormulaFrame.revalidate();
@@ -1209,6 +1197,7 @@ public class QuizEditor extends JFrame {
 				// Nothing has been entered yet
 				if (formula.size() == 0) return;
 				q.setFormula(formula);
+				formulaDisplay.setIcon(new ImageIcon(joinBufferedImages(formula)));
 				quiz.revalidate();
 				createFormulaFrame.dispose();
 			}
@@ -1232,7 +1221,7 @@ public class QuizEditor extends JFrame {
 		JScrollPane scroll = new JScrollPane(enteredFormula, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
 		scroll.getHorizontalScrollBar().setUnitIncrement(16);
-		scroll.setPreferredSize(new Dimension((int)contentPanel.getPreferredSize().getWidth(),(int)enteredFormula.getPreferredSize().getHeight() + 50));
+		scroll.setPreferredSize(new Dimension((int)contentPanel.getPreferredSize().getWidth(),(int)enteredFormula.getPreferredSize().getHeight() + 150));
 		contentPanel.add(scroll);
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		JPanel button = new JPanel();
@@ -1257,52 +1246,92 @@ public class QuizEditor extends JFrame {
 		createFormulaFrame.setVisible(true);
 	}
 
-	private BufferedImage stringToImage(String S) {
-//		if (S.endsWith(".0")) { 
-//			S = S.substring(0, S.length() - 2);
-//		}
-		int height = 0;
-		int width = 0;
-		SimpleLinkedList<BufferedImage> imageList = new SimpleLinkedList<BufferedImage>();
-		for (int i = 0; i < S.length(); i++) {
-			BufferedImage image = null;
-			if (S.charAt(i) == '-') {
-				if (i > 0) continue;
-				try {
-					image = ImageIO.read(new File("Symbols/Operations/-.png"));
-				} catch (IOException e) {
-					System.out.println(S.charAt(i));
-				}
-			} else if (S.charAt(i) == '.') {
-				try {
-					image = ImageIO.read(new File("Symbols/Operations/decimal.png"));
-				} catch (IOException e) {
-					System.out.println(S.charAt(i));
-				}
-			} else {
-				try {
-					image = ImageIO.read(new File("Symbols/Variables/" + (S.charAt(i) - '0') + ".png"));
-				} catch (IOException e) {
-					System.out.println(i);
-				}
+	public static BufferedImage stringToImage(String S) {
+//		System.out.println(S);
+		// is default operation
+		try {
+			BufferedImage image = ImageIO.read(new File("Symbols/Operations/" + S + ".png"));
+			return image;
+		} catch (IOException e) {}
+		
+		
+		// is default variable
+		try {
+			BufferedImage image = ImageIO.read(new File("Symbols/Variables/" + S + ".png"));
+			return image;
+		} catch (IOException e) {}
+		
+		// is double
+		try {
+			Double.parseDouble(S);
+			if (S.endsWith(".0")) { 
+				S = S.substring(0, S.length() - 2);
 			}
-			imageList.add(image);
-			height = Math.max(height, image.getHeight());
-			width += image.getWidth();
+			int height = 0;
+			int width = 0;
+			SimpleLinkedList<BufferedImage> imageList = new SimpleLinkedList<BufferedImage>();
+			for (int i = 0; i < S.length(); i++) {
+				BufferedImage image = null;
+				if (S.charAt(i) == '-') {
+					if (i > 0) continue;
+					try {
+						image = ImageIO.read(new File("Symbols/Operations/-.png"));
+					} catch (IOException e) {
+						System.out.println(S.charAt(i));
+					}
+				} else if (S.charAt(i) == '.') {
+					try {
+						image = ImageIO.read(new File("Symbols/Operations/decimal.png"));
+					} catch (IOException e) {
+						System.out.println(S.charAt(i));
+					}
+				} else {
+					try {
+						image = ImageIO.read(new File("Symbols/Variables/" + (S.charAt(i) - '0') + ".png"));
+					} catch (IOException e) {
+						System.out.println(i);
+					}
+				}
+				imageList.add(image);
+				height = Math.max(height, image.getHeight());
+				width += image.getWidth();
+			}
+			
+			BufferedImage connectedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+	
+	
+			// Draw each picture onto the new picture
+			Graphics g = connectedImage.createGraphics();
+			int sum = 0;
+			for (int i = 0; i < S.length(); i++) {
+				g.drawImage(imageList.get(i), sum, 0, null);
+				sum += imageList.get(i).getWidth();
+			}
+			g.dispose();
+			return connectedImage;
+		} catch (NumberFormatException e) {}
+		
+		
+		// is a variable with subscript
+		try {
+			BufferedImage variable = stringToImage(S.substring(0,S.indexOf("-")));
+			BufferedImage subscript = stringToImage(S.substring(S.indexOf("-") + 1));
+			Image tmp = subscript.getScaledInstance(subscript.getWidth() / 2, subscript.getHeight() / 2, Image.SCALE_SMOOTH);
+			int height = variable.getHeight();
+			int width = variable.getWidth() + subscript.getWidth() / 2;
+			BufferedImage connectedImage = new BufferedImage(width, height + 30, BufferedImage.TYPE_INT_ARGB);
+			
+			Graphics g = connectedImage.getGraphics();
+			g.drawImage(variable, 0, 0, null);
+			g.drawImage(tmp, variable.getWidth(), variable.getHeight() - subscript.getHeight() / 2 + 30, null);
+			g.dispose();
+			return connectedImage;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
-		BufferedImage connectedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-
-
-		// Draw each picture onto the new picture
-		Graphics g = connectedImage.createGraphics();
-		int sum = 0;
-		for (int i = 0; i < S.length(); i++) {
-			g.drawImage(imageList.get(i), sum, 0, null);
-			sum += imageList.get(i).getWidth();
-		}
-		g.dispose();
-		return connectedImage;
+		// should not be reached
+		return null;
 	}
 
 

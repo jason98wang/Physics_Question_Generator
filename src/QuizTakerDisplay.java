@@ -160,13 +160,13 @@ class QuizTakerDisplay extends JFrame {
 					Double.parseDouble(ids[j]);
 				} catch (NumberFormatException e) {
 					panel2.add(
-							new JLabel(new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
+							new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
 					JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
 					value.setFont(font2);
 					value.setForeground(lightBlue);
 					panel2.add(value);
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -356,12 +356,12 @@ class QuizTakerDisplay extends JFrame {
 			for (int j = 0; j < ids.length; j++) {
 				try {
 					panel2.add(
-							new JLabel(new ImageIcon(ImageIO.read(new File("Symbols/Variables/" + ids[j] + ".png")))));
+							new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
 					JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
 					value.setFont(font2);
 					value.setForeground(lightBlue);
 					panel2.add(value);
-				} catch (IOException ex) {
+				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
 			}
