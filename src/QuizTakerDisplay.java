@@ -1,9 +1,20 @@
 
 //Graphics & GUI imports
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+//Keyboard imports
+import java.io.File;
+
 import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,25 +22,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.SpringLayout;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import data_structures.SimpleLinkedList;
-
-import java.awt.Toolkit;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-//Keyboard imports
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 
 class QuizTakerDisplay extends JFrame {
 
@@ -76,9 +72,7 @@ class QuizTakerDisplay extends JFrame {
 
 		super("Practice Like A Physicist");
 
-	
-//		Icon clapping = new ImageIcon("clapping.gif");
-
+		//		Icon clapping = new ImageIcon("clapping.gif");
 
 		// Set the frame to full screen
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,15 +81,15 @@ class QuizTakerDisplay extends JFrame {
 		window = this;
 		// Set up the game panel
 		JPanel panel = new JPanel() {
-//			JLabel clap = new JLabel(clapping);
+			//			JLabel clap = new JLabel(clapping);
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
-	
+
 
 				if (correct) {
 					correct = false;
 					correct1 = true;
-					
+
 				} else if (correct1) {
 					if (time > 0) {
 						if (System.currentTimeMillis() - time >= 2000) {
@@ -109,9 +103,9 @@ class QuizTakerDisplay extends JFrame {
 						time = System.currentTimeMillis();
 						this.add(clapping);
 					}
-//					correct1 = false;
-//					this.add(clapp);
-					
+					//					correct1 = false;
+					//					this.add(clapp);
+
 					//this.remove(clap);
 				}
 
@@ -140,6 +134,21 @@ class QuizTakerDisplay extends JFrame {
 		answer2 = new JButton(String.format("%.2f", choices.get(questionNum)[1]));
 		answer3 = new JButton(String.format("%.2f", choices.get(questionNum)[2]));
 		answer4 = new JButton(String.format("%.2f", choices.get(questionNum)[3]));
+
+		// show colours on mac
+		answer1.setOpaque(true);
+		answer2.setOpaque(true);
+		answer3.setOpaque(true);
+		answer4.setOpaque(true);
+		//		nextButton.setOpaque(true);
+		//		exitButton.setOpaque(true);
+
+		answer1.setBorderPainted(false);
+		answer2.setBorderPainted(false);
+		answer3.setBorderPainted(false);
+		answer4.setBorderPainted(false);
+		//		nextButton.setBorderPainted(false);
+		//		exitButton.setBorderPainted(false);
 
 		answer1.setFont(font3);
 		answer2.setFont(font3);
@@ -266,7 +275,7 @@ class QuizTakerDisplay extends JFrame {
 
 		questionWrong = 0;
 		wrongQuestions = new SimpleLinkedList<Question>();
-		
+
 
 		//panel.remove(clap);
 	} // End of constructor
@@ -389,7 +398,7 @@ class QuizTakerDisplay extends JFrame {
 			answer4.setBackground(defaultColor);
 
 			questionLabel
-					.setText("<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
+			.setText("<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
 			label.setText("Question #" + Integer.toString(questionNum + 1));
 			answer1.setText(String.format("%.2f", choices.get(questionNum)[0]));
 			answer2.setText(String.format("%.2f", choices.get(questionNum)[1]));
