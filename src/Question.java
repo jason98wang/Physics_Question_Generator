@@ -80,6 +80,20 @@ public class Question {
 	
 	//Returns in format (for each row): Question, Answer, FalseAnswer1, FalseAnswer2, FalseAnswer3 
 	public String[][] getStringQuestions(int num) {
+		String[][] questions = new String[num][5];
+		int rand;
+		//If asking for more questions than there are specific questions for this one general stem
+		//Some questions will have to be doubled (no check for specific question doubling)
+		if (num > specificQuestions.size()) {
+			for (int i = 0; i < num; i++) {
+				rand = (int)(Math.round(Math.random()*(specificQuestions.size()-1)));
+				questions[i][0] = specificQuestions.get(rand);
+				questions[i][1] = specificAnswers.get(rand);
+				//Insert false answers
+			}
+		} else { //Checks that all specific questions are unique
+
+		}
 		return null;
 	}
 	
@@ -98,11 +112,25 @@ public class Question {
      */
 	public double getAnswer() {
 
+		boolean previouslyFound;
+		int previouslyFoundAt = 0;
+
 		//Randomize values of variables in formula (besides pi, which remains as pi)
 		for (int i = 0; i < formula.size(); i++) {
+			previouslyFound = false; //Reset flag to false
 			if (formula.get(i) instanceof Variable) {
 				if (!(((Variable)formula.get(i)).isConstant())) {
-					((Variable)(formula.get(i))).setValue(Math.random()*99+1);
+					for (int j = 0; j < i; j++) {
+						if (formula.get(i).getId().equals(formula.get(j).getId())) {
+							previouslyFound = true; //Flag as occurring previously in formula (already randomized)
+							previouslyFoundAt = j;
+						}
+					}
+					if (!previouslyFound) {
+						((Variable)(formula.get(i))).setValue(Math.random() * 99 + 1); //Randomize value
+					} else {
+						((Variable)(formula.get(i))).setValue(((Variable)(formula.get(previouslyFoundAt))).getValue());
+					}
 				}
 			}
 		}

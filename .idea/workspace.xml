@@ -4,7 +4,6 @@
     <list default="true" id="a2aaff2f-f0ef-48ef-ab37-2085b6f7665a" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Question.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Question.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data_structures/Stack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data_structures/Stack.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,8 +18,15 @@
       <file leaf-file-name="Question.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Question.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
-              <caret line="190" column="62" selection-start-line="190" selection-start-column="62" selection-end-line="190" selection-end-column="62" />
+            <state relative-caret-position="515">
+              <caret line="131" column="32" lean-forward="true" selection-start-line="131" selection-start-column="32" selection-end-line="131" selection-end-column="32" />
+              <folding>
+                <element signature="method#getFalseAnswers#0;class#Question#0" />
+                <element signature="method#toRPN#0;class#Question#0" />
+                <element signature="method#calcAnswer#0;class#Question#0" />
+                <element signature="method#toString#0;class#Question#0" />
+                <element signature="method#toSymbol#0;class#Question#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -244,11 +250,23 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="2" />
+    </breakpoint-manager>
+  </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/Question.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="7" column="36" lean-forward="true" selection-start-line="7" selection-start-column="36" selection-end-line="7" selection-end-column="36" />
+          <folding>
+            <element signature="method#getFalseAnswers#0;class#Question#0" />
+            <element signature="method#toRPN#0;class#Question#0" />
+            <element signature="method#calcAnswer#0;class#Question#0" />
+            <element signature="method#toString#0;class#Question#0" />
+            <element signature="method#toSymbol#0;class#Question#0" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -397,13 +415,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Variable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="22" column="25" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/data_structures/Stack.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
@@ -415,10 +426,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Variable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="22" column="25" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Question.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="190" column="62" selection-start-line="190" selection-start-column="62" selection-end-line="190" selection-end-column="62" />
+        <state relative-caret-position="515">
+          <caret line="131" column="32" lean-forward="true" selection-start-line="131" selection-start-column="32" selection-end-line="131" selection-end-column="32" />
+          <folding>
+            <element signature="method#getFalseAnswers#0;class#Question#0" />
+            <element signature="method#toRPN#0;class#Question#0" />
+            <element signature="method#calcAnswer#0;class#Question#0" />
+            <element signature="method#toString#0;class#Question#0" />
+            <element signature="method#toSymbol#0;class#Question#0" />
+          </folding>
         </state>
       </provider>
     </entry>
