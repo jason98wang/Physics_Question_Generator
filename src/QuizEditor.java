@@ -938,32 +938,14 @@ public class QuizEditor extends JFrame {
 	// Testing main class
 	public static void main(String[] args) {
 		try {
-			//			SimpleLinkedList<Subject> subjects = new SimpleLinkedList<Subject>();
-			//			Subject s = new Subject("HI", 11, "S");
-			//			s.addUnit(new Unit("a", 1));
-			//			s.addUnit(new Unit("b", 2));
-			//			s.addUnit(new Unit("c", 3));
-			//			s.addUnit(new Unit("d", 4));
-			//			s.addUnit(new Unit("e", 5));
-			//			subjects.add(s);
 			Database database = new Database();
 			SimpleLinkedList<Subject> subjects = database.getSubjects();
 
 			Symbol add = new Operation("+");
-			Symbol subtract = new Operation("-");
-			Symbol multiply = new Operation("mul");
-			Symbol divide = new Operation("div");
 			Symbol pi = new Variable("pi");
 			Symbol time = new Variable("time");
 			Symbol velocity = new Variable("velocity");
-			SimpleLinkedList<Symbol> symbols = new SimpleLinkedList<Symbol>();
-			symbols.add(add);
-			symbols.add(subtract);
-			symbols.add(multiply);
-			symbols.add(divide);
-			symbols.add(pi);
-			symbols.add(time);
-			symbols.add(velocity);
+			SimpleLinkedList<Symbol> symbols = database.getSymbols();;
 			SimpleLinkedList<SimpleLinkedList<Symbol>> formulas = new SimpleLinkedList<SimpleLinkedList<Symbol>>();
 			SimpleLinkedList<Symbol> tmp = new SimpleLinkedList<Symbol>();
 			tmp.add(time);
@@ -1070,7 +1052,9 @@ public class QuizEditor extends JFrame {
 
 		// Panel for buttons
 		JPanel buttons = new JPanel();
-		buttons.setLayout(new GridLayout((symbols.size() + 2) / (int) Math.sqrt((symbols.size() + 2)),(int) Math.sqrt(symbols.size())));
+		int cols = (int)Math.ceil(Math.sqrt(symbols.size() + 2));
+		int rows = (int)Math.ceil((double)(symbols.size() + 2) / cols);
+		buttons.setLayout(new GridLayout(rows,cols));
 
 		// Main panel
 		JPanel contentPanel = new JPanel();
@@ -1091,7 +1075,9 @@ public class QuizEditor extends JFrame {
 		for (int i = 0; i < symbols.size(); i++) {
 
 			// JButton for all symbols
-			JButton symbol = new JButton(new ImageIcon(symbols.get(i).getImage()));
+			BufferedImage image = symbols.get(i).getImage();
+			Image tmp = image.getScaledInstance(image.getWidth() / 2, image.getHeight() / 2, Image.SCALE_SMOOTH);
+			JButton symbol = new JButton(new ImageIcon(tmp));
 			symbol.setBackground(lightBlue);
 			symbol.addActionListener(new ActionListener() {
 				// Add to formula
@@ -1109,6 +1095,7 @@ public class QuizEditor extends JFrame {
 								if (prevId.charAt(prevId.length() - 1) >= '0' && prevId.charAt(prevId.length() - 1) <= '9') between = "";
 								formula.add(new Symbol(previous.getId() + between + id));
 							} else {
+								formula.add(previous);
 								formula.add(symbols.get(buttonlist.indexOf(symbol)));
 							}
 						} catch (NumberFormatException ex) {
@@ -1124,7 +1111,7 @@ public class QuizEditor extends JFrame {
 			buttonlist.add(symbol);
 			buttons.add(symbol);
 		}
-
+		
 		// Delete last symbol
 		JButton backspace = new JButton("Del");
 		backspace.setBackground(Color.WHITE);
@@ -1167,6 +1154,7 @@ public class QuizEditor extends JFrame {
 							if (id.charAt(id.length() - 1) >= '0' && id.charAt(id.length() - 1) <= '9') between = "";
 							formula.add(new Symbol(previous.getId() + between + constant.getText()));
 						} else {
+							formula.add(previous);
 							formula.add(new Symbol(constant.getText()));
 						}
 					} else {
@@ -1217,7 +1205,6 @@ public class QuizEditor extends JFrame {
 		contentPane.add(logo);
 		contentPanel.add(buttons);
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
-		
 		JScrollPane scroll = new JScrollPane(enteredFormula, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
 		scroll.getHorizontalScrollBar().setUnitIncrement(16);
@@ -1229,12 +1216,13 @@ public class QuizEditor extends JFrame {
 		button.add(Box.createHorizontalStrut(50));
 		button.add(cancel);
 		button.setBackground(indigo);
+//		buttons.setPreferredSize(new Dimension((int)(createFormulaFrame.getWidth() - logo.getWidth()),500));
 		contentPanel.add(button);
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.setBackground(indigo);
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		contentPane.add(Box.createHorizontalStrut(50));
-		JScrollPane scrollpane = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane scrollpane = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollpane.getVerticalScrollBar().setUnitIncrement(16);
 		Dimension fullscreen = Toolkit.getDefaultToolkit().getScreenSize();
 		scrollpane.setPreferredSize(new Dimension((int)fullscreen.getWidth() - 100, (int)fullscreen.getHeight()));
