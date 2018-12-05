@@ -44,6 +44,8 @@ class QuizTakerDisplay extends JFrame {
 
 	JLabel label;
 	JLabel questionLabel;
+	JLabel clapping = new JLabel(new ImageIcon("clapping.gif"));
+	private long time;
 
 	JPanel panel2;
 	Font font1 = new Font("Serif", Font.BOLD, 100);
@@ -75,7 +77,7 @@ class QuizTakerDisplay extends JFrame {
 		super("Practice Like A Physicist");
 
 	
-		Icon clapping = new ImageIcon("clapping.gif");
+//		Icon clapping = new ImageIcon("clapping.gif");
 
 
 		// Set the frame to full screen
@@ -85,7 +87,7 @@ class QuizTakerDisplay extends JFrame {
 		window = this;
 		// Set up the game panel
 		JPanel panel = new JPanel() {
-			JLabel clap = new JLabel(clapping);
+//			JLabel clap = new JLabel(clapping);
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
 	
@@ -95,15 +97,21 @@ class QuizTakerDisplay extends JFrame {
 					correct1 = true;
 					
 				} else if (correct1) {
-					correct1 = false;
-					this.add(clap);
-					revalidate();
-					try {
-						Thread.sleep(500);
-					} catch (Exception e) {
+					if (time > 0) {
+						if (System.currentTimeMillis() - time >= 2000) {
+							time = 0;
+							this.remove(clapping);
+							correct1 = false;
+							ActionEvent e = new ActionEvent(nextButton, 0, "");
+							nextButton.getActionListeners()[0].actionPerformed(e);
+						}
+					} else {
+						time = System.currentTimeMillis();
+						this.add(clapping);
 					}
-					ActionEvent e = new ActionEvent(nextButton, 0, "");
-					nextButton.getActionListeners()[0].actionPerformed(e);
+//					correct1 = false;
+//					this.add(clapp);
+					
 					//this.remove(clap);
 				}
 
