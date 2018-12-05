@@ -209,6 +209,14 @@ public class QuizTaker {
 			for (int j = 0; j < formula.size(); j++) {
 				if (formula.get(j) instanceof Variable) {
 					if(!((Variable) formula.get(j)).isConstant()) {
+						boolean variableUsed = false;
+						for (int k = 0; k < tempVariables.size(); k++) {
+							if (tempVariables.get(k).getId().equals(formula.get(j).getId())) {
+								variableUsed = true;
+								break;
+							}
+						}
+						if (variableUsed) continue;
 						tempVariables.add((Variable) formula.get(j));
 					}
 				}
