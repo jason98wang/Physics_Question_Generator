@@ -3,6 +3,7 @@
 import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -24,6 +25,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 //Keyboard imports
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +44,8 @@ class QuizTakerDisplay extends JFrame {
 
 	JLabel label;
 	JLabel questionLabel;
+	JLabel clapping = new JLabel(new ImageIcon("clapping.gif"));
+	private long time;
 
 	JPanel panel2;
 	Font font1 = new Font("Serif", Font.BOLD, 100);
@@ -49,6 +53,7 @@ class QuizTakerDisplay extends JFrame {
 	Font font3 = new Font("Serif", Font.BOLD, 25);
 	Color indigo = new Color(56, 53, 74);
 	Color lightBlue = new Color(162, 236, 250);
+	Color orange = new Color(255, 168, 104);
 	Color defaultColor = new JButton().getBackground();
 	int questionNum = 0;
 	String[] ids;
@@ -71,11 +76,9 @@ class QuizTakerDisplay extends JFrame {
 
 		super("Practice Like A Physicist");
 
-		//		Icon icon = null;
-		//		try {
-		//			icon = new ImageIcon(ImageIO.read(new File("clapping.gif")));
-		//		} catch (IOException e1) {}
-		//		JLabel clapping = new JLabel(icon);
+	
+//		Icon clapping = new ImageIcon("clapping.gif");
+
 
 		// Set the frame to full screen
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,21 +87,32 @@ class QuizTakerDisplay extends JFrame {
 		window = this;
 		// Set up the game panel
 		JPanel panel = new JPanel() {
+//			JLabel clap = new JLabel(clapping);
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
+	
 
 				if (correct) {
 					correct = false;
 					correct1 = true;
+					
 				} else if (correct1) {
-					correct1 = false;
-					//this.add(clapping);
-					try {
-						Thread.sleep(500);
-					} catch (Exception e) {
+					if (time > 0) {
+						if (System.currentTimeMillis() - time >= 2000) {
+							time = 0;
+							this.remove(clapping);
+							correct1 = false;
+							ActionEvent e = new ActionEvent(nextButton, 0, "");
+							nextButton.getActionListeners()[0].actionPerformed(e);
+						}
+					} else {
+						time = System.currentTimeMillis();
+						this.add(clapping);
 					}
-					ActionEvent e = new ActionEvent(nextButton, 0, "");
-					nextButton.getActionListeners()[0].actionPerformed(e);
+//					correct1 = false;
+//					this.add(clapp);
+					
+					//this.remove(clap);
 				}
 
 				repaint();
@@ -122,10 +136,10 @@ class QuizTakerDisplay extends JFrame {
 
 		// creating buttons for each choice
 
-		answer1 = new JButton(Double.toString(round(choices.get(questionNum)[0], 2)));
-		answer2 = new JButton(Double.toString(round(choices.get(questionNum)[1], 2)));
-		answer3 = new JButton(Double.toString(round(choices.get(questionNum)[2], 2)));
-		answer4 = new JButton(Double.toString(round(choices.get(questionNum)[3], 2)));
+		answer1 = new JButton(String.format("%.2f", choices.get(questionNum)[0]));
+		answer2 = new JButton(String.format("%.2f", choices.get(questionNum)[1]));
+		answer3 = new JButton(String.format("%.2f", choices.get(questionNum)[2]));
+		answer4 = new JButton(String.format("%.2f", choices.get(questionNum)[3]));
 
 		answer1.setFont(font3);
 		answer2.setFont(font3);
@@ -159,8 +173,7 @@ class QuizTakerDisplay extends JFrame {
 				try {
 					Double.parseDouble(ids[j]);
 				} catch (NumberFormatException e) {
-					panel2.add(
-							new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
+					panel2.add(new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
 					JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
 					value.setFont(font2);
 					value.setForeground(lightBlue);
@@ -194,14 +207,12 @@ class QuizTakerDisplay extends JFrame {
 			size = (int) (100 - (lengthOnRow - 46));
 		}
 
-		//		questionLabel.setRows(2);
-
 		questionLabel.setFont(new Font("Serif", Font.BOLD, size));
 		questionLabel.setForeground(lightBlue);
 
 		label = new JLabel("Question #" + Integer.toString(questionNum + 1));
-		label.setFont(font2);
-		label.setForeground(lightBlue);
+		label.setFont(new Font("Serif", Font.BOLD, 100));
+		label.setForeground(orange);
 		nextButton.addActionListener(new NextButtonListener());
 		int x = 50;
 		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -255,6 +266,9 @@ class QuizTakerDisplay extends JFrame {
 
 		questionWrong = 0;
 		wrongQuestions = new SimpleLinkedList<Question>();
+		
+
+		//panel.remove(clap);
 	} // End of constructor
 
 	private class Answer1Listener implements ActionListener {
@@ -265,7 +279,8 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[0] == answers.get(questionNum)) {
 				answer1.setBackground(Color.GREEN);
 				correct = true;
-				if (answer3.getBackground() == defaultColor && answer2.getBackground() == defaultColor && answer4.getBackground() == defaultColor) {
+				if (answer3.getBackground() == defaultColor && answer2.getBackground() == defaultColor
+						&& answer4.getBackground() == defaultColor) {
 					right = true;
 				}
 			} else {
@@ -283,7 +298,8 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[1] == answers.get(questionNum)) {
 				correct = true;
 				answer2.setBackground(Color.GREEN);
-				if (answer1.getBackground() == defaultColor && answer3.getBackground() == defaultColor && answer4.getBackground() == defaultColor) {
+				if (answer1.getBackground() == defaultColor && answer3.getBackground() == defaultColor
+						&& answer4.getBackground() == defaultColor) {
 					right = true;
 				}
 			} else {
@@ -301,7 +317,8 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[2] == answers.get(questionNum)) {
 				answer3.setBackground(Color.GREEN);
 				correct = true;
-				if (answer1.getBackground() == defaultColor && answer2.getBackground() == defaultColor && answer4.getBackground() == defaultColor) {
+				if (answer1.getBackground() == defaultColor && answer2.getBackground() == defaultColor
+						&& answer4.getBackground() == defaultColor) {
 					right = true;
 				}
 			} else {
@@ -319,7 +336,8 @@ class QuizTakerDisplay extends JFrame {
 			if (choices.get(questionNum)[3] == answers.get(questionNum)) {
 				answer4.setBackground(Color.GREEN);
 				correct = true;
-				if (answer1.getBackground() == defaultColor && answer2.getBackground() == defaultColor && answer3.getBackground() == defaultColor) {
+				if (answer1.getBackground() == defaultColor && answer2.getBackground() == defaultColor
+						&& answer3.getBackground() == defaultColor) {
 					right = true;
 				}
 			} else {
@@ -355,8 +373,7 @@ class QuizTakerDisplay extends JFrame {
 
 			for (int j = 0; j < ids.length; j++) {
 				try {
-					panel2.add(
-							new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
+					panel2.add(new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
 					JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
 					value.setFont(font2);
 					value.setForeground(lightBlue);
@@ -374,10 +391,10 @@ class QuizTakerDisplay extends JFrame {
 			questionLabel
 					.setText("<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
 			label.setText("Question #" + Integer.toString(questionNum + 1));
-			answer1.setText(Double.toString(round(choices.get(questionNum)[0], 2)));
-			answer2.setText(Double.toString(round(choices.get(questionNum)[1], 2)));
-			answer3.setText(Double.toString(round(choices.get(questionNum)[2], 2)));
-			answer4.setText(Double.toString(round(choices.get(questionNum)[3], 2)));
+			answer1.setText(String.format("%.2f", choices.get(questionNum)[0]));
+			answer2.setText(String.format("%.2f", choices.get(questionNum)[1]));
+			answer3.setText(String.format("%.2f", choices.get(questionNum)[2]));
+			answer4.setText(String.format("%.2f", choices.get(questionNum)[3]));
 			revalidate();
 		}
 	}
