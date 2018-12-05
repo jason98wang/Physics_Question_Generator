@@ -2,9 +2,10 @@ package data_structures;
 
 public class Stack<T> {
 
-    private Node<T> head = null;
+    private Node<T> head;
 
     public Stack() {
+        head = null;
     }
 
     public void push(T item) {

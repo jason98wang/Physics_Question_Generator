@@ -183,9 +183,12 @@ public class Question {
 				    if (operators.peek() != null) {
                         while (((operators.peek().getOperation().equals("sqrt")) || ((((Operation) (formula.get(i))).getPrecedence() < operators.peek().getPrecedence())) || (((((Operation) (formula.get(i))).getPrecedence() == operators.peek().getPrecedence())) && (((Operation) (formula.get(i))).getOperation() != "^"))) && (operators.peek().getOperation() != "(")) {
                             output.enqueue(operators.pop());
+                            if (operators.peek() != null) {
+                            	break;
+							}
                         }
                     }
-					operators.push((Operation)formula.get(i));;
+					operators.push((Operation)formula.get(i));
 				}
 				if (((Operation)(formula.get(i))).getOperation().equals("(")) {
 					operators.push((Operation)formula.get(i));

@@ -2,223 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a2aaff2f-f0ef-48ef-ab37-2085b6f7665a" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.classpath" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10.2/fileChanges/last-build.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10.2/gc.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/vcs-1/gc.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.mylyn/.taskListIndex/segments.gen" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.mylyn/.taskListIndex/segments_1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.mylyn/.tasks.xml.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.mylyn/repositories.xml.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.mylyn/tasks.xml.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.resources/.root/.indexes/history.version" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.resources/.root/.indexes/properties.index" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.resources/.root/.indexes/properties.version" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.resources/.root/2.tree" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.resources/.safetable/org.eclipse.core.resources" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.core.resources.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.egit.core.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.epp.logging.aeri.ide.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.jdt.launching.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.jdt.ui.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.m2e.discovery.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.mylyn.context.core.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.mylyn.monitor.ui.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.mylyn.tasks.ui.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.team.ui.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.editors.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.ide.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.core.runtime/.settings/org.eclipse.ui.workbench.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.e4.workbench/workbench.xmi" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.egit.ui/dialog_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/http-cache/segments.gen" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/http-cache/segments_1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/local-history/_0.fdt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/local-history/_0.fdx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/local-history/_0.fnm" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/local-history/_0.frq" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/local-history/_0.nrm" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/local-history/_0.tii" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/local-history/_0.tis" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/local-history/segments.gen" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/local-history/segments_1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/local-history/write.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/_0.fdt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/_0.fdx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/_0.fnm" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/_0.frq" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/_0.nrm" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/_0.tii" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/_0.tis" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/segments.gen" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/remote-history/segments_1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.epp.logging.aeri.ide/org.eclipse.epp.logging.aeri.ide.server/server-config.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.jdt.core/assumedExternalFilesCache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.jdt.core/externalFilesCache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.jdt.core/externalLibsTimeStamps" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.jdt.core/javaLikeNames.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.jdt.core/nonChainingJarsCache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.jdt.core/variablesAndContainers.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.jdt.launching/.install.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.jdt.launching/libraryInfos.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.jdt.ui/OpenTypeHistory.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.jdt.ui/QualifiedTypeNameHistory.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.jdt.ui/dialog_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.m2e.logback.configuration/0.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.m2e.logback.configuration/logback.1.7.0.20160603-1933.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.oomph.setup.ui/dialog_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.oomph.setup/workspace.setup" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.ui.ide/dialog_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.ui.intro/dialog_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.ui.intro/introstate" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.ui.workbench/dialog_settings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/.plugins/org.eclipse.ui.workbench/workingsets.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.metadata/version.ini" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.project" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.settings/org.eclipse.ltk.core.refactoring.prefs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/NextButton.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Physics.class.violet.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Physics.gan" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Physics_Question_Generator.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Operations/(.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Operations/).png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Operations/*.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Operations/+.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Operations/-.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Operations/&lt;.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Operations/&lt;=.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Operations/=.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Operations/&gt;.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Operations/&gt;=.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Operations/^.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Operations/degree.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Operations/div.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Operations/sqrt.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Operations/subscript.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/Pi.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/acceleration.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/appliedForce.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/chemicalEnergy.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/delta.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/displacement.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/e.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/elasticEnergy.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/elasticForce.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/electricForce.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/gravitationalEnergy.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/gravitationalForce.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/impulse.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/kineticEnergy.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/kineticFrictionalForce.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/lambda.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/magneticForce.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/momentum.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/normalForce.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/nuclearEnergy.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/sigma.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/soundEnergy.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/springForce.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/staticFrictionalForce.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/tensionalForce.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/thermalEnergy.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/theta.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/time.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/velocity.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/work.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/xForce.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Symbols/Variables/yForce.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Button.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Database.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Node.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Operation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Question.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$10.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$11.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$12.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$13.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$14.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$15.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$16.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$17.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$3$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$5.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$6$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$6.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$7.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$8.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$9.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor$CustomListRenderer.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizEditor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizTaker$ExitButtonActionListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizTaker$NumQuestionsFocusListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizTaker$StartButtonActionListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizTaker$SubjectActionListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizTaker$UnitActionListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizTaker.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizTakerDisplay$Answer1Listener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizTakerDisplay$Answer2Listener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizTakerDisplay$Answer3Listener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizTakerDisplay$Answer4Listener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizTakerDisplay$GameAreaPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizTakerDisplay$MouseActionListener.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizTakerDisplay.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/QuizTakerExe.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/SimpleLinkedList.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/SimpleQueue.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Stack.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Subject.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Symbol.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Unit.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/Variable.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/test.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/database.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jar_files/Pastebin-0.2.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jar_files/api-common-1.0.0.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jar_files/firebase-admin-6.5.0.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jar_files/google-auth-library-oauth2-http-0.11.0.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jar_files/gson-2.8.5.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jar_files/guava-r05.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jar_files/json-simple-1.1.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jar_files/log4j-over-slf4j-1.7.25.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jar_files/org.eclipse.egit.github.core-2.1.5.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/jar_files/slf4j-api-1.7.25.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/record.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/special chars.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Button.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Database.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Node.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Operation.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Question.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/QuizEditor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/QuizTaker.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/QuizTakerDisplay.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/QuizTakerExe.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SimpleLinkedList.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SimpleQueue.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Stack.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Subject.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Symbol.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Unit.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Variable.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Question.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Question.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data_structures/Stack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/data_structures/Stack.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/bin/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -230,26 +16,33 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Question.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Question.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Question.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="612">
-              <caret line="44" column="84" lean-forward="true" selection-start-line="44" selection-start-column="84" selection-end-line="44" selection-end-column="84" />
+            <state relative-caret-position="408">
+              <caret line="190" column="62" selection-start-line="190" selection-start-column="62" selection-end-line="190" selection-end-column="62" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Variable.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Stack.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/data_structures/Stack.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="7" column="20" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
+              <folding>
+                <element signature="e#97#98#0" expanded="true" />
+                <element signature="e#123#124#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Variable.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Variable.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="306">
-              <caret line="21" column="47" selection-start-line="21" selection-start-column="47" selection-end-line="21" selection-end-column="47" />
-              <folding>
-                <element signature="e#560#561#0" expanded="true" />
-                <element signature="e#585#586#0" expanded="true" />
-                <element signature="e#626#627#0" expanded="true" />
-                <element signature="e#645#646#0" expanded="true" />
-              </folding>
+              <caret line="22" column="25" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -282,6 +75,7 @@
         <option value="$PROJECT_DIR$/src/Stack.java" />
         <option value="$PROJECT_DIR$/src/SimpleQueue.java" />
         <option value="$PROJECT_DIR$/src/Variable.java" />
+        <option value="$PROJECT_DIR$/src/data_structures/Stack.java" />
         <option value="$PROJECT_DIR$/src/Question.java" />
       </list>
     </option>
@@ -297,6 +91,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="AndroidView" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -310,12 +106,16 @@
               <item name="Physics_Question_Generator" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="Physics_Question_Generator" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Physics_Question_Generator" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="data_structures" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -434,17 +234,31 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Messages" order="7" weight="0.32965517" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Messages" order="7" weight="0.32965517" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/Question.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="36" lean-forward="true" selection-start-line="7" selection-start-column="36" selection-end-line="7" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Variable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="21" column="47" selection-start-line="21" selection-start-column="47" selection-end-line="21" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Question.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="969">
@@ -477,12 +291,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="19" column="5" lean-forward="true" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
-          <folding>
-            <element signature="e#560#561#0" expanded="true" />
-            <element signature="e#585#586#0" expanded="true" />
-            <element signature="e#626#627#0" expanded="true" />
-            <element signature="e#645#646#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -555,12 +363,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="527">
           <caret line="31" column="5" lean-forward="true" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="5" />
-          <folding>
-            <element signature="e#116#117#0" expanded="true" />
-            <element signature="e#162#163#0" expanded="true" />
-            <element signature="e#556#557#0" expanded="true" />
-            <element signature="e#575#576#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -595,23 +397,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Question.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="44" column="84" lean-forward="true" selection-start-line="44" selection-start-column="84" selection-end-line="44" selection-end-column="84" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Variable.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
-          <caret line="21" column="47" selection-start-line="21" selection-start-column="47" selection-end-line="21" selection-end-column="47" />
+          <caret line="22" column="25" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/data_structures/Stack.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="20" selection-start-line="7" selection-start-column="20" selection-end-line="7" selection-end-column="20" />
           <folding>
-            <element signature="e#560#561#0" expanded="true" />
-            <element signature="e#585#586#0" expanded="true" />
-            <element signature="e#626#627#0" expanded="true" />
-            <element signature="e#645#646#0" expanded="true" />
+            <element signature="e#97#98#0" expanded="true" />
+            <element signature="e#123#124#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Question.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="190" column="62" selection-start-line="190" selection-start-column="62" selection-end-line="190" selection-end-column="62" />
         </state>
       </provider>
     </entry>
