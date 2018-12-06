@@ -131,7 +131,7 @@ class SummaryPage extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			new QuizTaker();
+			new QuizTaker(QuizTakerDisplay.student);
 			dispose();
 		}
 

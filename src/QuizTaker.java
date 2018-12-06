@@ -58,7 +58,7 @@ public class QuizTaker {
 	private SimpleLinkedList<double[]> variableValues;
 	private Subject chosenSubject;
 	private Unit chosenUnit;
-	private Student student;
+	private static Student student;
 
 	private Color indigo, lightBlue;
 	private static Random rand;
@@ -326,7 +326,7 @@ public class QuizTaker {
 			questions.add(new Question(problemStatement, formula));
 
 		}
-		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions);
+		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions, student);
 		window.dispose();
 
 	}
