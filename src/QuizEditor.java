@@ -8,7 +8,6 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -1092,25 +1091,6 @@ public class QuizEditor extends JFrame {
 				if (formulas.get(index) == null) return;
 				q.setFormula(formulas.get(index));
 				formulaDisplay.setIcon(new ImageIcon(joinBufferedImages(formulas.get(index))));
-				Question tempquestion = new Question(null,formulas.get(index));
-				double ans = tempquestion.getAnswer();
-				double[] wrongAns = tempquestion.getFalseAnswers();
-				Random rand = new Random();
-				int tempRand = rand.nextInt(4);
-				double[] tmp;
-				if (tempRand == 3) {
-					tmp = new double[] { ans, wrongAns[0], wrongAns[1], wrongAns[2] };
-				} else if (tempRand == 2) {
-					tmp = new double[] { wrongAns[0], ans, wrongAns[1], wrongAns[2] };
-				} else if (tempRand == 1) {
-					tmp = new double[] { wrongAns[0], wrongAns[1], ans, wrongAns[2] };
-				} else {
-					tmp = new double[] { wrongAns[0], wrongAns[1], wrongAns[2], ans };
-				}
-//				choice1.setText(Double.toString(tmp[0]));
-//				choice2.setText(Double.toString(tmp[1]));
-//				choice3.setText(Double.toString(tmp[2]));
-//				choice4.setText(Double.toString(tmp[3]));
 				quiz.revalidate();
 				previousFormulaFrame.dispose();
 				return;
@@ -1302,25 +1282,6 @@ public class QuizEditor extends JFrame {
 				if (formula.size() == 0) return;
 				q.setFormula(formula);
 				formulaDisplay.setIcon(new ImageIcon(joinBufferedImages(formula)));
-				Question tempquestion = new Question(null,formula);
-				double ans = tempquestion.getAnswer();
-				double[] wrongAns = tempquestion.getFalseAnswers();
-				Random rand = new Random();
-				int tempRand = rand.nextInt(4);
-				double[] tmp;
-				if (tempRand == 3) {
-					tmp = new double[] { ans, wrongAns[0], wrongAns[1], wrongAns[2] };
-				} else if (tempRand == 2) {
-					tmp = new double[] { wrongAns[0], ans, wrongAns[1], wrongAns[2] };
-				} else if (tempRand == 1) {
-					tmp = new double[] { wrongAns[0], wrongAns[1], ans, wrongAns[2] };
-				} else {
-					tmp = new double[] { wrongAns[0], wrongAns[1], wrongAns[2], ans };
-				}
-				choice1.setText(Double.toString(tmp[0]));
-				choice2.setText(Double.toString(tmp[1]));
-				choice3.setText(Double.toString(tmp[2]));
-				choice4.setText(Double.toString(tmp[3]));
 				quiz.revalidate();
 				createFormulaFrame.dispose();
 			}
