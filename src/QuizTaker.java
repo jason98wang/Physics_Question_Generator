@@ -245,7 +245,7 @@ public class QuizTaker {
 			questions.add(new Question(problemStatement, formula));
 
 		}
-		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions);
+		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions, student);
 		window.dispose();
 
 	}

@@ -66,5 +66,15 @@ public class Subject {
 	public SimpleLinkedList<Student> getStudents(){
 		return students;
 	}
+	
+	public Student getStudent(String studentNumber, String password) {
+		for (int i = 0; i < students.size(); i++) {
+			Student st = students.get(i);
+			if (st.getStudentNumber().equals(studentNumber) && st.getPassword().equals(password)) {
+				return st;
+			}
+		}
+		return null;
+	}
 
 }
