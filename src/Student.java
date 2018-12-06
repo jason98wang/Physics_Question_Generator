@@ -45,6 +45,11 @@ public class Student {
 	public void setTotalQuestions(int totalQuestions) {
 		this.totalQuestions = totalQuestions;
 	}
+	
+	public void addIncorrectQuestions() {
+		incorrectQuestions++;
+	}
+
 
 	// getters
 	public String getName() {
@@ -80,4 +85,6 @@ public class Student {
 		}
 		return -1;
 	}
+	
+	
 }

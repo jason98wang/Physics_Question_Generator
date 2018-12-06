@@ -32,9 +32,19 @@ import data_structures.SimpleLinkedList;
 
 import javax.swing.JComboBox;
 
+/*
+ * To Do
+ * Main UI better
+ * Preset questions
+ * Enter key listener
+ * Show current user
+ */
+
 public class QuizTaker {
 
 	private int numQuestions;
+	private int numNumQuestions;
+	private int numWordQuestions;
 
 	private Database database;
 	private SimpleLinkedList<Subject> subjects;
@@ -48,6 +58,7 @@ public class QuizTaker {
 	private SimpleLinkedList<double[]> variableValues;
 	private Subject chosenSubject;
 	private Unit chosenUnit;
+	private static Student student;
 
 	private Color indigo, lightBlue;
 	private static Random rand;
@@ -62,8 +73,10 @@ public class QuizTaker {
 	private JComboBox<String> subject, unit;
 	private JTextField numQuestionsField;
 
-	QuizTaker() {
-		window = new JFrame("Practice Like A Physicist");
+	QuizTaker(Student student) {
+		this.student = student;
+		
+		window = new JFrame();
 
 		database = new Database();
 
@@ -82,7 +95,6 @@ public class QuizTaker {
 			logo = Scalr.resize(logo, (int) (window.getHeight() / 2));
 		} catch (IOException e) {
 			logo = null;
-			System.out.println("File not found");
 		}
 
 		title = new LogoPanel();
@@ -290,6 +302,14 @@ public class QuizTaker {
 			for (int j = 0; j < formula.size(); j++) {
 				if (formula.get(j) instanceof Variable) {
 					if(!((Variable) formula.get(j)).isConstant()) {
+						boolean variableUsed = false;
+						for (int k = 0; k < tempVariables.size(); k++) {
+							if (tempVariables.get(k).getId().equals(formula.get(j).getId())) {
+								variableUsed = true;
+								break;
+							}
+						}
+						if (variableUsed) continue;
 						tempVariables.add((Variable) formula.get(j));
 					}
 				}
@@ -306,9 +326,13 @@ public class QuizTaker {
 			questions.add(new Question(problemStatement, formula));
 
 		}
-		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions);
+		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions, student);
 		window.dispose();
 
+	}
+	
+	private void findNumEachQuestions() {
+		
 	}
 
 	////////////////////////////////////////////////////// PRIVATE
@@ -370,14 +394,12 @@ public class QuizTaker {
 			boolean validNum = true;
 
 			try {
-				Integer.parseInt(numQuestionsField.getText());
+				numQuestions = Integer.parseInt(numQuestionsField.getText());
 			} catch (Exception s) {
 				validNum = false;
 			}
 
-			if (validNum) {
-				numQuestions = Integer.parseInt(numQuestionsField.getText());
-
+			if (validNum && (numQuestions >= 1)) {
 				startQuiz();
 			} else {
 				JOptionPane.showMessageDialog(null, "Invalid # of Questions");
