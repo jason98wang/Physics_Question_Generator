@@ -67,12 +67,13 @@ class QuizTakerDisplay extends JFrame {
 	SimpleLinkedList<String[]> variableIDs;
 	SimpleLinkedList<double[]> variableValues;
 	SimpleLinkedList<Question> rootQuestions;
+	static Student student; 
 	boolean right = false;
 
 	// Constructor
 	QuizTakerDisplay(SimpleLinkedList<String> question, SimpleLinkedList<double[]> choices,
 			SimpleLinkedList<Double> answers, SimpleLinkedList<String[]> variableIDs,
-			SimpleLinkedList<double[]> variableValues, SimpleLinkedList<Question> rootQuestions) {
+			SimpleLinkedList<double[]> variableValues, SimpleLinkedList<Question> rootQuestions,Student student) {
 
 		super("Practice Like A Physicist");
 
@@ -267,7 +268,7 @@ class QuizTakerDisplay extends JFrame {
 		questionWrong = 0;
 		wrongQuestions = new SimpleLinkedList<Question>();
 		
-
+		this.student = student;
 		//panel.remove(clap);
 	} // End of constructor
 
