@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +26,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.imgscalr.Scalr;
@@ -34,9 +37,9 @@ import javax.swing.JComboBox;
 
 /*
  * To Do
- * Dot password
  * Resize
  * Quality of life
+ * Look better
  */
 
 public class Login {
@@ -58,9 +61,8 @@ public class Login {
 	private JPanel mainPanel;
 	private JButton login;
 	private JButton exit;
-	private JComboBox<String> subject;
 	private JTextField studentNumField;
-	private JTextField passwordField;
+	private JPasswordField passwordField;
 
 	Login() {
 		window = new JFrame();
@@ -96,22 +98,18 @@ public class Login {
 		exit.addActionListener(new ExitButtonActionListener());
 		exit.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		subject = new JComboBox<String>();
-		subject.addActionListener(new SubjectActionListener());
-		addSubjects();
-
 		studentNumField = new JTextField("Student #");
 //		studentNumField.setPreferredSize(new Dimension(window.getWidth()/4, window.getHeight()/5));
 		studentNumField.addFocusListener(new StudentNumFocusListener());
+		studentNumField.addKeyListener(new LoginKeyListener());
 
-		passwordField = new JTextField("Password");
-		passwordField.addFocusListener(new PasswordFocusListener());
+		passwordField = new JPasswordField();
+		passwordField.addKeyListener(new LoginKeyListener());
 
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		mainPanel.setBackground(indigo);
 		mainPanel.add(title);
-		mainPanel.add(subject);
 		mainPanel.add(studentNumField);
 		mainPanel.add(passwordField);
 		mainPanel.add(login);
@@ -127,57 +125,45 @@ public class Login {
 		window.setVisible(true);
 	}
 
-	private void addSubjects() {
-		for (int i = 0; i < subjects.size(); i++) {
-			subject.addItem(
-					subjects.get(i).getName() + " " + subjects.get(i).getGrade() + " " + subjects.get(i).getLevel());
-		}
-	}
-
 	private void startQuiz() {
 
 		boolean valid = true;
+		password = "";
+		char[] tempPassword = passwordField.getPassword();
 		studentNum = studentNumField.getText();
-		password = passwordField.getText();
-		students = chosenSubject.getStudents();
 
-		for (int i = 0; i < students.size(); i++) {
-			if(studentNum.equals(students.get(i).getStudentNumber())) {
-				if(password.equals(students.get(i).getPassword())) {
-					student = students.get(i);
-					valid = true;
-					break;
+		for (int i = 0; i < tempPassword.length; i++) {
+			password += tempPassword[i];
+		}
+
+		for (int j = 0; j < subjects.size(); j++) {
+			students = subjects.get(j).getStudents();
+			for (int i = 0; i < students.size(); i++) {
+				if (studentNum.equals(students.get(i).getStudentNumber())) {
+					if (password.equals(students.get(i).getPassword())) {
+						student = students.get(i);
+						chosenSubject = subjects.get(j);
+						valid = true;
+						break;
+					}
 				}
+				valid = false;
 			}
-			valid = false;
+			break;
 		}
 
 		if (valid) {
-			new QuizTaker(student);
+			new QuizTaker(student, chosenSubject);
 			window.dispose();
 		} else {
 			JOptionPane.showMessageDialog(null, "Invalid student number or password");
+			passwordField.requestFocus();
 		}
 
 	}
 
 	////////////////////////////////////////////////////// PRIVATE
 	////////////////////////////////////////////////////// CLASSES////////////////////////////////
-
-	private class SubjectActionListener implements ActionListener {
-
-		public void actionPerformed(ActionEvent e) {
-			String subjectName = (String) subject.getSelectedItem();
-
-			for (int i = 0; i < subjects.size(); i++) {
-				if (subjectName.equals(subjects.get(i).getName() + " " + subjects.get(i).getGrade() + " "
-						+ subjects.get(i).getLevel())) {
-					chosenSubject = subjects.get(i);
-				}
-			}
-		}
-
-	}
 
 	private class StudentNumFocusListener implements FocusListener {
 
@@ -190,22 +176,6 @@ public class Login {
 		public void focusLost(FocusEvent e) {
 			if (studentNumField.getText().trim().equals("")) {
 				studentNumField.setText("Student #");
-			}
-		}
-
-	}
-
-	private class PasswordFocusListener implements FocusListener {
-
-		public void focusGained(FocusEvent e) {
-			if (passwordField.getText().trim().equals("Password")) {
-				passwordField.setText("");
-			}
-		}
-
-		public void focusLost(FocusEvent e) {
-			if (passwordField.getText().trim().equals("")) {
-				passwordField.setText("Password");
 			}
 		}
 
@@ -227,6 +197,30 @@ public class Login {
 			window.dispose();
 		}
 
+	}
+	
+	private class LoginKeyListener implements KeyListener{
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			// TODO Auto-generated method stub
+			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+				startQuiz();
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 
 	private class LogoPanel extends JPanel {

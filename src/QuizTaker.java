@@ -11,6 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +38,6 @@ import javax.swing.JComboBox;
  * To Do
  * Main UI better
  * Preset questions
- * Enter key listener
  * Show current user
  */
 
@@ -46,8 +47,6 @@ public class QuizTaker {
 	private int numNumQuestions;
 	private int numWordQuestions;
 
-	private Database database;
-	private SimpleLinkedList<Subject> subjects;
 	private SimpleLinkedList<Unit> units;
 	private SimpleLinkedList<Question> rootQuestions;
 	private SimpleLinkedList<Question> questions;
@@ -70,17 +69,14 @@ public class QuizTaker {
 	private JPanel optionsPanel;
 	private JButton start;
 	private JButton exit;
-	private JComboBox<String> subject, unit;
+	private JComboBox<String> unit;
 	private JTextField numQuestionsField;
 
-	QuizTaker(Student student) {
+	QuizTaker(Student student, Subject chosenSubject) {
 		this.student = student;
+		this.chosenSubject = chosenSubject;
 		
 		window = new JFrame();
-
-		database = new Database();
-
-		subjects = database.getSubjects();
 
 		indigo = new Color(56, 53, 74);
 		lightBlue = new Color(162, 236, 250);
@@ -112,18 +108,25 @@ public class QuizTaker {
 
 		unit = new JComboBox<String>();
 		unit.addActionListener(new UnitActionListener());
+		unit.addKeyListener(new StartKeyListener());
+		addUnits();
+		if (unit.getSelectedItem() != null) {
+			String unitName = (String) unit.getSelectedItem();
 
-		subject = new JComboBox<String>();
-		subject.addActionListener(new SubjectActionListener());
-		addSubjects();
+			for (int i = 0; i < units.size(); i++) {
+				if (unitName.equals(units.get(i).getName())) {
+					chosenUnit = units.get(i);
+				}
+			}
+		}
 
 		numQuestionsField = new JTextField("# of Questions");
 		numQuestionsField.addFocusListener(new NumQuestionsFocusListener());
+		numQuestionsField.addKeyListener(new StartKeyListener());
 
 		optionsPanel = new JPanel();
 		optionsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 5));
 		optionsPanel.setBackground(indigo);
-		optionsPanel.add(subject);
 		optionsPanel.add(unit);
 		optionsPanel.add(numQuestionsField);
 		optionsPanel.setVisible(true);
@@ -147,20 +150,9 @@ public class QuizTaker {
 		window.setVisible(true);
 	}
 
-	private void addSubjects() {
-		for (int i = 0; i < subjects.size(); i++) {
-			subject.addItem(
-					subjects.get(i).getName() + " " + subjects.get(i).getGrade() + " " + subjects.get(i).getLevel());
-		}
-	}
-
 	private void addUnits() {
 
 		units = chosenSubject.getUnits();
-
-		if (unit != null) {
-			unit.removeAllItems();
-		}
 
 		for (int i = 0; i < units.size(); i++) {
 			unit.addItem(units.get(i).getName());
@@ -338,23 +330,6 @@ public class QuizTaker {
 	////////////////////////////////////////////////////// PRIVATE
 	////////////////////////////////////////////////////// CLASSES////////////////////////////////
 
-	private class SubjectActionListener implements ActionListener {
-
-		public void actionPerformed(ActionEvent e) {
-			String subjectName = (String) subject.getSelectedItem();
-
-			for (int i = 0; i < subjects.size(); i++) {
-				if (subjectName.equals(subjects.get(i).getName() + " " + subjects.get(i).getGrade() + " "
-						+ subjects.get(i).getLevel())) {
-					chosenSubject = subjects.get(i);
-				}
-			}
-
-			addUnits();
-		}
-
-	}
-
 	private class UnitActionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -416,6 +391,30 @@ public class QuizTaker {
 
 	}
 
+	private class StartKeyListener implements KeyListener{
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			// TODO Auto-generated method stub
+			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+				startQuiz();
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
 	private class LogoPanel extends JPanel {
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
