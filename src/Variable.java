@@ -25,6 +25,9 @@ public class Variable extends Symbol{
 		} else if (id.equals("c")) {
 			value = 3.0 * Math.pow(10,8);
 			constant = true;
+		} else if (id.equals("k")) {
+			value = 8.99 * Math.pow(10,9);
+			constant = true;
 		} else {
 			try {
 				value = Double.parseDouble(id);
