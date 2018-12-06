@@ -1389,4 +1389,3 @@ public class QuizEditor extends JFrame {
 	}
 	
 }
-Press h to open a hovercard with more details.
