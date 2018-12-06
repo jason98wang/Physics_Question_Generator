@@ -13,7 +13,10 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
+
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListCellRenderer;
@@ -26,8 +29,10 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 
@@ -49,7 +54,7 @@ public class QuizEditor extends JFrame {
 	
 	
 	// Booleans
-	private boolean addQ, removeQ, editQ, newFormula, editingQ;
+	private boolean addQ, removeQ, editQ, newFormula, editingQ, noFormula = false;
 
 	
 	// JComponents
@@ -58,7 +63,10 @@ public class QuizEditor extends JFrame {
 	private JComboBox<String> subject = new JComboBox<String>();
 	private JComboBox<String> unit = new JComboBox<String>();
 	private JComboBox<String> formula = new JComboBox<String>();
-	
+	private JTextField choice1;
+	private JTextField choice2;
+	private JTextField choice3;
+	private JTextField choice4;
 	
 	// Font and Color
 	private Font font = new Font("Serif", Font.BOLD, 30);
@@ -208,13 +216,14 @@ public class QuizEditor extends JFrame {
 		subject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String chosenSubject = (String) subject.getSelectedItem();
-				
+				int size = unit.getItemCount();
+				for (int i = 1; i < size; i++) {
+					unit.removeItemAt(1);
+				}
 				// Update units in subject
 				if (!chosenSubject.equals("Choose a subject")) {
 					
-					for (int i = 1; i < unit.getItemCount(); i++) {
-						unit.removeItemAt(i);
-					}
+					
 					
 					s = subjects.get(subject.getSelectedIndex() - 1);
 					// Priority queue instead of linkedlist to keep the units in order
@@ -257,6 +266,7 @@ public class QuizEditor extends JFrame {
 		formula.addItem("Choose a formula");
 		formula.addItem("Create new formula");
 		formula.addItem("Use previous formula");
+		formula.addItem("No formula(Enter answers myself)");
 		formula.setBackground(lightBlue);
 
 		
@@ -275,15 +285,36 @@ public class QuizEditor extends JFrame {
 				formula.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						String chosenFormula = (String) formula.getSelectedItem();
-						q = new Question("", new SimpleLinkedList<Symbol>());
-						// creating a new formula
-						if (chosenFormula.equals("Create new formula")) {
-							newFormula = true;
-							createFormula(symbols, currentFormulaDisplay);
-							// using a previous formula
+						if (chosenFormula.equals("No formula(Enter answers myself)")) {
+							q.setFormula(null);
+							currentFormulaDisplay.setIcon(new ImageIcon());
+//							quiz.revalidate();
+							choice1.setEditable(true);
+							choice2.setEditable(true);
+							choice3.setEditable(true);
+							choice4.setEditable(true);
+							noFormula = true;
 						} else {
-							newFormula = false;
-							previousFormula(formulas, currentFormulaDisplay);
+							noFormula = false;
+							choice1.setEditable(false);
+							choice1.setText("");
+							choice2.setEditable(false);
+							choice2.setText("");
+							choice3.setEditable(false);
+							choice3.setText("");
+							choice4.setEditable(false);
+							choice4.setText("");
+							if (chosenFormula.equals("Choose a formula")) return;
+							q = new Question("", new SimpleLinkedList<Symbol>());
+							// creating a new formula
+							if (chosenFormula.equals("Create new formula")) {
+								newFormula = true;
+								createFormula(symbols, currentFormulaDisplay);
+								// using a previous formula
+							} else if (chosenFormula.equals("Use previous formula")){
+								newFormula = false;
+								previousFormula(formulas, currentFormulaDisplay);
+							}
 						}
 					}
 				});
@@ -307,10 +338,17 @@ public class QuizEditor extends JFrame {
 				problemStatement.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 				displayPane.add(problemStatement);
 				enter.setEditable(true);
-				displayPane.add(enter);
+				enter.setPreferredSize(new Dimension((int)enter.getPreferredSize().getWidth(),(int)enter.getPreferredSize().getHeight() * 10));
+				JScrollPane enterScroll = new JScrollPane(enter, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+				enterScroll.getVerticalScrollBar().setUnitIncrement(16);
+				enterScroll.setPreferredSize(enter.getPreferredSize());
+				enterScroll.setMinimumSize(enterScroll.getPreferredSize());
+				displayPane.add(enterScroll);
+				JPanel enterAnswers = new JPanel();
+				
 				revalidate();
 				midPane.setPreferredSize(new Dimension((int)midPane.getMinimumSize().getWidth(),(int)exit.getLocation().getY() + 50 + offset));
-			
+				contentPane.setPreferredSize(new Dimension((int)contentPane.getPreferredSize().getWidth(),(int)midPane.getPreferredSize().getHeight()));
 			}
 		});
 
@@ -323,17 +361,19 @@ public class QuizEditor extends JFrame {
 				addQ = false;
 				editQ = false;
 				editingQ = false;
-
+				
 				// Displays list with all questions in the unit selected supporting multi selection
 				displayPane.removeAll();
+				displayPane.setMinimumSize(new Dimension((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 200,300));
 				list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 				JScrollPane scroll = new JScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 				scroll.getVerticalScrollBar().setUnitIncrement(16);
 				scroll.getHorizontalScrollBar().setUnitIncrement(16);
+				scroll.setPreferredSize(displayPane.getPreferredSize());
 				displayPane.add(scroll);
 				revalidate();
 				midPane.setPreferredSize(new Dimension((int)midPane.getMinimumSize().getWidth(),(int)exit.getLocation().getY() + 50 + offset));
-
+				contentPane.setPreferredSize(new Dimension((int)contentPane.getPreferredSize().getWidth(),(int)midPane.getPreferredSize().getHeight()));
 				
 			}
 		});
@@ -348,7 +388,7 @@ public class QuizEditor extends JFrame {
 				removeQ = false;
 				editingQ = false;
 				displayPane.removeAll();
-				
+				displayPane.setMinimumSize(new Dimension((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 200,300));
 				// Displays list with all questions in the unit but can only edit one at a time
 				list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				subject.setVisible(true);
@@ -359,7 +399,7 @@ public class QuizEditor extends JFrame {
 				displayPane.add(scroll);
 				revalidate();
 				midPane.setPreferredSize(new Dimension((int)midPane.getMinimumSize().getWidth(),(int)exit.getLocation().getY() + 50 + offset));
-
+				contentPane.setPreferredSize(new Dimension((int)contentPane.getPreferredSize().getWidth(),(int)midPane.getPreferredSize().getHeight()));
 			}
 		});
 
@@ -476,10 +516,16 @@ public class QuizEditor extends JFrame {
 					problemStatement.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 					displayPane.add(problemStatement);
 					enter.setEditable(true);
-					displayPane.add(enter);
+//					enter.setPreferredSize(new Dimension((int)enter.getPreferredSize().getWidth(),(int)enter.getPreferredSize().getHeight() * 5));
+//					enter.setMaximumSize(enter.getPreferredSize());
+					JScrollPane enterScroll = new JScrollPane(enter, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+					enterScroll.getVerticalScrollBar().setUnitIncrement(16);
+					enterScroll.setPreferredSize(new Dimension((int)enter.getPreferredSize().getWidth(),(int)enter.getPreferredSize().getHeight() * 5));
+					enterScroll.setMinimumSize(enterScroll.getPreferredSize());
+					displayPane.add(enterScroll);
 					revalidate();
 					midPane.setPreferredSize(new Dimension((int)midPane.getMinimumSize().getWidth(),(int)exit.getLocation().getY() + 50 + offset));
-					
+					contentPane.setPreferredSize(new Dimension((int)contentPane.getPreferredSize().getWidth(),(int)midPane.getPreferredSize().getHeight()));
 					
 					//
 				} else {
@@ -646,18 +692,20 @@ public class QuizEditor extends JFrame {
 		
 		// Scrollable
 		midPane.setPreferredSize(new Dimension((int)midPane.getMinimumSize().getWidth(),(int)exit.getLocation().getY() + 50));
-		JScrollPane scrollpane = new JScrollPane(midPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollpane.getVerticalScrollBar().setUnitIncrement(16);
-		scrollpane.getVerticalScrollBar().setBackground(lightBlue);
-		scrollpane.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-		contentPane.add(scrollpane);
+		contentPane.add(midPane);
 		contentPane.add(Box.createHorizontalStrut(100));
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
 		contentPane.setBackground(indigo);
-		this.setContentPane(contentPane);
+		JScrollPane scrollpane = new JScrollPane(contentPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollpane.getVerticalScrollBar().setUnitIncrement(16);
+		scrollpane.getVerticalScrollBar().setBackground(lightBlue);
+		scrollpane.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+		scrollpane.setBorder(BorderFactory.createEmptyBorder());
+		this.setContentPane(scrollpane);
 		this.setVisible(true);
 		midPane.setPreferredSize(new Dimension((int)midPane.getMinimumSize().getWidth(),(int)exit.getLocation().getY() + 50 + offset));
-		revalidate();		
+		contentPane.setPreferredSize(new Dimension((int)contentPane.getPreferredSize().getWidth(),(int)midPane.getPreferredSize().getHeight()));
+		revalidate();
 	}
 
 	
@@ -993,6 +1041,7 @@ public class QuizEditor extends JFrame {
 		confirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int index = list.getSelectedIndex();
+				if (formulas.get(index) == null) return;
 				q.setFormula(formulas.get(index));
 				formulaDisplay.setIcon(new ImageIcon(joinBufferedImages(formulas.get(index))));
 				quiz.revalidate();
@@ -1209,6 +1258,7 @@ public class QuizEditor extends JFrame {
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
 		scroll.getHorizontalScrollBar().setUnitIncrement(16);
 		scroll.setPreferredSize(new Dimension((int)contentPanel.getPreferredSize().getWidth(),(int)enteredFormula.getPreferredSize().getHeight() + 150));
+		scroll.setBorder(BorderFactory.createEmptyBorder());
 		contentPanel.add(scroll);
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		JPanel button = new JPanel();

@@ -261,8 +261,8 @@ class QuizTakerDisplay extends JFrame {
 				new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), r.y + r.height + 50));
 		c.setPreferredSize(new Dimension((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth()
 				- exitButton.getWidth() - nextButton.getWidth() - 100), 0));
-		System.out.println(exitButton.getBounds());
-		System.out.println(nextButton.getBounds());
+//		System.out.println(exitButton.getBounds());
+//		System.out.println(nextButton.getBounds());
 
 		questionWrong = 0;
 		wrongQuestions = new SimpleLinkedList<Question>();
@@ -390,12 +390,22 @@ class QuizTakerDisplay extends JFrame {
 
 			questionLabel
 					.setText("<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
+			questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
+					100 + (int) (Math.ceil(
+							questionLabel.getPreferredSize().getHeight() * (questionLabel.getPreferredSize().getWidth()
+									/ Toolkit.getDefaultToolkit().getScreenSize().getWidth())))));
+			questionLabel.setMinimumSize(questionLabel.getPreferredSize());
+			
 			label.setText("Question #" + Integer.toString(questionNum + 1));
 			answer1.setText(String.format("%.2f", choices.get(questionNum)[0]));
 			answer2.setText(String.format("%.2f", choices.get(questionNum)[1]));
 			answer3.setText(String.format("%.2f", choices.get(questionNum)[2]));
 			answer4.setText(String.format("%.2f", choices.get(questionNum)[3]));
 			revalidate();
+			questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
+					100 + (int) (Math.ceil(
+							questionLabel.getPreferredSize().getHeight() * (questionLabel.getPreferredSize().getWidth()
+									/ Toolkit.getDefaultToolkit().getScreenSize().getWidth())))));
 		}
 	}
 

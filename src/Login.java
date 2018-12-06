@@ -34,9 +34,9 @@ import javax.swing.JComboBox;
 
 /*
  * To Do
- * Login UI
- * Main UI better
- * Preset questions
+ * Dot password
+ * Resize
+ * Quality of life
  */
 
 public class Login {
@@ -45,6 +45,7 @@ public class Login {
 	private SimpleLinkedList<Student> students;
 	private SimpleLinkedList<Subject> subjects;
 	private Subject chosenSubject;
+	private Student student;
 
 	private Color indigo, lightBlue;
 	private static Random rand;
@@ -139,11 +140,20 @@ public class Login {
 		studentNum = studentNumField.getText();
 		password = passwordField.getText();
 		students = chosenSubject.getStudents();
-		
-		
-		
+
+		for (int i = 0; i < students.size(); i++) {
+			if(studentNum.equals(students.get(i).getStudentNumber())) {
+				if(password.equals(students.get(i).getPassword())) {
+					student = students.get(i);
+					valid = true;
+					break;
+				}
+			}
+			valid = false;
+		}
+
 		if (valid) {
-			new QuizTaker();
+			new QuizTaker(student);
 			window.dispose();
 		} else {
 			JOptionPane.showMessageDialog(null, "Invalid student number or password");

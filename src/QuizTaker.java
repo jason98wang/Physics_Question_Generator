@@ -34,10 +34,10 @@ import javax.swing.JComboBox;
 
 /*
  * To Do
- * Login UI
  * Main UI better
  * Preset questions
  * Enter key listener
+ * Show current user
  */
 
 public class QuizTaker {
@@ -58,6 +58,7 @@ public class QuizTaker {
 	private SimpleLinkedList<double[]> variableValues;
 	private Subject chosenSubject;
 	private Unit chosenUnit;
+	private Student student;
 
 	private Color indigo, lightBlue;
 	private static Random rand;
@@ -72,7 +73,9 @@ public class QuizTaker {
 	private JComboBox<String> subject, unit;
 	private JTextField numQuestionsField;
 
-	QuizTaker() {
+	QuizTaker(Student student) {
+		this.student = student;
+		
 		window = new JFrame();
 
 		database = new Database();
