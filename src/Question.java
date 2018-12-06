@@ -78,23 +78,56 @@ public class Question {
 		return image;
 	}
 	
-	//Returns in format (for each row): Question, Answer, FalseAnswer1, FalseAnswer2, FalseAnswer3 
+	//Returns in format (for each row): Question, Answer, FalseAnswer1, FalseAnswer2, FalseAnswer3
+	//Make sure that the max value of 'num' entered is the num of specific questions (prevent doubling)
 	public String[][] getStringQuestions(int num) {
 		String[][] questions = new String[num][5];
 		int rand;
-		//If asking for more questions than there are specific questions for this one general stem
-		//Some questions will have to be doubled (no check for specific question doubling)
-		if (num > specificQuestions.size()) {
-			for (int i = 0; i < num; i++) {
+		boolean repeatedQuestion;
+		for (int i = 0; i < num; i++) {
+			do {
+				repeatedQuestion = false;
 				rand = (int)(Math.round(Math.random()*(specificQuestions.size()-1)));
-				questions[i][0] = specificQuestions.get(rand);
-				questions[i][1] = specificAnswers.get(rand);
-				//Insert false answers
+				for (int j = 0; j < specificQuestions.size(); j++) {
+					if (specificQuestions.get(j).equals(specificQuestions.get(rand))) {
+						repeatedQuestion = true;
+					}
+				}
+			} while (repeatedQuestion);
+			questions[i][0] = specificQuestions.get(rand);
+			questions[i][1] = specificAnswers.get(rand);
+			if (possibleAnswers.size() == 1) {
+				questions[i][2] = possibleAnswers.get(0);
+				questions[i][3] = possibleAnswers.get(0);
+				questions[i][4] = possibleAnswers.get(0);
+			} else if (possibleAnswers.size() == 2) {
+				questions[i][2] = possibleAnswers.get(0);
+				questions[i][3] = possibleAnswers.get(1);
+				questions[i][4] = possibleAnswers.get(0);
+			} else if (possibleAnswers.size() == 3) {
+				questions[i][2] = possibleAnswers.get(0);
+				questions[i][3] = possibleAnswers.get(1);
+				questions[i][4] = possibleAnswers.get(2);
+			} else { //Randomize all possibleQuestions
+				boolean repeatedChoice;
+				for (int j = 2; j < 5; j++) {
+					do {
+						repeatedChoice = false;
+						rand = (int)(Math.round(Math.random()*(possibleAnswers.size()-1)));
+						for (int k = 2; k < 5; k++) {
+							if (questions[k] != null) {
+								if (questions[k].equals(possibleAnswers.get(rand))) {
+									repeatedQuestion = true;
+								}
+							}
+						}
+					} while (repeatedChoice);
+					questions[i][j] = possibleAnswers.get(rand);
+				}
 			}
-		} else { //Checks that all specific questions are unique
-
+			//Insert false answers
 		}
-		return null;
+		return questions;
 	}
 	
 	public boolean isPreset() {
@@ -103,6 +136,10 @@ public class Question {
 	
 	public boolean isNumerical() {
 		return numerical;
+	}
+	
+	public int numSpecificQuestions() {
+		return specificQuestions.size();
 	}
 
     /**
