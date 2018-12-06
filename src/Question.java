@@ -78,6 +78,18 @@ public class Question {
 		return image;
 	}
 	
+	public SimpleLinkedList<String> getSpecificQuestions() {
+		return specificQuestions;
+	}
+	
+	public SimpleLinkedList<String> getSpecificAnswers() {
+		return specificAnswers;
+	}
+	
+	public SimpleLinkedList<String> getPossibleAnswers() {
+		return possibleAnswers;
+	}
+	
 	//Returns in format (for each row): Question, Answer, FalseAnswer1, FalseAnswer2, FalseAnswer3
 	//Make sure that the max value of 'num' entered is the num of specific questions (prevent doubling)
 	public String[][] getStringQuestions(int num) {
