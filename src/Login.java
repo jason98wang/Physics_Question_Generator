@@ -1,11 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,14 +12,12 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -32,8 +26,6 @@ import javax.swing.JTextField;
 import org.imgscalr.Scalr;
 
 import data_structures.SimpleLinkedList;
-
-import javax.swing.JComboBox;
 
 /*
  * To Do
@@ -50,8 +42,7 @@ public class Login {
 	private Subject chosenSubject;
 	private Student student;
 
-	private Color indigo, lightBlue;
-	private static Random rand;
+	private Color indigo;
 	private BufferedImage logo;
 	private String studentNum;
 	private String password;
@@ -72,7 +63,6 @@ public class Login {
 		subjects = database.getSubjects();
 
 		indigo = new Color(56, 53, 74);
-		lightBlue = new Color(162, 236, 250);
 
 		////////////////////////////////////////////////// GUI
 		////////////////////////////////////////////////// STUFF/////////////////////////////////////
@@ -136,29 +126,18 @@ public class Login {
 			password += tempPassword[i];
 		}
 
-		for (int j = 0; j < subjects.size(); j++) {
-			students = subjects.get(j).getStudents();
-			for (int i = 0; i < students.size(); i++) {
-				if (studentNum.equals(students.get(i).getStudentNumber())) {
-					if (password.equals(students.get(i).getPassword())) {
-						student = students.get(i);
-						chosenSubject = subjects.get(j);
-						valid = true;
-						break;
-					}
-				}
-				valid = false;
+		for (int i = 0; i < subjects.size(); i++) {
+			student = subjects.get(i).getStudent(studentNum, password);
+			if (student != null) {
+				chosenSubject = subjects.get(i);
+				new QuizTaker(student, chosenSubject);
+				window.dispose();
+				return;
 			}
-			break;
 		}
 
-		if (valid) {
-			new QuizTaker(student, chosenSubject);
-			window.dispose();
-		} else {
-			JOptionPane.showMessageDialog(null, "Invalid student number or password");
-			passwordField.requestFocus();
-		}
+		JOptionPane.showMessageDialog(null, "Invalid student number or password");
+		passwordField.requestFocus();
 
 	}
 
@@ -198,19 +177,19 @@ public class Login {
 		}
 
 	}
-	
-	private class LoginKeyListener implements KeyListener{
+
+	private class LoginKeyListener implements KeyListener {
 
 		@Override
 		public void keyTyped(KeyEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void keyPressed(KeyEvent e) {
 			// TODO Auto-generated method stub
-			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				startQuiz();
 			}
 		}
@@ -218,9 +197,9 @@ public class Login {
 		@Override
 		public void keyReleased(KeyEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 	}
 
 	private class LogoPanel extends JPanel {
