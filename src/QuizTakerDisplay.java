@@ -99,7 +99,7 @@ class QuizTakerDisplay extends JFrame {
 					
 				} else if (correct1) {
 					if (time > 0) {
-						if (System.currentTimeMillis() - time >= 2000) {
+						if (System.currentTimeMillis() - time >= 500) {
 							time = 0;
 							this.remove(clapping);
 							correct1 = false;
@@ -146,6 +146,16 @@ class QuizTakerDisplay extends JFrame {
 		answer2.setFont(font3);
 		answer3.setFont(font3);
 		answer4.setFont(font3);
+		
+		answer1.setOpaque(true);
+		answer2.setOpaque(true);
+		answer3.setOpaque(true);
+		answer4.setOpaque(true);
+		
+		answer1.setBorderPainted(false);
+		answer2.setBorderPainted(false);
+		answer3.setBorderPainted(false);
+		answer4.setBorderPainted(false);
 
 		// add listeners for each button
 		answer1.addActionListener(new Answer1Listener());
