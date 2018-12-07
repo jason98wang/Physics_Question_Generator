@@ -1,7 +1,14 @@
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Base64;
+
+import javax.imageio.ImageIO;
+
 import data_structures.SimpleLinkedList;
 import data_structures.SimpleQueue;
 import data_structures.Stack;
-import java.awt.image.BufferedImage;
 
 public class Question {
 
@@ -13,12 +20,12 @@ public class Question {
 	private SimpleLinkedList<String> specificQuestions;
 	private SimpleLinkedList<String> specificAnswers;
 	private SimpleLinkedList<String> possibleAnswers;
-	
+
 	private BufferedImage image;
-	
+
 	private boolean preset;
 	private boolean numerical;
-	
+
 	//Stacks (for shunting yard alg)
 	private Stack<Operation> operators;
 	private SimpleQueue<Symbol> output;
@@ -31,7 +38,7 @@ public class Question {
 		output = new SimpleQueue<>();
 		numerical = true;
 	}
-	
+
 	Question(String problemStatement, SimpleLinkedList<Symbol> formula, BufferedImage image){
 		this.image = image;
 		this.problemStatement = problemStatement;
@@ -40,14 +47,14 @@ public class Question {
 		output = new SimpleQueue<>();
 		numerical = true;
 	}
-	
+
 	Question(String problemStatement, SimpleLinkedList<String> specificQuestions, SimpleLinkedList<String> specificAnswers, SimpleLinkedList<String> possibleAnswers) {
 		this.specificQuestions = specificQuestions;
 		this.specificAnswers = specificAnswers;
 		this.possibleAnswers = possibleAnswers;
 		preset = true;
 	}
-	
+
 	Question(String problemStatement, SimpleLinkedList<String> specificQuestions, SimpleLinkedList<String> specificAnswers, SimpleLinkedList<String> possibleAnswers, BufferedImage image) {
 		this.specificQuestions = specificQuestions;
 		this.specificAnswers = specificAnswers;
@@ -73,23 +80,23 @@ public class Question {
 	public SimpleLinkedList<Symbol> getFormula() {
 		return formula;
 	}
-	
+
 	public BufferedImage getImage() {
 		return image;
 	}
-	
+
 	public SimpleLinkedList<String> getSpecificQuestions() {
 		return specificQuestions;
 	}
-	
+
 	public SimpleLinkedList<String> getSpecificAnswers() {
 		return specificAnswers;
 	}
-	
+
 	public SimpleLinkedList<String> getPossibleAnswers() {
 		return possibleAnswers;
 	}
-	
+
 	//Returns in format (for each row): Question, Answer, FalseAnswer1, FalseAnswer2, FalseAnswer3
 	//Make sure that the max value of 'num' entered is the num of specific questions (prevent doubling)
 	public String[][] getStringQuestions(int num) {
@@ -141,24 +148,24 @@ public class Question {
 		}
 		return questions;
 	}
-	
+
 	public boolean isPreset() {
 		return preset;
 	}
-	
+
 	public boolean isNumerical() {
 		return numerical;
 	}
-	
+
 	public int numSpecificQuestions() {
 		return specificQuestions.size();
 	}
 
-    /**
-     * getAnswer
-     * This method randomizes values of variables in the formula, calculates and returns the answer
-     * @return answer, the double value representing the answer to the question with the randomized variable values
-     */
+	/**
+	 * getAnswer
+	 * This method randomizes values of variables in the formula, calculates and returns the answer
+	 * @return answer, the double value representing the answer to the question with the randomized variable values
+	 */
 	public double getAnswer() {
 
 		boolean previouslyFound;
@@ -188,58 +195,58 @@ public class Question {
 		toRPN();
 		calcAnswer();
 		operators.clear(); //Make sure operators stack is cleared
-        output.clear(); //Make sure calculation queue is cleared
+		output.clear(); //Make sure calculation queue is cleared
 		return answer;
 	}
 
-    /**
-     * getFalseAnswers
-     * This method generates 3 false answers for the randomized values of variables (with the given formula)
-     * @return falseAnswers, an array of 3 doubles representing the 3 incorrect MC answers given
-     */
+	/**
+	 * getFalseAnswers
+	 * This method generates 3 false answers for the randomized values of variables (with the given formula)
+	 * @return falseAnswers, an array of 3 doubles representing the 3 incorrect MC answers given
+	 */
 	public double[] getFalseAnswers() {
 
-	    double[] falseAnswers = new double[3];
+		double[] falseAnswers = new double[3];
 		double[] randInts = new double[3];
 		boolean flag;
 
-	    for (int i = 0; i < 3; i++) {
-		    int j = 0;
-		    do {
-			flag = false;
-	        	j = (int)(Math.random()*9);
-		    	for (int h = 0; h < 3; h ++) {
-				if (j == randInts[h]) {
-					flag = true;
+		for (int i = 0; i < 3; i++) {
+			int j = 0;
+			do {
+				flag = false;
+				j = (int)(Math.random()*9);
+				for (int h = 0; h < 3; h ++) {
+					if (j == randInts[h]) {
+						flag = true;
+					}
 				}
+			} while (flag);
+			randInts[i] = j;
+			if (j == 0) {
+				falseAnswers[i] = answer*2.0;
+			} else if (j == 1) {
+				falseAnswers[i] = answer/2.0;
+			} else if (j == 2) {
+				falseAnswers[i] = Math.pow(answer,2.0);
+			} else if (j == 3) {
+				falseAnswers[i] = Math.sqrt(answer);
+			} else if (j == 4) {
+				falseAnswers[i] = answer*3.0;
+			} else if (j == 5) {
+				falseAnswers[i] = answer/3.0;
+			} else if (j == 6) {
+				falseAnswers[i] = answer/Math.PI;
+			} else if (j == 7) {
+				falseAnswers[i] = answer*Math.PI;
+			} else if (j == 8) {
+				falseAnswers[i] = answer*Math.E;
+			} else if (j == 9) {
+				falseAnswers[i] = answer/Math.E;
 			}
-		    } while (flag);
-		    randInts[i] = j;
-	        if (j == 0) {
-	            falseAnswers[i] = answer*2.0;
-            } else if (j == 1) {
-	            falseAnswers[i] = answer/2.0;
-            } else if (j == 2) {
-	            falseAnswers[i] = Math.pow(answer,2.0);
-            } else if (j == 3) {
-	            falseAnswers[i] = Math.sqrt(answer);
-            } else if (j == 4) {
-	            falseAnswers[i] = answer*3.0;
-            } else if (j == 5) {
-	            falseAnswers[i] = answer/3.0;
-            } else if (j == 6) {
-	            falseAnswers[i] = answer/Math.PI;
-            } else if (j == 7) {
-	            falseAnswers[i] = answer*Math.PI;
-            } else if (j == 8) {
-	            falseAnswers[i] = answer*Math.E;
-            } else if (j == 9) {
-                falseAnswers[i] = answer/Math.E;
-            }
-        }
+		}
 
-	    return falseAnswers;
-    }
+		return falseAnswers;
+	}
 
 	/**
 	 * toRPN
@@ -257,14 +264,14 @@ public class Question {
 				if (((Operation)(formula.get(i))).getOperation().equals("sqrt")) {
 					operators.push((Operation)formula.get(i));
 				} else if ((!(((Operation)(formula.get(i))).getOperation().equals("("))) && !(((Operation)(formula.get(i))).getOperation().equals(")"))) {
-				    if (operators.peek() != null) {
-                        while (((operators.peek().getOperation().equals("sqrt")) || ((((Operation) (formula.get(i))).getPrecedence() < operators.peek().getPrecedence())) || (((((Operation) (formula.get(i))).getPrecedence() == operators.peek().getPrecedence())) && (((Operation) (formula.get(i))).getOperation() != "^"))) && (operators.peek().getOperation() != "(")) {
-                            output.enqueue(operators.pop());
-                            if (operators.peek() == null) {
-                            	break;
+					if (operators.peek() != null) {
+						while (((operators.peek().getOperation().equals("sqrt")) || ((((Operation) (formula.get(i))).getPrecedence() < operators.peek().getPrecedence())) || (((((Operation) (formula.get(i))).getPrecedence() == operators.peek().getPrecedence())) && (((Operation) (formula.get(i))).getOperation() != "^"))) && (operators.peek().getOperation() != "(")) {
+							output.enqueue(operators.pop());
+							if (operators.peek() == null) {
+								break;
 							}
-                        }
-                    }
+						}
+					}
 					operators.push((Operation)formula.get(i));
 				}
 				if (((Operation)(formula.get(i))).getOperation().equals("(")) {
@@ -327,41 +334,56 @@ public class Question {
 
 	}
 
-    /**
-     * toString
-     * This method converts a SimpleLinkedList of Symbols into a String
-     * @return stringFormula, the formula (of symbols) as a String
-     */
-    public String toString() {
+	/**
+	 * toString
+	 * This method converts a SimpleLinkedList of Symbols into a String
+	 * @return stringFormula, the formula (of symbols) as a String
+	 */
+	public String toString() {
 
-        String stringFormula = "";
+		String stringFormula = "";
 
-        for (int i = 0; i < formula.size(); i++) {
-            stringFormula += " ";
-            stringFormula += formula.get(i).getId();
-        }
+		for (int i = 0; i < formula.size(); i++) {
+			stringFormula += " ";
+			stringFormula += formula.get(i).getId();
+		}
 
-        stringFormula += " ";
+		stringFormula += " ";
 
-        return stringFormula;
-    }
+		return stringFormula;
+	}
 
-    /**
-     * toSymbol
-     * This method converts a String representing a formula into a SimpleLinkedList of Symbols
-     * @param stringFormula, the formula (of symbols) as a String
-     */
-    public void toSymbol(String stringFormula) {
+	/**
+	 * toSymbol
+	 * This method converts a String representing a formula into a SimpleLinkedList of Symbols
+	 * @param stringFormula, the formula (of symbols) as a String
+	 */
+	public void toSymbol(String stringFormula) {
 
-        if (stringFormula.length() > 1) {
-            if ((stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("+")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("-")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("mul")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("/")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("sqrt")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("^")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("(")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals(")"))) {
-                formula.add(new Operation(stringFormula.substring(1,stringFormula.indexOf(" ",1))));
-            } else {
-                formula.add(new Variable(stringFormula.substring(1,stringFormula.indexOf(" ",1))));
-            }
-            toSymbol(stringFormula.substring(stringFormula.indexOf(" ",1)));
-        }
+		if (stringFormula.length() > 1) {
+			if ((stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("+")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("-")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("mul")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("/")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("sqrt")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("^")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals("(")) || (stringFormula.substring(1,stringFormula.indexOf(" ",1)).equals(")"))) {
+				formula.add(new Operation(stringFormula.substring(1,stringFormula.indexOf(" ",1))));
+			} else {
+				formula.add(new Variable(stringFormula.substring(1,stringFormula.indexOf(" ",1))));
+			}
+			toSymbol(stringFormula.substring(stringFormula.indexOf(" ",1)));
+		}
 
-    }
+	}
+
+	// converts image to string for database to store
+	public static String imageToString(BufferedImage img) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			ImageIO.write(img, "png", baos);
+			byte[] bytes = baos.toByteArray();
+			baos.close();
+			return Base64.getEncoder().encodeToString(bytes);
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("returned null");
+		return null;
+	}
 
 }
