@@ -38,7 +38,6 @@ import javax.swing.JComboBox;
  * To Do
  * Main UI better
  * Preset questions
- * Show current user
  */
 
 public class QuizTaker {
@@ -58,6 +57,7 @@ public class QuizTaker {
 	public static Subject chosenSubject;
 	private Unit chosenUnit;
 	private static Student student;
+	private String studentName;
 
 	private Color indigo, lightBlue;
 	private static Random rand;
@@ -75,6 +75,7 @@ public class QuizTaker {
 	QuizTaker(Student student, Subject chosenSubject) {
 		this.student = student;
 		this.chosenSubject = chosenSubject;
+		studentName = this.student.getName();
 		
 		window = new JFrame();
 
@@ -186,7 +187,7 @@ public class QuizTaker {
 		for (int i = 0; i < numQuestions; i++) {
 			tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size()));
 			tempVariables = new SimpleLinkedList<Variable>();
-
+			
 			ans = tempQ.getAnswer();
 			answers.add(ans);
 
@@ -403,7 +404,19 @@ public class QuizTaker {
 		public void keyPressed(KeyEvent e) {
 			// TODO Auto-generated method stub
 			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-				startQuiz();
+				boolean validNum = true;
+
+				try {
+					numQuestions = Integer.parseInt(numQuestionsField.getText());
+				} catch (Exception s) {
+					validNum = false;
+				}
+
+				if (validNum && (numQuestions >= 1)) {
+					startQuiz();
+				} else {
+					JOptionPane.showMessageDialog(null, "Invalid # of Questions");
+				}
 			}
 		}
 
@@ -422,6 +435,9 @@ public class QuizTaker {
 
 			g.drawImage(logo, (int) ((window.getWidth() / 2) - (logo.getWidth() / 2)), 0, null);
 
+			g.setColor(lightBlue);
+			g.drawString("Current User: " + studentName, window.getHeight()/50, window.getHeight()/50);
+			
 			repaint();
 		}
 	}
