@@ -372,10 +372,10 @@ public class Question {
 	}
 
 	// converts image to string for database to store
-	public static String imageToString(BufferedImage img) {
+	public String imageToString() {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
-			ImageIO.write(img, "png", baos);
+			ImageIO.write(image, "png", baos);
 			byte[] bytes = baos.toByteArray();
 			baos.close();
 			return Base64.getEncoder().encodeToString(bytes);

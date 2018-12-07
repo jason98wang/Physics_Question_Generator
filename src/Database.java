@@ -132,23 +132,38 @@ public class Database {
 					// get its problem statement and its formula
 					String problemStatement = (String) question.get("problem");
 					SimpleLinkedList<Symbol> formula = stringToSymbols((String) question.get("formula"));
-					
+
 					Question q;
-					if (formula != null) {
+
+					if (formula != null) { // if question is calculable
 						q = new Question(problemStatement, formula);
-					} else {
+					} else { // if question is not calculable
 						BufferedImage image = stringToImage((String) question.get("image")); // SimpleLinkedList<String> 
-						JSONArray specificQuestions = (JSONArray) question.get("specificQuestions");
-						JSONArray specificAnswers = (JSONArray) question.get("specificAnswers");
-						JSONArray possibleAnswers = (JSONArray) question.get("possibleAnswers");
-						
+						JSONArray specificQuestions = (JSONArray) question.get("sq");
+						JSONArray specificAnswers = (JSONArray) question.get("sa");
+						JSONArray possibleAnswers = (JSONArray) question.get("pa");
+
 						SimpleLinkedList<String> sq = new SimpleLinkedList<String>();
 						SimpleLinkedList<String> sa = new SimpleLinkedList<String>();
 						SimpleLinkedList<String> pa = new SimpleLinkedList<String>();
-						
+
 						for (Object d : specificQuestions) {
-							
+							JSONObject jo = (JSONObject) d;
+							String str = (String) jo.get("q");
+							sq.add(str);
 						}
+						for (Object d : specificAnswers) {
+							JSONObject jo = (JSONObject) d;
+							String str = (String) jo.get("a");
+							sa.add(str);
+						}
+						for (Object d : possibleAnswers) {
+							JSONObject jo = (JSONObject) d;
+							String str = (String) jo.get("p");
+							pa.add(str);
+						}
+
+						// add new question
 						q = new Question(problemStatement, sq, sa, pa, image);
 					}
 					u.addQuestion(q);
@@ -254,8 +269,43 @@ public class Database {
 				for (int k = 0; k < unit.getQuestions().size(); k++) {
 					Question question = unit.getQuestions().get(k);
 					JSONObject qobj = new JSONObject();
+
 					qobj.put("problem", question.getProblemStatement());
-					qobj.put("formula", question.toString());
+					
+					if (question.isNumerical()) {
+						qobj.put("formula", question.toString());
+						qobj.put("image", "null");
+						qobj.put("sq", "null");
+						qobj.put("sa", "null");
+						qobj.put("pa", "null");
+					} else {
+						JSONArray sq = new JSONArray();
+						JSONArray sa = new JSONArray();
+						JSONArray pa = new JSONArray();
+
+						for (int l = 0; l < question.getSpecificQuestions().size(); l++) {
+							JSONObject aobj = new JSONObject();
+							aobj.put("q", question.getSpecificQuestions().get(l));
+							sq.add(aobj);
+						}
+						for (int l = 0; l < question.getSpecificAnswers().size(); l++) {
+							JSONObject aobj = new JSONObject();
+							aobj.put("a", question.getSpecificAnswers().get(l));
+							sa.add(aobj);
+						}
+						for (int l = 0; l < question.getPossibleAnswers().size(); l++) {
+							JSONObject aobj = new JSONObject();
+							aobj.put("p", question.getPossibleAnswers().get(l));
+							pa.add(aobj);
+						}
+						
+						qobj.put("formula", "null");
+						qobj.put("image", question.imageToString());
+						qobj.put("sq", sq);
+						qobj.put("sa", sa);
+						qobj.put("pa", pa);
+					}
+
 					c.add(qobj);
 				}
 				uobj.put("questions", c);
