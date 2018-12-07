@@ -23,13 +23,14 @@ class SummaryPage extends JFrame {
 	JLabel title;
 	JLabel accuracy;
 	JButton exit, redo,homePage;
+	Student student; 
 	SimpleLinkedList<Question> wrongQuestions;
 	Color indigo = new Color(56, 53, 74);
 	Color lightBlue = new Color(162, 236, 250);
 	Font font = new Font("Arial",Font.BOLD,30);
 	
 	// Constructor
-	SummaryPage(SimpleLinkedList<Question> wrongQuestions) {
+	SummaryPage(SimpleLinkedList<Question> wrongQuestions, Student student) {
 		super("Summary Page");
 		// Set the frame to full screen
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -97,11 +98,20 @@ class SummaryPage extends JFrame {
 		panel1.setBackground(indigo);
 		panel.add(panel1);
 		
-		
-		
 		panel.setBackground(indigo);
 		
 		this.wrongQuestions = QuizTakerDisplay.wrongQuestions;
+		
+		student.setIncorrectQuestions(student.getIncorrectQuestions() + wrongQuestions.size());
+		student.setTotalQuestions(student.getTotalQuestions() + QuizTakerDisplay.questions.size());
+		
+		
+		Login.getDatabase().update();
+		
+		
+		
+		
+		
 
 
 	} // End of constructor
@@ -131,7 +141,7 @@ class SummaryPage extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			new QuizTaker(QuizTakerDisplay.student);
+			new QuizTaker(student, QuizTaker.chosenSubject);
 			dispose();
 		}
 

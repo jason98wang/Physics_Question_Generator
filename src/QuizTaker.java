@@ -55,7 +55,7 @@ public class QuizTaker {
 	private SimpleLinkedList<String> problemStatements;
 	private SimpleLinkedList<String[]> variableIDs;
 	private SimpleLinkedList<double[]> variableValues;
-	private Subject chosenSubject;
+	public static Subject chosenSubject;
 	private Unit chosenUnit;
 	private static Student student;
 

@@ -364,7 +364,7 @@ class QuizTakerDisplay extends JFrame {
 			questionNum++;
 
 			if (questionNum == questions.size()) {
-				new SummaryPage(wrongQuestions);
+				new SummaryPage(wrongQuestions,student);
 				dispose();
 				return;
 			}
@@ -392,7 +392,7 @@ class QuizTakerDisplay extends JFrame {
 			questionLabel
 					.setText("<html><div style='text-align: center;'>" + questions.get(questionNum) + "</div></html");
 			questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
-					100 + (int) (Math.ceil(
+					(int) (Math.ceil(
 							questionLabel.getPreferredSize().getHeight() * (questionLabel.getPreferredSize().getWidth()
 									/ Toolkit.getDefaultToolkit().getScreenSize().getWidth())))));
 			questionLabel.setMinimumSize(questionLabel.getPreferredSize());
@@ -404,7 +404,7 @@ class QuizTakerDisplay extends JFrame {
 			answer4.setText(String.format("%.2f", choices.get(questionNum)[3]));
 			revalidate();
 			questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
-					100 + (int) (Math.ceil(
+					(int) (Math.ceil(
 							questionLabel.getPreferredSize().getHeight() * (questionLabel.getPreferredSize().getWidth()
 									/ Toolkit.getDefaultToolkit().getScreenSize().getWidth())))));
 		}

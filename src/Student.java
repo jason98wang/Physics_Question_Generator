@@ -46,9 +46,6 @@ public class Student {
 		this.totalQuestions = totalQuestions;
 	}
 	
-	public void addIncorrectQuestions() {
-		incorrectQuestions++;
-	}
 
 
 	// getters

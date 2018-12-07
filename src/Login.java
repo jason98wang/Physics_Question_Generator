@@ -36,7 +36,7 @@ import data_structures.SimpleLinkedList;
 
 public class Login {
 
-	private Database database;
+	private static Database database;
 	private SimpleLinkedList<Student> students;
 	private SimpleLinkedList<Subject> subjects;
 	private Subject chosenSubject;
@@ -60,7 +60,7 @@ public class Login {
 
 		database = new Database();
 
-		subjects = database.getSubjects();
+		subjects = getDatabase().getSubjects();
 
 		indigo = new Color(56, 53, 74);
 
@@ -141,8 +141,11 @@ public class Login {
 
 	}
 
+	
 	////////////////////////////////////////////////////// PRIVATE
 	////////////////////////////////////////////////////// CLASSES////////////////////////////////
+
+
 
 	private class StudentNumFocusListener implements FocusListener {
 
@@ -212,4 +215,10 @@ public class Login {
 			repaint();
 		}
 	}
+
+
+	public static Database getDatabase() {
+		return database;
+	}
+
 }
