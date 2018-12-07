@@ -37,6 +37,7 @@ public class Database {
 
 	private static SimpleLinkedList<Subject> subjects;
 	private static SimpleLinkedList<Symbol> symbols;
+	private static SimpleLinkedList<SimpleLinkedList<Symbol>> formulas;
 
 	private static File jsonFile;
 
@@ -141,6 +142,7 @@ public class Database {
 
 					if (formula != null) { // if question is calculable
 						q = new Question(problemStatement, formula);
+						formulas.add(formula);
 					} else { // if question is not calculable
 						BufferedImage image = stringToImage((String) question.get("image")); // SimpleLinkedList<String> 
 						JSONArray specificQuestions = (JSONArray) question.get("sq");
@@ -377,5 +379,8 @@ public class Database {
 
 	public SimpleLinkedList<Symbol> getSymbols() {
 		return symbols;
+	}
+	public SimpleLinkedList<SimpleLinkedList<Symbol>> getFormulas() {
+		return formulas;
 	}
 }

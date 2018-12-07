@@ -71,7 +71,7 @@ public class Student {
 	
 	public double getPercentage() {
 		if (totalQuestions != 0) {
-			double output = (double)(incorrectQuestions) / totalQuestions * 100;
+			double output = (double)(totalQuestions - incorrectQuestions) / totalQuestions * 100;
 			
 			// round to 2 decimal places
 			output *= 100;
