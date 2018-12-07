@@ -1,8 +1,13 @@
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Base64;
+
+import javax.imageio.ImageIO;
 
 import org.eclipse.egit.github.core.Gist;
 import org.eclipse.egit.github.core.GistFile;
@@ -47,7 +52,7 @@ public class Database {
 		// setup gist and get data
 		initGist();
 	}
-	
+
 	// private methods
 
 	private void initGist() {
@@ -126,9 +131,41 @@ public class Database {
 
 					// get its problem statement and its formula
 					String problemStatement = (String) question.get("problem");
-					SimpleLinkedList<Symbol> formula = toSymbol((String) question.get("formula")); // (SimpleLinkedList<Symbol>) question.get("formula");
+					SimpleLinkedList<Symbol> formula = stringToSymbols((String) question.get("formula"));
 
-					Question q = new Question(problemStatement, formula); // temp
+					Question q;
+
+					if (formula != null) { // if question is calculable
+						q = new Question(problemStatement, formula);
+					} else { // if question is not calculable
+						BufferedImage image = stringToImage((String) question.get("image")); // SimpleLinkedList<String> 
+						JSONArray specificQuestions = (JSONArray) question.get("sq");
+						JSONArray specificAnswers = (JSONArray) question.get("sa");
+						JSONArray possibleAnswers = (JSONArray) question.get("pa");
+
+						SimpleLinkedList<String> sq = new SimpleLinkedList<String>();
+						SimpleLinkedList<String> sa = new SimpleLinkedList<String>();
+						SimpleLinkedList<String> pa = new SimpleLinkedList<String>();
+
+						for (Object d : specificQuestions) {
+							JSONObject jo = (JSONObject) d;
+							String str = (String) jo.get("q");
+							sq.add(str);
+						}
+						for (Object d : specificAnswers) {
+							JSONObject jo = (JSONObject) d;
+							String str = (String) jo.get("a");
+							sa.add(str);
+						}
+						for (Object d : possibleAnswers) {
+							JSONObject jo = (JSONObject) d;
+							String str = (String) jo.get("p");
+							pa.add(str);
+						}
+
+						// add new question
+						q = new Question(problemStatement, sq, sa, pa, image);
+					}
 					u.addQuestion(q);
 				}
 			}
@@ -172,23 +209,43 @@ public class Database {
 		}
 	}
 
-	private static SimpleLinkedList<Symbol> toSymbol(String stringFormula) {
+	private static SimpleLinkedList<Symbol> stringToSymbols(String str) {
+		if (str.equals("null")) {
+			return null;
+		}
 		SimpleLinkedList<Symbol> formula = new SimpleLinkedList<Symbol>();
-		stringFormula = stringFormula.substring(1, stringFormula.length());
+		str = str.substring(1, str.length());
 
-		while (stringFormula.length() > 0) {
-			String sub = stringFormula.substring(0, stringFormula.indexOf(" "));			
+		while (str.length() > 0) {
+			String sub = str.substring(0, str.indexOf(" "));			
 			if ((sub.equals("+")) || (sub.equals("-")) || (sub.equals("mul")) || (sub.equals("div")) || (sub.equals("sqrt")) || (sub.equals("^")) || (sub.equals("(")) || (sub.equals(")"))) {
 				formula.add(new Operation(sub));
 			} else {
 				formula.add(new Variable(sub));
 			}
-			stringFormula = stringFormula.substring(stringFormula.indexOf(" ") + 1);
+			str = str.substring(str.indexOf(" ") + 1);
 		}
 
 		return formula;
 	}
-	
+
+	// converts string taken from database to image for the question
+	private static BufferedImage stringToImage(String str) {
+		if (str.equals("null")) {
+			return null;
+		}
+		BufferedImage image = null;
+		byte[] bytes = Base64.getDecoder().decode(str);
+		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+		try {
+			image = ImageIO.read(bais);
+			bais.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return image;
+	}
+
 	// public methods
 	public void update() {
 		JSONObject all = new JSONObject();
@@ -212,8 +269,43 @@ public class Database {
 				for (int k = 0; k < unit.getQuestions().size(); k++) {
 					Question question = unit.getQuestions().get(k);
 					JSONObject qobj = new JSONObject();
+
 					qobj.put("problem", question.getProblemStatement());
-					qobj.put("formula", question.toString());
+					
+					if (question.isNumerical()) {
+						qobj.put("formula", question.toString());
+						qobj.put("image", "null");
+						qobj.put("sq", new JSONArray());
+						qobj.put("sa", new JSONArray());
+						qobj.put("pa", new JSONArray());
+					} else {
+						JSONArray sq = new JSONArray();
+						JSONArray sa = new JSONArray();
+						JSONArray pa = new JSONArray();
+
+						for (int l = 0; l < question.getSpecificQuestions().size(); l++) {
+							JSONObject aobj = new JSONObject();
+							aobj.put("q", question.getSpecificQuestions().get(l));
+							sq.add(aobj);
+						}
+						for (int l = 0; l < question.getSpecificAnswers().size(); l++) {
+							JSONObject aobj = new JSONObject();
+							aobj.put("a", question.getSpecificAnswers().get(l));
+							sa.add(aobj);
+						}
+						for (int l = 0; l < question.getPossibleAnswers().size(); l++) {
+							JSONObject aobj = new JSONObject();
+							aobj.put("p", question.getPossibleAnswers().get(l));
+							pa.add(aobj);
+						}
+						
+						qobj.put("formula", "null");
+						qobj.put("image", question.imageToString());
+						qobj.put("sq", sq);
+						qobj.put("sa", sa);
+						qobj.put("pa", pa);
+					}
+
 					c.add(qobj);
 				}
 				uobj.put("questions", c);

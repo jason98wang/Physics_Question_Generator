@@ -17,22 +17,6 @@ public class Subject {
 		students = new SimpleLinkedList<Student>();
 	}
 
-	//	public void addUnit(Unit u) {
-	//		units.add(u);
-	//	}
-	//	
-	//	public void removeUnit(Unit u) {
-	//		units.remove(u);
-	//	}
-	//	
-	//	public void addStudent(Student s) {
-	//		students.add(s);
-	//	}
-	//	
-	//	public void removeStudent(Student s) {
-	//		students.remove(s);
-	//	}
-
 	// setters
 	public void setName(String name) {
 		this.name = name;

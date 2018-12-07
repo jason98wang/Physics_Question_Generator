@@ -1,21 +1,41 @@
 
-// Imports
+// Formatting imports
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
+
+// Used for drop image
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
+
+// Other
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
+import java.util.List;
+import java.util.TooManyListenersException;
 
+// ImageIO
+import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
+
+// Swing
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -24,6 +44,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -35,16 +56,15 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
+// Data structure
 import data_structures.SimpleLinkedList;
-
-
 
 // Main JFrame
 public class QuizEditor extends JFrame {
-
-
-
 
 	// Objects
 	private static QuizEditor quiz;
@@ -52,10 +72,8 @@ public class QuizEditor extends JFrame {
 	private Unit u;
 	private Question q, editQuestion;
 
-
 	// Booleans
 	private boolean addQ, removeQ, editQ, newFormula, editingQ, noFormula = false;
-
 
 	// JComponents
 	private JLabel currentFormulaDisplay;
@@ -63,10 +81,6 @@ public class QuizEditor extends JFrame {
 	private JComboBox<String> subject = new JComboBox<String>();
 	private JComboBox<String> unit = new JComboBox<String>();
 	private JComboBox<String> formula = new JComboBox<String>();
-	private JTextField choice1;
-	private JTextField choice2;
-	private JTextField choice3;
-	private JTextField choice4;
 
 	// Font and Color
 	private Font font = new Font("Serif", Font.BOLD, 30);
@@ -74,29 +88,21 @@ public class QuizEditor extends JFrame {
 	private Color indigo = new Color(56, 53, 74);
 	private Color lightBlue = new Color(162, 236, 250);
 	private Color orange = new Color(255, 168, 104);
-
+	private BufferedImage image = null;
 
 	// Offset for spacing out the components
 	private int offset = 0;
 	private int addingoffset = 20;
 
-
 	// Database
 	private Database database;
 
-	// current formula
-	SimpleLinkedList<Symbol> curFormula = new SimpleLinkedList<Symbol>();
-
-
-
 	// QuizEditor(Database d) {
-	QuizEditor(Database database, SimpleLinkedList<Subject> subjects, SimpleLinkedList<Symbol> symbols, SimpleLinkedList<SimpleLinkedList<Symbol>> formulas) {
-
-
+	QuizEditor(Database database, SimpleLinkedList<Subject> subjects, SimpleLinkedList<Symbol> symbols,
+			SimpleLinkedList<SimpleLinkedList<Symbol>> formulas) {
 
 		// Database where everything is stored
 		this.database = database;
-
 
 		// Setting up frame
 		setTitle("Quiz Editor");
@@ -107,7 +113,6 @@ public class QuizEditor extends JFrame {
 		setUndecorated(true);
 		requestFocusInWindow();
 
-
 		// Components on main frame
 		JButton add = new JButton("Add");
 		JButton remove = new JButton("Remove");
@@ -117,6 +122,7 @@ public class QuizEditor extends JFrame {
 		JButton removeSubject = new JButton("Remove current subject");
 		JButton removeUnit = new JButton("Remove current unit");
 		JButton confirm = new JButton("Confirm");
+		JButton clear = new JButton("Clear");
 		JButton exit = new JButton("Exit");
 		JLabel problemStatement = new JLabel("Enter problem statement below");
 		JLabel currentFormula = new JLabel("Current Formula");
@@ -127,8 +133,6 @@ public class QuizEditor extends JFrame {
 		JPanel displayPane = new JPanel();
 		JPanel displayFormula = new JPanel();
 		JTextArea enter = new JTextArea();
-
-
 
 		// Formatting
 		list.setBackground(indigo);
@@ -173,6 +177,10 @@ public class QuizEditor extends JFrame {
 		confirm.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		confirm.setBackground(lightBlue);
 
+		clear.setFont(font);
+		clear.setAlignmentX(JButton.CENTER_ALIGNMENT);
+		clear.setBackground(lightBlue);
+		
 		exit.setFont(font);
 		exit.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		exit.setBackground(lightBlue);
@@ -187,7 +195,8 @@ public class QuizEditor extends JFrame {
 		currentFormula.setFont(small);
 
 		currentFormulaDisplay.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		displayPane.setPreferredSize(new Dimension((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 200,300));
+		displayPane.setPreferredSize(
+				new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 200, 300));
 		displayPane.setBackground(lightBlue);
 
 		logo.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -203,17 +212,15 @@ public class QuizEditor extends JFrame {
 		u = null;
 		q = null;
 
-
 		// SimpleLinkedList<Subject> subjects = d.getSubjects();
 
 		// Adding all subjects
 		subject.addItem("Choose a subject");
 		unit.addItem("Choose a unit");
 		for (int i = 0; i < subjects.size(); i++) {
-			subject.addItem(subjects.get(i).getName() + " " + subjects.get(i).getGrade() + " " + subjects.get(i).getLevel());
+			subject.addItem(
+					subjects.get(i).getName() + " " + subjects.get(i).getGrade() + " " + subjects.get(i).getLevel());
 		}
-
-
 
 		// Subject combobox
 		subject.addActionListener(new ActionListener() {
@@ -226,8 +233,6 @@ public class QuizEditor extends JFrame {
 				// Update units in subject
 				if (!chosenSubject.equals("Choose a subject")) {
 
-
-
 					s = subjects.get(subject.getSelectedIndex() - 1);
 					// Priority queue instead of linkedlist to keep the units in order
 					SimpleLinkedList<Unit> units = s.getUnits();
@@ -239,8 +244,6 @@ public class QuizEditor extends JFrame {
 				list.setModel(new DefaultListModel<String>());
 			}
 		});
-
-
 
 		// Unit combobox
 		unit.addActionListener(new ActionListener() {
@@ -263,8 +266,6 @@ public class QuizEditor extends JFrame {
 			}
 		});
 
-
-
 		// Formula combobox
 		formula.addItem("Choose a formula");
 		formula.addItem("Create new formula");
@@ -272,90 +273,170 @@ public class QuizEditor extends JFrame {
 		formula.addItem("No formula(Enter answers myself)");
 		formula.setBackground(lightBlue);
 
+		JPanel hasFormula = new JPanel();
+		JPanel notFormula = new JPanel();
 
+		// Setting up add interface
+		displayFormula.add(currentFormula);
+		displayFormula.add(Box.createVerticalStrut(addingoffset));
+		currentFormula.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		displayFormula.add(currentFormulaDisplay);
+		displayFormula.add(Box.createVerticalStrut(addingoffset));
+		displayFormula.setLayout(new BoxLayout(displayFormula, BoxLayout.Y_AXIS));
+		JScrollPane scroll = new JScrollPane(displayFormula, JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scroll.getVerticalScrollBar().setUnitIncrement(16);
+		scroll.getHorizontalScrollBar().setUnitIncrement(16);
+		scroll.setMinimumSize(new Dimension((int) displayPane.getPreferredSize().getWidth(), 200));
+		hasFormula.add(scroll);
+		hasFormula.add(Box.createVerticalStrut(addingoffset));
+		problemStatement.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		hasFormula.add(problemStatement);
+		enter.setEditable(true);
+		enter.setPreferredSize(new Dimension((int) enter.getPreferredSize().getWidth(),
+				(int) enter.getPreferredSize().getHeight() * 10));
+		JScrollPane enterScroll = new JScrollPane(enter, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		enterScroll.getVerticalScrollBar().setUnitIncrement(16);
+		enterScroll.setPreferredSize(enter.getPreferredSize());
+		enterScroll.setMinimumSize(enterScroll.getPreferredSize());
+		hasFormula.add(enterScroll);
+		hasFormula.setLayout(new BoxLayout(hasFormula, BoxLayout.Y_AXIS));
+		JPanel leftPanel = new JPanel();
+		DropPane dragImage = new DropPane();
+		JLabel rootQuestion = new JLabel("Root Question");
+		JTextArea enterQ = new JTextArea();
+		enterQ.setLineWrap(true);
+		enterQ.setWrapStyleWord(true);
+		leftPanel.add(dragImage);
+		leftPanel.add(rootQuestion);
+		leftPanel.add(enterQ);
+		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+		JPanel rightPanel = new JPanel();
+		JLabel questionsLabel = new JLabel("Questions");
+		JLabel rightAnswerLabel = new JLabel("Right Answer");
+		JLabel allAnswersLabel = new JLabel("Choices");
+		DefaultListModel<String> questionsModel = new DefaultListModel<String>();
+		JList<String> questions = new JList<String>(questionsModel);
+		DefaultListModel<String> rightAnswerModel = new DefaultListModel<String>();
+		JList<String> rightAnswer = new JList<String>(rightAnswerModel);
+		DefaultListModel<String> allAnswersModel = new DefaultListModel<String>();
+		JList<String> allAnswers = new JList<String>(allAnswersModel);
+		JTextField enterQuestion = new JTextField();
+		JScrollBar scrollQuestion = new JScrollBar(JScrollBar.HORIZONTAL);
+		scrollQuestion.setModel(enterQuestion.getHorizontalVisibility());
+		enterQuestion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String S = enterQuestion.getText();
+				enterQuestion.setText("");
+				if (S.equals(""))
+					return;
+				questionsModel.addElement(S);
+			}
+		});
+		JTextField enterRightAnswer = new JTextField();
+		JScrollBar scrollRightAnswer = new JScrollBar(JScrollBar.HORIZONTAL);
+		scrollRightAnswer.setModel(enterRightAnswer.getHorizontalVisibility());
+		enterRightAnswer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String S = enterRightAnswer.getText();
+				enterRightAnswer.setText("");
+				if (S.equals(""))
+					return;
+				rightAnswerModel.addElement(S);
+			}
+		});
+		JTextField enterAllAnswers = new JTextField();
+		JScrollBar scrollAllAnswers = new JScrollBar(JScrollBar.HORIZONTAL);
+		scrollAllAnswers.setModel(enterAllAnswers.getHorizontalVisibility());
+		enterAllAnswers.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String S = enterAllAnswers.getText();
+				enterAllAnswers.setText("");
+				if (S.equals(""))
+					return;
+				allAnswersModel.addElement(S);
+			}
+		});
+		JPanel questionsPanel = new JPanel();
+		questionsPanel.setLayout(new BoxLayout(questionsPanel, BoxLayout.Y_AXIS));
+		questionsPanel.add(questionsLabel);
+		questionsPanel.add(questions);
+		questionsPanel.add(enterQuestion);
+		questionsPanel.add(scrollQuestion);
+		JPanel rightAnswerPanel = new JPanel();
+		rightAnswerPanel.setLayout(new BoxLayout(rightAnswerPanel, BoxLayout.Y_AXIS));
+		rightAnswerPanel.add(rightAnswerLabel);
+		rightAnswerPanel.add(rightAnswer);
+		rightAnswerPanel.add(enterRightAnswer);
+		rightAnswerPanel.add(scrollRightAnswer);
+		JPanel allAnswersPanel = new JPanel();
+		allAnswersPanel.setLayout(new BoxLayout(allAnswersPanel, BoxLayout.Y_AXIS));
+		allAnswersPanel.add(allAnswersLabel);
+		allAnswersPanel.add(allAnswers);
+		allAnswersPanel.add(enterAllAnswers);
+		allAnswersPanel.add(scrollAllAnswers);
+		rightPanel.add(questionsPanel);
+		rightPanel.add(rightAnswerPanel);
+		rightPanel.add(allAnswersPanel);
+		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.X_AXIS));
+		notFormula.add(leftPanel);
+		notFormula.add(rightPanel);
+		notFormula.setLayout(new BoxLayout(notFormula, BoxLayout.X_AXIS));
+
+		formula.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String chosenFormula = (String) formula.getSelectedItem();
+				if (chosenFormula.equals("No formula(Enter answers myself)")) {
+					// q.setFormula(null);
+					currentFormulaDisplay.setIcon(new ImageIcon());
+					// quiz.revalidate();
+					if (!noFormula) {
+						noFormula = true;
+						displayPane.remove(hasFormula);
+						displayPane.add(notFormula);
+					}
+				} else {
+					if (noFormula) {
+						noFormula = false;
+						displayPane.remove(notFormula);
+						displayPane.add(hasFormula);
+					}
+					if (chosenFormula.equals("Choose a formula"))
+						return;
+					q = new Question("", new SimpleLinkedList<Symbol>());
+					// creating a new formula
+					if (chosenFormula.equals("Create new formula")) {
+						newFormula = true;
+						createFormula(symbols, currentFormulaDisplay);
+						// using a previous formula
+					} else if (chosenFormula.equals("Use previous formula")) {
+						newFormula = false;
+						previousFormula(formulas, currentFormulaDisplay);
+					}
+				}
+			}
+		});
 
 		// Add Button
 		add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (addQ) return;
+				if (addQ)
+					return;
 				addQ = true;
 				removeQ = false;
 				editQ = false;
 				editingQ = false;
 				displayPane.removeAll();
-
-				// action listener for formula combobox
-				formula.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						String chosenFormula = (String) formula.getSelectedItem();
-						if (chosenFormula.equals("No formula(Enter answers myself)")) {
-							q.setFormula(null);
-							currentFormulaDisplay.setIcon(new ImageIcon());
-							//							quiz.revalidate();
-							choice1.setEditable(true);
-							choice2.setEditable(true);
-							choice3.setEditable(true);
-							choice4.setEditable(true);
-							noFormula = true;
-						} else {
-							noFormula = false;
-							choice1.setEditable(false);
-							choice1.setText("");
-							choice2.setEditable(false);
-							choice2.setText("");
-							choice3.setEditable(false);
-							choice3.setText("");
-							choice4.setEditable(false);
-							choice4.setText("");
-							if (chosenFormula.equals("Choose a formula")) return;
-							q = new Question("", new SimpleLinkedList<Symbol>());
-							// creating a new formula
-							if (chosenFormula.equals("Create new formula")) {
-								newFormula = true;
-								createFormula(symbols, currentFormulaDisplay);
-								// using a previous formula
-							} else if (chosenFormula.equals("Use previous formula")){
-								newFormula = false;
-								previousFormula(formulas, currentFormulaDisplay);
-							}
-						}
-					}
-				});
-
 				displayPane.add(formula);
-
-
-				// Setting up add interface
-				displayFormula.add(currentFormula);
-				displayFormula.add(Box.createVerticalStrut(addingoffset));
-				currentFormula.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-				displayFormula.add(currentFormulaDisplay);
-				displayFormula.add(Box.createVerticalStrut(addingoffset));
-				displayFormula.setLayout(new BoxLayout(displayFormula, BoxLayout.Y_AXIS));
-				JScrollPane scroll = new JScrollPane(displayFormula, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-				scroll.getVerticalScrollBar().setUnitIncrement(16);
-				scroll.getHorizontalScrollBar().setUnitIncrement(16);
-				scroll.setMinimumSize(new Dimension((int)displayPane.getPreferredSize().getWidth(),200));
-				displayPane.add(scroll);
-				displayPane.add(Box.createVerticalStrut(addingoffset));
-				problemStatement.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-				displayPane.add(problemStatement);
-				enter.setEditable(true);
-				enter.setPreferredSize(new Dimension((int)enter.getPreferredSize().getWidth(),(int)enter.getPreferredSize().getHeight() * 10));
-				JScrollPane enterScroll = new JScrollPane(enter, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-				enterScroll.getVerticalScrollBar().setUnitIncrement(16);
-				enterScroll.setPreferredSize(enter.getPreferredSize());
-				enterScroll.setMinimumSize(enterScroll.getPreferredSize());
-				displayPane.add(enterScroll);
-				JPanel enterAnswers = new JPanel();
-
+				displayPane.add(hasFormula);
 				revalidate();
-				midPane.setPreferredSize(new Dimension((int)midPane.getMinimumSize().getWidth(),(int)exit.getLocation().getY() + 50 + offset));
-				contentPane.setPreferredSize(new Dimension((int)contentPane.getPreferredSize().getWidth(),(int)midPane.getPreferredSize().getHeight()));
+				midPane.setPreferredSize(new Dimension((int) midPane.getMinimumSize().getWidth(),
+						(int) exit.getLocation().getY() + 50 + offset));
+				contentPane.setPreferredSize(new Dimension((int) contentPane.getPreferredSize().getWidth(),
+						(int) midPane.getPreferredSize().getHeight()));
 			}
 		});
-
-
 
 		// Remove button
 		remove.addActionListener(new ActionListener() {
@@ -365,23 +446,26 @@ public class QuizEditor extends JFrame {
 				editQ = false;
 				editingQ = false;
 
-				// Displays list with all questions in the unit selected supporting multi selection
+				// Displays list with all questions in the unit selected supporting multi
+				// selection
 				displayPane.removeAll();
-				displayPane.setMinimumSize(new Dimension((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 200,300));
+				displayPane.setMinimumSize(
+						new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 200, 300));
 				list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-				JScrollPane scroll = new JScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				JScrollPane scroll = new JScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+						JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 				scroll.getVerticalScrollBar().setUnitIncrement(16);
 				scroll.getHorizontalScrollBar().setUnitIncrement(16);
 				scroll.setPreferredSize(displayPane.getPreferredSize());
 				displayPane.add(scroll);
 				revalidate();
-				midPane.setPreferredSize(new Dimension((int)midPane.getMinimumSize().getWidth(),(int)exit.getLocation().getY() + 50 + offset));
-				contentPane.setPreferredSize(new Dimension((int)contentPane.getPreferredSize().getWidth(),(int)midPane.getPreferredSize().getHeight()));
+				midPane.setPreferredSize(new Dimension((int) midPane.getMinimumSize().getWidth(),
+						(int) exit.getLocation().getY() + 50 + offset));
+				contentPane.setPreferredSize(new Dimension((int) contentPane.getPreferredSize().getWidth(),
+						(int) midPane.getPreferredSize().getHeight()));
 
 			}
 		});
-
-
 
 		// Edit button
 		edit.addActionListener(new ActionListener() {
@@ -391,22 +475,24 @@ public class QuizEditor extends JFrame {
 				removeQ = false;
 				editingQ = false;
 				displayPane.removeAll();
-				displayPane.setMinimumSize(new Dimension((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 200,300));
+				displayPane.setMinimumSize(
+						new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 200, 300));
 				// Displays list with all questions in the unit but can only edit one at a time
 				list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				subject.setVisible(true);
 				unit.setVisible(true);
-				JScrollPane scroll = new JScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				JScrollPane scroll = new JScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+						JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 				scroll.getVerticalScrollBar().setUnitIncrement(16);
 				scroll.getHorizontalScrollBar().setUnitIncrement(16);
 				displayPane.add(scroll);
 				revalidate();
-				midPane.setPreferredSize(new Dimension((int)midPane.getMinimumSize().getWidth(),(int)exit.getLocation().getY() + 50 + offset));
-				contentPane.setPreferredSize(new Dimension((int)contentPane.getPreferredSize().getWidth(),(int)midPane.getPreferredSize().getHeight()));
+				midPane.setPreferredSize(new Dimension((int) midPane.getMinimumSize().getWidth(),
+						(int) exit.getLocation().getY() + 50 + offset));
+				contentPane.setPreferredSize(new Dimension((int) contentPane.getPreferredSize().getWidth(),
+						(int) midPane.getPreferredSize().getHeight()));
 			}
 		});
-
-
 
 		// Confirm Button
 		// Button used to confirm choices for add, remove and edit
@@ -450,23 +536,42 @@ public class QuizEditor extends JFrame {
 					}
 					list.clearSelection();
 
-
 					// Adds a question
 				} else if (addQ) {
-					q.setProblemStatement(enter.getText());
-					// d.addQuestion(s,u,q);
-					DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
-					model.addElement(q.getProblemStatement());
-					if (newFormula) {
-						formulas.add(q.getFormula());
-						newFormula = false;
+					if (noFormula) {
+						if (questionsModel.size() != rightAnswerModel.size()) return;
+						String problemStatement = enterQ.getText();
+						SimpleLinkedList<String> specificQuestions = new SimpleLinkedList<String>();
+						SimpleLinkedList<String> specificAnswers = new SimpleLinkedList<String>();
+						SimpleLinkedList<String> possibleAnswers = new SimpleLinkedList<String>();
+						for (int i = 0; i < questionsModel.size(); i++) {
+							specificQuestions.add(questionsModel.getElementAt(i));
+						}
+						for (int i = 0; i < rightAnswerModel.size(); i++) {
+							specificAnswers.add(rightAnswerModel.getElementAt(i));
+						}
+						for (int i = 0; i < allAnswersModel.size(); i++) {
+							possibleAnswers.add(allAnswersModel.getElementAt(i));
+						}
+						q = new Question(problemStatement,specificQuestions,specificAnswers,possibleAnswers,image);
+						image = null;
+					} else {
+						q.setProblemStatement(enter.getText());
+						// d.addQuestion(s,u,q);
+						DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
+						model.addElement(q.getProblemStatement());
+						if (newFormula) {
+							formulas.add(q.getFormula());
+							newFormula = false;
+						}
+						// Remove Later
+						
+						
+						currentFormulaDisplay.setIcon(new ImageIcon());
+						enter.setText("");
 					}
-					// Remove Later
 					u.addQuestion(q);
 					q = null;
-					currentFormulaDisplay.setIcon(new ImageIcon());
-					enter.setText("");
-
 					// Editing questions
 				} else if (editQ) {
 					// Same as add interface but formula and problem statement are already filled in
@@ -487,80 +592,58 @@ public class QuizEditor extends JFrame {
 					currentFormulaDisplay.setIcon(new ImageIcon(joinBufferedImages(editFormula)));
 					enter.setText(editProblemStatement);
 
-
-					formula.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							String chosenFormula = (String) formula.getSelectedItem();
-							if (chosenFormula.equals("Create new formula")) {
-								newFormula = true;
-								createFormula(symbols, currentFormulaDisplay);
-							} else {
-								newFormula = false;
-								previousFormula(formulas, currentFormulaDisplay);
-							}
-						}
-					});
-
-
 					// Formatting
 					displayPane.add(formula);
-					displayFormula.add(currentFormula);
-					displayFormula.add(Box.createVerticalStrut(addingoffset));
-					currentFormula.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-					displayFormula.add(currentFormulaDisplay);
-					displayFormula.add(Box.createVerticalStrut(addingoffset));
-					displayFormula.setLayout(new BoxLayout(displayFormula, BoxLayout.Y_AXIS));
-					JScrollPane scroll = new JScrollPane(displayFormula, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-					scroll.getVerticalScrollBar().setUnitIncrement(16);
-					scroll.getHorizontalScrollBar().setUnitIncrement(16);
-					scroll.setPreferredSize(new Dimension((int)displayPane.getPreferredSize().getWidth(),200));
-					displayPane.add(scroll);
-					displayPane.add(Box.createVerticalStrut(addingoffset));
-					problemStatement.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-					displayPane.add(problemStatement);
-					enter.setEditable(true);
-					//					enter.setPreferredSize(new Dimension((int)enter.getPreferredSize().getWidth(),(int)enter.getPreferredSize().getHeight() * 5));
-					//					enter.setMaximumSize(enter.getPreferredSize());
-					JScrollPane enterScroll = new JScrollPane(enter, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-					enterScroll.getVerticalScrollBar().setUnitIncrement(16);
-					enterScroll.setPreferredSize(new Dimension((int)enter.getPreferredSize().getWidth(),(int)enter.getPreferredSize().getHeight() * 5));
-					enterScroll.setMinimumSize(enterScroll.getPreferredSize());
-					displayPane.add(enterScroll);
 					revalidate();
-					midPane.setPreferredSize(new Dimension((int)midPane.getMinimumSize().getWidth(),(int)exit.getLocation().getY() + 50 + offset));
-					contentPane.setPreferredSize(new Dimension((int)contentPane.getPreferredSize().getWidth(),(int)midPane.getPreferredSize().getHeight()));
+					midPane.setPreferredSize(new Dimension((int) midPane.getMinimumSize().getWidth(),
+							(int) exit.getLocation().getY() + 50 + offset));
+					contentPane.setPreferredSize(new Dimension((int) contentPane.getPreferredSize().getWidth(),
+							(int) midPane.getPreferredSize().getHeight()));
 
 					//
 				} else {
-					// Confirms changes
-					DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
-					model.add(model.indexOf(editQuestion.getProblemStatement()), enter.getText());
-					model.removeElement(editQuestion.getProblemStatement());
-					editQuestion.setProblemStatement(enter.getText());
-					editQuestion.setFormula(q.getFormula());
-					if (newFormula) {
-						formulas.add(q.getFormula());
-						newFormula = false;
+					if (noFormula) {
+						
+					} else {
+						// Confirms changes
+						DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
+						model.add(model.indexOf(editQuestion.getProblemStatement()), enter.getText());
+						model.removeElement(editQuestion.getProblemStatement());
+						editQuestion.setProblemStatement(enter.getText());
+						editQuestion.setFormula(q.getFormula());
+						if (newFormula) {
+							formulas.add(q.getFormula());
+							newFormula = false;
+						}
+						currentFormulaDisplay.setIcon(new ImageIcon());
+						enter.setText("");
 					}
 					q = null;
-					currentFormulaDisplay.setIcon(new ImageIcon());
-					enter.setText("");
 				}
 
 				database.update(); // call database to update
 			}
 		});
-
-
-
+		
+		clear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				enter.setText("");
+				enterQ.setText("");
+				currentFormulaDisplay.setIcon(new ImageIcon());
+				enterQuestion.setText("");
+				questionsModel.removeAllElements();
+				enterRightAnswer.setText("");
+				rightAnswerModel.removeAllElements();
+				enterAllAnswers.setText("");
+				allAnswersModel.removeAllElements();
+			}
+		});
 		// Add subject button
 		addSubject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addSubject(subjects);
 			}
 		});
-
-
 
 		// Add unit button
 		addUnit.addActionListener(new ActionListener() {
@@ -575,7 +658,6 @@ public class QuizEditor extends JFrame {
 				addUnit(unitlist, null);
 			}
 		});
-
 
 		// Remove subject button
 		removeSubject.addActionListener(new ActionListener() {
@@ -592,7 +674,6 @@ public class QuizEditor extends JFrame {
 				database.update(); // call database to update
 			}
 		});
-
 
 		// remove unit button
 		removeUnit.addActionListener(new ActionListener() {
@@ -611,7 +692,6 @@ public class QuizEditor extends JFrame {
 			}
 		});
 
-
 		// Exit button
 		exit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -621,7 +701,6 @@ public class QuizEditor extends JFrame {
 
 		// logo
 		midPane.add(logo);
-
 
 		// Panel to store main buttons
 		JPanel buttons = new JPanel();
@@ -637,13 +716,15 @@ public class QuizEditor extends JFrame {
 		buttons.setBackground(indigo);
 		midPane.add(buttons);
 
-
 		// Difference in height between components in the frame
-		offset = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight() - (int)displayPane.getPreferredSize().getHeight() - (int)buttons.getPreferredSize().getHeight() - (int)subject.getMinimumSize().getHeight() - (int)unit.getMinimumSize().getHeight() - (int)confirm.getPreferredSize().getHeight() - (int)exit.getPreferredSize().getHeight();
-		offset /= 6;
+		offset = (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight()
+				- (int) displayPane.getPreferredSize().getHeight() - (int) buttons.getPreferredSize().getHeight()
+				- (int) subject.getMinimumSize().getHeight() - (int) unit.getMinimumSize().getHeight()
+				- (int) confirm.getPreferredSize().getHeight() - (int) exit.getPreferredSize().getHeight()
+				- (int) clear.getPreferredSize().getHeight();
+		offset /= 7;
 		offset += 50;
 		midPane.add(Box.createVerticalStrut(offset));
-
 
 		// Panel to store subject related components
 		JPanel subjectPane = new JPanel();
@@ -653,14 +734,13 @@ public class QuizEditor extends JFrame {
 		subjectPane.add(Box.createHorizontalStrut(100));
 		subjectPane.add(removeSubject);
 		subjectPane.setLayout(new BoxLayout(subjectPane, BoxLayout.X_AXIS));
-		subjectPane.setPreferredSize(new Dimension((int) midPane.getPreferredSize().getWidth(), (int)subject.getMinimumSize().getHeight()));
+		subjectPane.setPreferredSize(
+				new Dimension((int) midPane.getPreferredSize().getWidth(), (int) subject.getMinimumSize().getHeight()));
 		subjectPane.setBackground(indigo);
 		subjectPane.setMaximumSize(subjectPane.getPreferredSize());
 		midPane.add(subjectPane);
 
-
 		midPane.add(Box.createVerticalStrut(offset));
-
 
 		// Panel to store unit related components
 		JPanel unitPane = new JPanel();
@@ -670,11 +750,11 @@ public class QuizEditor extends JFrame {
 		unitPane.add(Box.createHorizontalStrut(100));
 		unitPane.add(removeUnit);
 		unitPane.setLayout(new BoxLayout(unitPane, BoxLayout.X_AXIS));
-		unitPane.setPreferredSize(new Dimension((int) midPane.getPreferredSize().getWidth(), (int)unit.getMinimumSize().getHeight()));
+		unitPane.setPreferredSize(
+				new Dimension((int) midPane.getPreferredSize().getWidth(), (int) unit.getMinimumSize().getHeight()));
 		unitPane.setBackground(indigo);
 		unitPane.setMaximumSize(unitPane.getPreferredSize());
 		midPane.add(unitPane);
-
 
 		// Adding everything to the main panel
 		displayPane.setLayout(new BoxLayout(displayPane, BoxLayout.Y_AXIS));
@@ -683,34 +763,38 @@ public class QuizEditor extends JFrame {
 		midPane.add(Box.createVerticalStrut(offset));
 		midPane.add(confirm);
 		midPane.add(Box.createVerticalStrut(offset));
+		midPane.add(clear);
+		midPane.add(Box.createVerticalStrut(offset));
 		midPane.add(exit);
 		midPane.add(Box.createVerticalStrut(offset));
 		midPane.setBackground(indigo);
 		midPane.setLayout(new BoxLayout(midPane, BoxLayout.Y_AXIS));
-
 
 		// main jpanel
 		this.setVisible(true);
 		contentPane.add(Box.createHorizontalStrut(100));
 
 		// Scrollable
-		midPane.setPreferredSize(new Dimension((int)midPane.getMinimumSize().getWidth(),(int)exit.getLocation().getY() + 50));
+		midPane.setPreferredSize(
+				new Dimension((int) midPane.getMinimumSize().getWidth(), (int) exit.getLocation().getY() + 50));
 		contentPane.add(midPane);
 		contentPane.add(Box.createHorizontalStrut(100));
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
 		contentPane.setBackground(indigo);
-		JScrollPane scrollpane = new JScrollPane(contentPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane scrollpane = new JScrollPane(contentPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollpane.getVerticalScrollBar().setUnitIncrement(16);
 		scrollpane.getVerticalScrollBar().setBackground(lightBlue);
 		scrollpane.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
 		scrollpane.setBorder(BorderFactory.createEmptyBorder());
 		this.setContentPane(scrollpane);
 		this.setVisible(true);
-		midPane.setPreferredSize(new Dimension((int)midPane.getMinimumSize().getWidth(),(int)exit.getLocation().getY() + 50 + offset));
-		contentPane.setPreferredSize(new Dimension((int)contentPane.getPreferredSize().getWidth(),(int)midPane.getPreferredSize().getHeight()));
+		midPane.setPreferredSize(new Dimension((int) midPane.getMinimumSize().getWidth(),
+				(int) exit.getLocation().getY() + 50 + offset));
+		contentPane.setPreferredSize(new Dimension((int) contentPane.getPreferredSize().getWidth(),
+				(int) midPane.getPreferredSize().getHeight()));
 		revalidate();
 	}
-
 
 	// method to add a subject
 	// AddSubject(Database d) {
@@ -719,7 +803,6 @@ public class QuizEditor extends JFrame {
 		addSubjectFrame.setSize(500, 700);
 		addSubjectFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		addSubjectFrame.setUndecorated(true);
-
 
 		// Components
 		JPanel contentPanel = new JPanel();
@@ -733,13 +816,13 @@ public class QuizEditor extends JFrame {
 		JButton addUnit = new JButton("Add a unit");
 		DefaultListModel<String> unitmodel = new DefaultListModel<String>();
 		JList<String> units = new JList<String>(unitmodel);
-		JScrollPane scroll = new JScrollPane(units, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane scroll = new JScrollPane(units, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
 		scroll.getHorizontalScrollBar().setUnitIncrement(16);
 		JButton confirm = new JButton("Confirm");
 		JButton cancel = new JButton("Cancel");
 		JLabel logo = new JLabel(new ImageIcon("logo.png"));
-
 
 		// Formatting
 		logo.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -792,7 +875,6 @@ public class QuizEditor extends JFrame {
 			}
 		});
 
-
 		// Confirm button
 		confirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -810,13 +892,11 @@ public class QuizEditor extends JFrame {
 			}
 		});
 
-
 		cancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addSubjectFrame.dispose();
 			}
 		});
-
 
 		// Adding onto the content pane
 		contentPanel.add(logo);
@@ -842,16 +922,14 @@ public class QuizEditor extends JFrame {
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		// this.setPreferredSize(preferredSize);
 
-
 		// Scrollable
-		JScrollPane scrollpane = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane scrollpane = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollpane.getVerticalScrollBar().setUnitIncrement(16);
 		addSubjectFrame.setContentPane(scrollpane);
 		addSubjectFrame.setVisible(true);
 
 	}
-
-
 
 	// Method to add unit
 	private void addUnit(SimpleLinkedList<Unit> unitlist, DefaultListModel<String> model) {
@@ -862,7 +940,6 @@ public class QuizEditor extends JFrame {
 		addUnitFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		addUnitFrame.setUndecorated(true);
 
-
 		// Components
 		JPanel contentPanel = new JPanel();
 		JLabel logo = new JLabel(new ImageIcon("logo.png"));
@@ -872,8 +949,6 @@ public class QuizEditor extends JFrame {
 		JTextArea num = new JTextArea();
 		JButton confirm = new JButton("Confirm");
 		JButton cancel = new JButton("Cancel");
-
-
 
 		// Formatting
 		logo.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -903,7 +978,6 @@ public class QuizEditor extends JFrame {
 		cancel.setBackground(lightBlue);
 		cancel.setFont(font);
 		cancel.setAlignmentX(JButton.CENTER_ALIGNMENT);
-
 
 		confirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -935,7 +1009,6 @@ public class QuizEditor extends JFrame {
 			}
 		});
 
-
 		// Adding components onto JFrame
 		contentPanel.add(logo);
 		contentPanel.add(enterName);
@@ -950,13 +1023,12 @@ public class QuizEditor extends JFrame {
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		contentPanel.setBackground(indigo);
-		JScrollPane scroll = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane scroll = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
 		addUnitFrame.setContentPane(scroll);
 		addUnitFrame.setVisible(true);
 	}
-
-
 
 	// Method to join symbols together to form a formula
 	private BufferedImage joinBufferedImages(SimpleLinkedList<Symbol> formula) {
@@ -971,7 +1043,6 @@ public class QuizEditor extends JFrame {
 		}
 		BufferedImage connectedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
-
 		// Draw each picture onto the new picture
 		Graphics g = connectedImage.createGraphics();
 		int sum = 0;
@@ -984,8 +1055,6 @@ public class QuizEditor extends JFrame {
 		return connectedImage;
 	}
 
-
-
 	// Testing main class
 	public static void main(String[] args) {
 		try {
@@ -996,7 +1065,8 @@ public class QuizEditor extends JFrame {
 			Symbol pi = new Variable("pi");
 			Symbol time = new Variable("time");
 			Symbol velocity = new Variable("velocity");
-			SimpleLinkedList<Symbol> symbols = database.getSymbols();;
+			SimpleLinkedList<Symbol> symbols = database.getSymbols();
+			;
 			SimpleLinkedList<SimpleLinkedList<Symbol>> formulas = new SimpleLinkedList<SimpleLinkedList<Symbol>>();
 			SimpleLinkedList<Symbol> tmp = new SimpleLinkedList<Symbol>();
 			tmp.add(time);
@@ -1009,8 +1079,6 @@ public class QuizEditor extends JFrame {
 			e.printStackTrace();
 		}
 	}
-
-
 
 	// Display all previous formulas
 	private void previousFormula(SimpleLinkedList<SimpleLinkedList<Symbol>> formulas, JLabel formulaDisplay) {
@@ -1032,7 +1100,8 @@ public class QuizEditor extends JFrame {
 		}
 		list.setCellRenderer(new CustomListRenderer());
 		list.setPreferredSize(list.getMinimumSize());
-		JScrollPane scroll = new JScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane scroll = new JScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
 		scroll.getHorizontalScrollBar().setUnitIncrement(16);
 
@@ -1044,7 +1113,8 @@ public class QuizEditor extends JFrame {
 		confirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int index = list.getSelectedIndex();
-				if (formulas.get(index) == null) return;
+				if (formulas.get(index) == null)
+					return;
 				q.setFormula(formulas.get(index));
 				formulaDisplay.setIcon(new ImageIcon(joinBufferedImages(formulas.get(index))));
 				quiz.revalidate();
@@ -1077,10 +1147,11 @@ public class QuizEditor extends JFrame {
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		contentPanel.setBackground(indigo);
 		Dimension fullscreen = Toolkit.getDefaultToolkit().getScreenSize();
-		JScrollPane scrollpane = new JScrollPane(contentPanel,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane scrollpane = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollpane.getVerticalScrollBar().setUnitIncrement(16);
 		scrollpane.getHorizontalScrollBar().setUnitIncrement(16);
-		scrollpane.setPreferredSize(new Dimension((int)fullscreen.getWidth() - 100, (int)fullscreen.getHeight()));
+		scrollpane.setPreferredSize(new Dimension((int) fullscreen.getWidth() - 100, (int) fullscreen.getHeight()));
 		contentPane.add(Box.createHorizontalStrut(50));
 		contentPane.add(scrollpane);
 		contentPane.add(Box.createHorizontalStrut(50));
@@ -1089,9 +1160,6 @@ public class QuizEditor extends JFrame {
 		previousFormulaFrame.setVisible(true);
 		revalidate();
 	}
-
-
-
 
 	// ChooseFormula (Database d) {
 
@@ -1102,24 +1170,133 @@ public class QuizEditor extends JFrame {
 		createFormulaFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		createFormulaFrame.requestFocus();
 
+		// Panel for buttons
+		JPanel buttons = new JPanel();
+		int cols = (int) Math.ceil(Math.sqrt(symbols.size() + 2));
+		int rows = (int) Math.ceil((double) (symbols.size() + 2) / cols);
+		buttons.setLayout(new GridLayout(rows, cols));
+
 		// Main panel
 		JPanel contentPanel = new JPanel();
 		JPanel contentPane = new JPanel();
 
 		// List to store entered formula
+		SimpleLinkedList<Symbol> formula = new SimpleLinkedList<Symbol>();
 		// SimpleLinkedList<Symbol> symbols = d.getSymbols();
-
 
 		// Display entered formula
 		JLabel enteredFormula = new JLabel();
 		enteredFormula.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
-		// enter formula
-		JTextArea formulaText = new JTextArea();
-		String text = formulaText.getText();
-		curFormula = stringToSymbols(text);
-		q.setFormula(curFormula);
+		// list with all of the jbuttons
+		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
 
+		for (int i = 0; i < symbols.size(); i++) {
+
+			// JButton for all symbols
+			BufferedImage image = symbols.get(i).getImage();
+			Image tmp = image.getScaledInstance(image.getWidth() / 2, image.getHeight() / 2, Image.SCALE_SMOOTH);
+			JButton symbol = new JButton(new ImageIcon(tmp));
+			symbol.setBackground(lightBlue);
+			symbol.addActionListener(new ActionListener() {
+				// Add to formula
+				public void actionPerformed(ActionEvent e) {
+
+					if (formula.size() > 0) {
+						String id = symbols.get(buttonlist.indexOf(symbol)).getId();
+						try {
+							Integer.parseInt(id);
+							Symbol previous = formula.get(formula.size() - 1);
+							formula.remove(formula.size() - 1);
+							if (previous instanceof Variable) {
+								String prevId = previous.getId();
+								String between = "-";
+								if (prevId.charAt(prevId.length() - 1) >= '0'
+										&& prevId.charAt(prevId.length() - 1) <= '9')
+									between = "";
+								formula.add(new Symbol(previous.getId() + between + id));
+							} else {
+								formula.add(previous);
+								formula.add(symbols.get(buttonlist.indexOf(symbol)));
+							}
+						} catch (NumberFormatException ex) {
+							formula.add(symbols.get(buttonlist.indexOf(symbol)));
+						}
+					} else {
+						formula.add(symbols.get(buttonlist.indexOf(symbol)));
+					}
+					enteredFormula.setIcon(new ImageIcon(joinBufferedImages(formula)));
+					createFormulaFrame.revalidate();
+				}
+			});
+			buttonlist.add(symbol);
+			buttons.add(symbol);
+		}
+
+		// Delete last symbol
+		JButton backspace = new JButton("Del");
+		backspace.setBackground(Color.WHITE);
+		backspace.setFont(font);
+		backspace.setBackground(lightBlue);
+		backspace.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (formula.size() > 0) {
+					formula.remove(formula.size() - 1);
+				} else {
+					return;
+				}
+				if (formula.size() > 0) {
+					enteredFormula.setIcon(new ImageIcon(joinBufferedImages(formula)));
+				} else {
+					enteredFormula.setIcon(new ImageIcon());
+				}
+				createFormulaFrame.revalidate();
+			}
+		});
+
+		buttons.add(backspace);
+
+		JPanel constantPane = new JPanel();
+		JButton ok = new JButton("OK");
+		JTextArea constant = new JTextArea();
+		constant.setLineWrap(true);
+		constant.setWrapStyleWord(true);
+		ok.setFont(font);
+		ok.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					double d = Double.parseDouble(constant.getText());
+					if (formula.size() > 0 && d % 1 == 0) {
+						Symbol previous = formula.get(formula.size() - 1);
+						formula.remove(formula.size() - 1);
+						if (previous instanceof Variable) {
+							String id = previous.getId();
+							String between = "-";
+							if (id.charAt(id.length() - 1) >= '0' && id.charAt(id.length() - 1) <= '9')
+								between = "";
+							formula.add(new Symbol(previous.getId() + between + constant.getText()));
+						} else {
+							formula.add(previous);
+							formula.add(new Symbol(constant.getText()));
+						}
+					} else {
+						formula.add(new Symbol(constant.getText()));
+					}
+					enteredFormula.setIcon(new ImageIcon(joinBufferedImages(formula)));
+					createFormulaFrame.revalidate();
+					constant.setText("");
+				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(null, "A valid number was not entered");
+				}
+			}
+		});
+		ok.setBackground(lightBlue);
+
+		constantPane.add(constant);
+		constantPane.add(ok);
+		constantPane.setBackground(indigo);
+		constantPane.setLayout(new BoxLayout(constantPane, BoxLayout.X_AXIS));
+		buttons.add(constantPane);
 		// confirm button
 		JButton confirm = new JButton("Confirm");
 		confirm.setFont(font);
@@ -1128,9 +1305,10 @@ public class QuizEditor extends JFrame {
 		confirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Nothing has been entered yet
-				// if (formula.size() == 0) return;
-				q.setFormula(curFormula);
-				formulaDisplay.setIcon(new ImageIcon(joinBufferedImages(curFormula)));
+				if (formula.size() == 0)
+					return;
+				q.setFormula(formula);
+				formulaDisplay.setIcon(new ImageIcon(joinBufferedImages(formula)));
 				quiz.revalidate();
 				createFormulaFrame.dispose();
 			}
@@ -1148,11 +1326,14 @@ public class QuizEditor extends JFrame {
 		// add to content pane
 		JLabel logo = new JLabel(new ImageIcon("logo.png"));
 		contentPane.add(logo);
+		contentPanel.add(buttons);
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
-		JScrollPane scroll = new JScrollPane(enteredFormula, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane scroll = new JScrollPane(enteredFormula, JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
 		scroll.getHorizontalScrollBar().setUnitIncrement(16);
-		scroll.setPreferredSize(new Dimension((int)contentPanel.getPreferredSize().getWidth(),(int)enteredFormula.getPreferredSize().getHeight() + 150));
+		scroll.setPreferredSize(new Dimension((int) contentPanel.getPreferredSize().getWidth(),
+				(int) enteredFormula.getPreferredSize().getHeight() + 150));
 		scroll.setBorder(BorderFactory.createEmptyBorder());
 		contentPanel.add(scroll);
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
@@ -1161,17 +1342,18 @@ public class QuizEditor extends JFrame {
 		button.add(Box.createHorizontalStrut(50));
 		button.add(cancel);
 		button.setBackground(indigo);
-		//		buttons.setPreferredSize(new Dimension((int)(createFormulaFrame.getWidth() - logo.getWidth()),500));
-
+		// buttons.setPreferredSize(new Dimension((int)(createFormulaFrame.getWidth() -
+		// logo.getWidth()),500));
 		contentPanel.add(button);
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.setBackground(indigo);
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		contentPane.add(Box.createHorizontalStrut(50));
-		JScrollPane scrollpane = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane scrollpane = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollpane.getVerticalScrollBar().setUnitIncrement(16);
 		Dimension fullscreen = Toolkit.getDefaultToolkit().getScreenSize();
-		scrollpane.setPreferredSize(new Dimension((int)fullscreen.getWidth() - 100, (int)fullscreen.getHeight()));
+		scrollpane.setPreferredSize(new Dimension((int) fullscreen.getWidth() - 100, (int) fullscreen.getHeight()));
 		contentPane.add(scrollpane);
 		contentPane.add(Box.createHorizontalStrut(50));
 		contentPane.setBackground(indigo);
@@ -1180,30 +1362,26 @@ public class QuizEditor extends JFrame {
 		createFormulaFrame.setVisible(true);
 	}
 
-	private SimpleLinkedList<Symbol> stringToSymbols(String s) {
-		
-		return null;
-	}
-
 	public static BufferedImage stringToImage(String S) {
-		//		System.out.println(S);
+		// System.out.println(S);
 		// is default operation
 		try {
 			BufferedImage image = ImageIO.read(new File("Symbols/Operations/" + S + ".png"));
 			return image;
-		} catch (IOException e) {}
-
+		} catch (IOException e) {
+		}
 
 		// is default variable
 		try {
 			BufferedImage image = ImageIO.read(new File("Symbols/Variables/" + S + ".png"));
 			return image;
-		} catch (IOException e) {}
+		} catch (IOException e) {
+		}
 
 		// is double
 		try {
 			Double.parseDouble(S);
-			if (S.endsWith(".0")) { 
+			if (S.endsWith(".0")) {
 				S = S.substring(0, S.length() - 2);
 			}
 			int height = 0;
@@ -1212,7 +1390,8 @@ public class QuizEditor extends JFrame {
 			for (int i = 0; i < S.length(); i++) {
 				BufferedImage image = null;
 				if (S.charAt(i) == '-') {
-					if (i > 0) continue;
+					if (i > 0)
+						continue;
 					try {
 						image = ImageIO.read(new File("Symbols/Operations/-.png"));
 					} catch (IOException e) {
@@ -1238,7 +1417,6 @@ public class QuizEditor extends JFrame {
 
 			BufferedImage connectedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
-
 			// Draw each picture onto the new picture
 			Graphics g = connectedImage.createGraphics();
 			int sum = 0;
@@ -1248,14 +1426,15 @@ public class QuizEditor extends JFrame {
 			}
 			g.dispose();
 			return connectedImage;
-		} catch (NumberFormatException e) {}
-
+		} catch (NumberFormatException e) {
+		}
 
 		// is a variable with subscript
 		try {
-			BufferedImage variable = stringToImage(S.substring(0,S.indexOf("-")));
+			BufferedImage variable = stringToImage(S.substring(0, S.indexOf("-")));
 			BufferedImage subscript = stringToImage(S.substring(S.indexOf("-") + 1));
-			Image tmp = subscript.getScaledInstance(subscript.getWidth() / 2, subscript.getHeight() / 2, Image.SCALE_SMOOTH);
+			Image tmp = subscript.getScaledInstance(subscript.getWidth() / 2, subscript.getHeight() / 2,
+					Image.SCALE_SMOOTH);
 			int height = variable.getHeight();
 			int width = variable.getWidth() + subscript.getWidth() / 2;
 			BufferedImage connectedImage = new BufferedImage(width, height + 30, BufferedImage.TYPE_INT_ARGB);
@@ -1273,7 +1452,6 @@ public class QuizEditor extends JFrame {
 		return null;
 	}
 
-
 	// Method to draw buffered images in a jlist
 	private class CustomListRenderer extends DefaultListCellRenderer {
 
@@ -1288,6 +1466,167 @@ public class QuizEditor extends JFrame {
 			label.setHorizontalAlignment(JLabel.CENTER);
 			return label;
 		}
+	}
+
+	public class DropPane extends JPanel {
+
+		private DropTarget dropTarget;
+		private DropTargetHandler dropTargetHandler;
+		private Point dragPoint;
+		private boolean dragOver = false;
+		private JLabel message;
+		private BufferedImage target;
+		
+		public DropPane() {
+			message = new JLabel("Drop Picture Here:");
+			message.setFont(message.getFont().deriveFont(Font.BOLD, 24));
+			add(message);
+			JButton selectFile = new JButton("Select File");
+			selectFile.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					JFileChooser fileChooser = new JFileChooser();
+					FileFilter imageFilter = new FileNameExtensionFilter("Image files", ImageIO.getReaderFileSuffixes());
+					fileChooser.setFileFilter(imageFilter);
+					int returnValue = fileChooser.showOpenDialog(null);
+					if (returnValue == JFileChooser.APPROVE_OPTION) {
+						File selectedFile = fileChooser.getSelectedFile();
+						try {
+							image = ImageIO.read(selectedFile);
+						} catch (IOException io) {
+							io.printStackTrace();
+						}
+					}
+				}
+			});
+			add(selectFile);
+			setPreferredSize(new Dimension(400, 400));
+		}
+
+		private DropTarget getMyDropTarget() {
+			if (dropTarget == null) {
+				dropTarget = new DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, null);
+			}
+			return dropTarget;
+		}
+
+		private DropTargetHandler getDropTargetHandler() {
+			if (dropTargetHandler == null) {
+				dropTargetHandler = new DropTargetHandler();
+			}
+			return dropTargetHandler;
+		}
+
+		@Override
+		public void addNotify() {
+			super.addNotify();
+			try {
+				getMyDropTarget().addDropTargetListener(getDropTargetHandler());
+			} catch (TooManyListenersException ex) {
+				ex.printStackTrace();
+			}
+		}
+
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			if (dragOver) {
+                Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setColor(new Color(0, 255, 0, 64));
+                g2d.fill(new Rectangle(getWidth(), getHeight()));
+                if (dragPoint != null && target != null) {
+                    int x = dragPoint.x - 12;
+                    int y = dragPoint.y - 12;
+                    g2d.drawImage(target, x, y, this);
+                }
+                g2d.dispose();
+            }
+			if (image != null)
+				g.drawImage(image.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH), 0, 0, null);
+		}
+
+		protected class DropTargetHandler implements DropTargetListener {
+
+			protected void processDrag(DropTargetDragEvent dtde) {
+                if (dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                    dtde.acceptDrag(DnDConstants.ACTION_COPY);
+                } else {
+                    dtde.rejectDrag();
+                }
+            }
+
+            @Override
+            public void dragEnter(DropTargetDragEvent dtde) {
+                processDrag(dtde);
+                SwingUtilities.invokeLater(new DragUpdate(true, dtde.getLocation()));
+                repaint();
+            }
+
+            @Override
+            public void dragOver(DropTargetDragEvent dtde) {
+                processDrag(dtde);
+                SwingUtilities.invokeLater(new DragUpdate(true, dtde.getLocation()));
+                repaint();
+            }
+
+            @Override
+            public void dropActionChanged(DropTargetDragEvent dtde) {
+            }
+
+            @Override
+            public void dragExit(DropTargetEvent dte) {
+                SwingUtilities.invokeLater(new DragUpdate(false, null));
+                repaint();
+            }
+
+			@Override
+			public void drop(DropTargetDropEvent dtde) {
+
+				SwingUtilities.invokeLater(new DragUpdate(false, null));
+
+				Transferable transferable = dtde.getTransferable();
+				if (dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+					dtde.acceptDrop(dtde.getDropAction());
+					try {
+
+						List<File> transferData = (List<File>) transferable
+								.getTransferData(DataFlavor.javaFileListFlavor);
+						if (transferData != null && transferData.size() > 0) {
+
+							dtde.dropComplete(true);
+							try {
+								image = ImageIO.read(transferData.get(transferData.size() - 1));
+							} catch (IIOException exx) {
+								System.out.println("Not an image");
+							}
+						}
+
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				} else {
+					dtde.rejectDrop();
+				}
+			}
+		}
+
+		public class DragUpdate implements Runnable {
+
+			private boolean dragOver;
+			private Point dragPoint;
+
+			public DragUpdate(boolean dragOver, Point dragPoint) {
+				this.dragOver = dragOver;
+				this.dragPoint = dragPoint;
+			}
+
+			@Override
+			public void run() {
+				DropPane.this.dragOver = dragOver;
+				DropPane.this.dragPoint = dragPoint;
+				DropPane.this.repaint();
+			}
+		}
+
 	}
 
 }
