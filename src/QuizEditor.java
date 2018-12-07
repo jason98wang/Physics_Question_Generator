@@ -302,26 +302,38 @@ public class QuizEditor extends JFrame {
 		enterScroll.setMinimumSize(enterScroll.getPreferredSize());
 		hasFormula.add(enterScroll);
 		hasFormula.setLayout(new BoxLayout(hasFormula, BoxLayout.Y_AXIS));
+		
+		
 		JPanel leftPanel = new JPanel();
 		DropPane dragImage = new DropPane();
 		JLabel rootQuestion = new JLabel("Root Question");
+		
+		
 		JTextArea enterQ = new JTextArea();
 		enterQ.setLineWrap(true);
 		enterQ.setWrapStyleWord(true);
+		
+		
 		leftPanel.add(dragImage);
 		leftPanel.add(rootQuestion);
 		leftPanel.add(enterQ);
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+		
 		JPanel rightPanel = new JPanel();
 		JLabel questionsLabel = new JLabel("Questions");
 		JLabel rightAnswerLabel = new JLabel("Right Answer");
 		JLabel allAnswersLabel = new JLabel("Choices");
+		
 		DefaultListModel<String> questionsModel = new DefaultListModel<String>();
 		JList<String> questions = new JList<String>(questionsModel);
+		
 		DefaultListModel<String> rightAnswerModel = new DefaultListModel<String>();
 		JList<String> rightAnswer = new JList<String>(rightAnswerModel);
+		
 		DefaultListModel<String> allAnswersModel = new DefaultListModel<String>();
 		JList<String> allAnswers = new JList<String>(allAnswersModel);
+		
+		
 		JTextField enterQuestion = new JTextField();
 		JScrollBar scrollQuestion = new JScrollBar(JScrollBar.HORIZONTAL);
 		scrollQuestion.setModel(enterQuestion.getHorizontalVisibility());
@@ -333,7 +345,10 @@ public class QuizEditor extends JFrame {
 					return;
 				questionsModel.addElement(S);
 			}
+		
 		});
+		
+		
 		JTextField enterRightAnswer = new JTextField();
 		JScrollBar scrollRightAnswer = new JScrollBar(JScrollBar.HORIZONTAL);
 		scrollRightAnswer.setModel(enterRightAnswer.getHorizontalVisibility());
@@ -346,6 +361,8 @@ public class QuizEditor extends JFrame {
 				rightAnswerModel.addElement(S);
 			}
 		});
+		
+		
 		JTextField enterAllAnswers = new JTextField();
 		JScrollBar scrollAllAnswers = new JScrollBar(JScrollBar.HORIZONTAL);
 		scrollAllAnswers.setModel(enterAllAnswers.getHorizontalVisibility());
@@ -358,28 +375,74 @@ public class QuizEditor extends JFrame {
 				allAnswersModel.addElement(S);
 			}
 		});
+		
+		
+		JButton removeLastQuestion = new JButton("Remove");
+		removeLastQuestion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (!questionsModel.isEmpty()) {
+					questionsModel.removeElementAt(questionsModel.size() - 1);
+				}
+			}
+		});
+		removeLastQuestion.setAlignmentX(JButton.CENTER_ALIGNMENT);
+		
+		
+		JButton removeLastAnswer = new JButton("Remove");
+		removeLastAnswer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (!rightAnswerModel.isEmpty()) {
+					rightAnswerModel.removeElementAt(rightAnswerModel.size() - 1);
+				}
+			}
+		});
+		removeLastAnswer.setAlignmentX(JButton.CENTER_ALIGNMENT);
+		
+		
+		JButton removeLastChoice = new JButton("Remove");
+		removeLastChoice.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (!allAnswersModel.isEmpty()) {
+					allAnswersModel.removeElementAt(allAnswersModel.size() - 1);
+				}
+			}
+		});
+		removeLastChoice.setAlignmentX(JButton.CENTER_ALIGNMENT);
+		
+		
 		JPanel questionsPanel = new JPanel();
 		questionsPanel.setLayout(new BoxLayout(questionsPanel, BoxLayout.Y_AXIS));
 		questionsPanel.add(questionsLabel);
 		questionsPanel.add(questions);
 		questionsPanel.add(enterQuestion);
 		questionsPanel.add(scrollQuestion);
+		questionsPanel.add(removeLastQuestion);
+		
+		
 		JPanel rightAnswerPanel = new JPanel();
 		rightAnswerPanel.setLayout(new BoxLayout(rightAnswerPanel, BoxLayout.Y_AXIS));
 		rightAnswerPanel.add(rightAnswerLabel);
 		rightAnswerPanel.add(rightAnswer);
 		rightAnswerPanel.add(enterRightAnswer);
 		rightAnswerPanel.add(scrollRightAnswer);
+		rightAnswerPanel.add(removeLastAnswer);
+		
+		
 		JPanel allAnswersPanel = new JPanel();
 		allAnswersPanel.setLayout(new BoxLayout(allAnswersPanel, BoxLayout.Y_AXIS));
 		allAnswersPanel.add(allAnswersLabel);
 		allAnswersPanel.add(allAnswers);
 		allAnswersPanel.add(enterAllAnswers);
 		allAnswersPanel.add(scrollAllAnswers);
+		allAnswersPanel.add(removeLastChoice);
+		
+		
 		rightPanel.add(questionsPanel);
 		rightPanel.add(rightAnswerPanel);
 		rightPanel.add(allAnswersPanel);
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.X_AXIS));
+		
+		
 		notFormula.add(leftPanel);
 		notFormula.add(rightPanel);
 		notFormula.setLayout(new BoxLayout(notFormula, BoxLayout.X_AXIS));
@@ -429,7 +492,11 @@ public class QuizEditor extends JFrame {
 				editingQ = false;
 				displayPane.removeAll();
 				displayPane.add(formula);
-				displayPane.add(hasFormula);
+				if (noFormula) {
+					displayPane.add(notFormula);
+				} else {
+					displayPane.add(hasFormula);
+				}
 				revalidate();
 				midPane.setPreferredSize(new Dimension((int) midPane.getMinimumSize().getWidth(),
 						(int) exit.getLocation().getY() + 50 + offset));
@@ -517,7 +584,7 @@ public class QuizEditor extends JFrame {
 				}
 
 				// No question chosen
-				if (q == null && !removeQ && !editQ && !editingQ) {
+				if (q == null && !noFormula && !removeQ && !editQ && !editingQ) {
 					JOptionPane.showMessageDialog(null, "A valid question has not been selected");
 					return;
 				}
@@ -668,8 +735,9 @@ public class QuizEditor extends JFrame {
 					JOptionPane.showMessageDialog(null, "A valid subject has not been selected");
 					return;
 				}
-				subject.removeItem(s.getName());
+				subject.removeItem(subject.getSelectedItem());
 				subject.setSelectedIndex(0);
+				subjects.remove(s);
 				s = null;
 				database.update(); // call database to update
 			}
@@ -685,7 +753,9 @@ public class QuizEditor extends JFrame {
 					JOptionPane.showMessageDialog(null, "A valid unit has not been selected");
 					return;
 				}
-				unit.removeItem(u.getName());
+				SimpleLinkedList<Unit> units = s.getUnits();
+				units.remove(u);
+				unit.removeItem(unit.getSelectedItem());
 				u = null;
 				unit.setSelectedIndex(0);
 				database.update(); // call database to update
@@ -1353,6 +1423,7 @@ public class QuizEditor extends JFrame {
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollpane.getVerticalScrollBar().setUnitIncrement(16);
 		Dimension fullscreen = Toolkit.getDefaultToolkit().getScreenSize();
+		
 		scrollpane.setPreferredSize(new Dimension((int) fullscreen.getWidth() - 100, (int) fullscreen.getHeight()));
 		contentPane.add(scrollpane);
 		contentPane.add(Box.createHorizontalStrut(50));
@@ -1540,8 +1611,10 @@ public class QuizEditor extends JFrame {
                 }
                 g2d.dispose();
             }
-			if (image != null)
+			if (image != null) {
 				g.drawImage(image.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH), 0, 0, null);
+			}
+			repaint();
 		}
 
 		protected class DropTargetHandler implements DropTargetListener {
@@ -1588,13 +1661,13 @@ public class QuizEditor extends JFrame {
 					dtde.acceptDrop(dtde.getDropAction());
 					try {
 
-						List<File> transferData = (List<File>) transferable
+						List transferData = (List) transferable
 								.getTransferData(DataFlavor.javaFileListFlavor);
 						if (transferData != null && transferData.size() > 0) {
 
 							dtde.dropComplete(true);
 							try {
-								image = ImageIO.read(transferData.get(transferData.size() - 1));
+								image = ImageIO.read((File)transferData.get(transferData.size() - 1));
 							} catch (IIOException exx) {
 								System.out.println("Not an image");
 							}
