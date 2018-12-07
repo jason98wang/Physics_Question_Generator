@@ -117,22 +117,7 @@
           "name": "Joshua Cai"
         }
       ],
-      "units": [
-        {
-          "number": "1",
-          "name": "TLAP",
-          "questions": [
-            {
-              "image": "null",
-              "pa": [],
-              "problem": "What is TLAP?",
-              "formula": " ( velocity + nuclearEnergy ) mul time ",
-              "sq": [],
-              "sa": []
-            }
-          ]
-        }
-      ]
+      "units": []
     },
     {
       "level": "AP",
