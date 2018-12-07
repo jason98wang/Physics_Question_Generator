@@ -126,31 +126,18 @@ public class Login {
 			password += tempPassword[i];
 		}
 
-		for (int j = 0; j < subjects.size(); j++) {
-			students = subjects.get(j).getStudents();
-			for (int i = 0; i < students.size(); i++) {
-				if (studentNum.equals(students.get(i).getStudentNumber())) {
-					if (password.equals(students.get(i).getPassword())) {
-						student = students.get(i);
-						chosenSubject = subjects.get(j);
-						valid = true;
-						break;
-					}
-				}
-				valid = false;
-			}
-			if(valid == true) {
-				break;
+		for (int i = 0; i < subjects.size(); i++) {
+			student = subjects.get(i).getStudent(studentNum, password);
+			if (student != null) {
+				chosenSubject = subjects.get(i);
+				new QuizTaker(student, chosenSubject);
+				window.dispose();
+				return;
 			}
 		}
 
-		if (valid) {
-			new QuizTaker(student, chosenSubject);
-			window.dispose();
-		} else {
-			JOptionPane.showMessageDialog(null, "Invalid student number or password");
-			passwordField.requestFocus();
-		}
+		JOptionPane.showMessageDialog(null, "Invalid student number or password");
+		passwordField.requestFocus();
 
 	}
 
@@ -190,19 +177,19 @@ public class Login {
 		}
 
 	}
-	
-	private class LoginKeyListener implements KeyListener{
+
+	private class LoginKeyListener implements KeyListener {
 
 		@Override
 		public void keyTyped(KeyEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void keyPressed(KeyEvent e) {
 			// TODO Auto-generated method stub
-			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				startQuiz();
 			}
 		}
@@ -210,9 +197,9 @@ public class Login {
 		@Override
 		public void keyReleased(KeyEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 	}
 
 	private class LogoPanel extends JPanel {
