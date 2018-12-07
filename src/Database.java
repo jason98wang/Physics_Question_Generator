@@ -127,7 +127,7 @@ public class Database {
 					// get its problem statement and its formula
 					String problemStatement = (String) question.get("problem");
 					SimpleLinkedList<Symbol> formula = toSymbol((String) question.get("formula")); // (SimpleLinkedList<Symbol>) question.get("formula");
-
+					
 					Question q = new Question(problemStatement, formula); // temp
 					u.addQuestion(q);
 				}
