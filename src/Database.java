@@ -275,9 +275,9 @@ public class Database {
 					if (question.isNumerical()) {
 						qobj.put("formula", question.toString());
 						qobj.put("image", "null");
-						qobj.put("sq", "null");
-						qobj.put("sa", "null");
-						qobj.put("pa", "null");
+						qobj.put("sq", new JSONArray());
+						qobj.put("sa", new JSONArray());
+						qobj.put("pa", new JSONArray());
 					} else {
 						JSONArray sq = new JSONArray();
 						JSONArray sa = new JSONArray();
