@@ -17,6 +17,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 import data_structures.SimpleLinkedList;
 
 public class Database {
@@ -271,7 +276,7 @@ public class Database {
 					JSONObject qobj = new JSONObject();
 
 					qobj.put("problem", question.getProblemStatement());
-					
+
 					if (question.isNumerical()) {
 						qobj.put("formula", question.toString());
 						qobj.put("image", "null");
@@ -298,7 +303,7 @@ public class Database {
 							aobj.put("p", question.getPossibleAnswers().get(l));
 							pa.add(aobj);
 						}
-						
+
 						qobj.put("formula", "null");
 						qobj.put("image", question.imageToString());
 						qobj.put("sq", sq);
@@ -348,23 +353,18 @@ public class Database {
 		all.put("variables", array3);
 
 		try {
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			JsonParser jp = new JsonParser();
+			JsonElement je = jp.parse(all.toJSONString());
+			String prettyJsonString = gson.toJson(je);
+			
 			// write to file
 			FileWriter file = new FileWriter(jsonFile);
-			file.write(all.toJSONString());
+			file.write(prettyJsonString);
 			file.close();
 
-			// read from file line by line
-			BufferedReader br = new BufferedReader(new FileReader(jsonFile));
-			String output = "";
-			String s = "";
-			while (s != null) {
-				output += s;
-				s = br.readLine();
-			}
-			br.close();
-
 			// update gist
-			gistFile.setContent(output);
+			gistFile.setContent(prettyJsonString);
 			service.updateGist(gist);
 		} catch (IOException e) {
 			e.printStackTrace();
