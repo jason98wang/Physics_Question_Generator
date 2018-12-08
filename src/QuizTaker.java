@@ -215,6 +215,7 @@ public class QuizTaker {
 					}
 				}
 			}
+			choices.add(choicesArray);
 
 			problemStatement = tempQ.getProblemStatement();
 			problemStatements.add(problemStatement);
@@ -306,6 +307,7 @@ public class QuizTaker {
 					}
 				}
 			}
+			choices.add(choicesArray);
 
 			problemStatement = tempQ.getProblemStatement();
 			problemStatements.add(problemStatement);
