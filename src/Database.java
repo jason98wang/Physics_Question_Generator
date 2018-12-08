@@ -53,6 +53,7 @@ public class Database {
 		// init subjects and symbols
 		subjects = new SimpleLinkedList<Subject>();
 		symbols = new SimpleLinkedList<Symbol>();
+		formulas = new SimpleLinkedList<SimpleLinkedList<Symbol>>();
 
 		// setup gist and get data
 		initGist();
