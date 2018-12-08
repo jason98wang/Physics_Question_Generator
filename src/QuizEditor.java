@@ -30,6 +30,7 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -51,9 +52,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-// Data structure(s)
+// Data structure
 import data_structures.SimpleLinkedList;
-
 
 //Other
 import java.awt.event.ActionEvent;
@@ -61,16 +61,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.TooManyListenersException;
 
-
 /**
  * 
- * @author Eric Long
- * class for running the quiz editor user interface
+ * @author Eric Long class for running the quiz editor user interface
  */
 public class QuizEditor extends JFrame {
 
@@ -81,14 +81,17 @@ public class QuizEditor extends JFrame {
 	private Question q, editQuestion;
 
 	// Booleans
-	private boolean addQ, removeQ, editQ, newFormula, editingQ, noFormula = false;
+	private boolean addQ, removeQ, editQ, newFormula, editingQ, noFormula = false, deleting;
 
 	// JComponents
 	private JLabel currentFormulaDisplay;
 	private JList<String> list = new JList<String>(new DefaultListModel<String>());
-	private JComboBox<String> subject = new JComboBox<String>();
-	private JComboBox<String> unit = new JComboBox<String>();
-	private JComboBox<String> formula = new JComboBox<String>();
+	private DefaultComboBoxModel<String> subjectModel = new DefaultComboBoxModel<String>();
+	private JComboBox<String> subject = new JComboBox<String>(subjectModel);
+	private DefaultComboBoxModel<String> unitModel = new DefaultComboBoxModel<String>();
+	private JComboBox<String> unit = new JComboBox<String>(unitModel);
+	private DefaultComboBoxModel<String> formulaModel = new DefaultComboBoxModel<String>();
+	private JComboBox<String> formula = new JComboBox<String>(formulaModel);
 
 	// Font and Color
 	private Font font = new Font("Serif", Font.BOLD, 30);
@@ -96,7 +99,7 @@ public class QuizEditor extends JFrame {
 	private Color indigo = new Color(56, 53, 74);
 	private Color lightBlue = new Color(162, 236, 250);
 	private Color orange = new Color(255, 168, 104);
-	
+
 	// Image chosen for question
 	private BufferedImage image = null;
 
@@ -104,56 +107,66 @@ public class QuizEditor extends JFrame {
 	private int offset = 0;
 	private int addingoffset = 20;
 
-	// Database
-	private Database database;
-	
-	
-	
-	// QuizEditor(Database d) {
-	QuizEditor(Database database, SimpleLinkedList<Subject> subjects, SimpleLinkedList<Symbol> symbols,
-			SimpleLinkedList<SimpleLinkedList<Symbol>> formulas) {
+	/**
+	 * Method that takes in everything from the database
+	 * 
+	 * @param database
+	 *            database object
+	 */
+	QuizEditor(Database database) {
 
-		// Database where everything is stored
-		this.database = database;
+		// Lists from database;
+		SimpleLinkedList<Symbol> symbols = database.getSymbols();
+		SimpleLinkedList<Subject> subjects = database.getSubjects();
+		SimpleLinkedList<SimpleLinkedList<Symbol>> formulas = database.getFormulas();
 
 		// Setting up frame
 		setTitle("Quiz Editor");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(Toolkit.getDefaultToolkit().getScreenSize());
-		setFocusable(true);
-		setResizable(false);
 		setUndecorated(true);
+		setResizable(false);
+		setFocusable(true);
 		requestFocusInWindow();
 		quiz = this;
-		
-		
-		// Action event for when the window is closed
-//		addWindowListener(new WindowListener() {
-//			
-//			@Override
-//			public void windowActivated(WindowEvent arg0) {}
-//
-//			@Override
-//			public void windowClosed(WindowEvent arg0) {}
-//
-//			@Override
-//			public void windowClosing(WindowEvent arg0) {}
-//
-//			@Override
-//			public void windowDeactivated(WindowEvent arg0) {}
-//
-//			@Override
-//			public void windowDeiconified(WindowEvent arg0) {}
-//
-//			@Override
-//			public void windowIconified(WindowEvent arg0) {}
-//
-//			@Override
-//			public void windowOpened(WindowEvent arg0) {}
-//			
-//		});
-		
-		
+
+		// Action event for when the window is closed, updates database
+		addWindowListener(new WindowListener() {
+
+			@Override
+			public void windowActivated(WindowEvent arg0) {
+			}
+			
+			/**
+			 * Updates database
+			 */
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+				database.update();
+			}
+
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent arg0) {
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent arg0) {
+			}
+
+			@Override
+			public void windowIconified(WindowEvent arg0) {
+			}
+
+			@Override
+			public void windowOpened(WindowEvent arg0) {
+			}
+
+		});
+
 		// Components on main frame
 		JButton add = new JButton("Add");
 		JButton remove = new JButton("Remove");
@@ -176,7 +189,7 @@ public class QuizEditor extends JFrame {
 		JTextArea enter = new JTextArea();
 		JPanel hasFormula = new JPanel();
 		JPanel notFormula = new JPanel();
-		
+
 		// Formatting
 		list.setBackground(indigo);
 
@@ -198,7 +211,7 @@ public class QuizEditor extends JFrame {
 		subject.setFont(font);
 		subject.setBackground(lightBlue);
 		subject.setPreferredSize(new Dimension(100, 100));
-		((JLabel) subject.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+		((JLabel) subject.getRenderer()).setHorizontalAlignment(SwingConstants.LEFT);
 
 		addSubject.setFont(font);
 		addSubject.setBackground(lightBlue);
@@ -208,7 +221,7 @@ public class QuizEditor extends JFrame {
 
 		unit.setFont(font);
 		unit.setBackground(lightBlue);
-		((JLabel) unit.getRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+		((JLabel) unit.getRenderer()).setHorizontalAlignment(SwingConstants.LEFT);
 
 		addUnit.setFont(font);
 		addUnit.setBackground(lightBlue);
@@ -223,7 +236,7 @@ public class QuizEditor extends JFrame {
 		clear.setFont(font);
 		clear.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		clear.setBackground(lightBlue);
-		
+
 		exit.setFont(font);
 		exit.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		exit.setBackground(lightBlue);
@@ -255,8 +268,6 @@ public class QuizEditor extends JFrame {
 		u = null;
 		q = null;
 
-		// SimpleLinkedList<Subject> subjects = d.getSubjects();
-
 		// Adding all subjects
 		subject.addItem("Choose a subject");
 		unit.addItem("Choose a unit");
@@ -264,47 +275,74 @@ public class QuizEditor extends JFrame {
 			subject.addItem(
 					subjects.get(i).getName() + " " + subjects.get(i).getGrade() + " " + subjects.get(i).getLevel());
 		}
+		
 
 		// Subject combobox
 		subject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				// Ignore
+				if (deleting) {
+					deleting = false;
+					return;
+				}
+				
+				
 				// Gets subject name
 				String chosenSubject = (String) subject.getSelectedItem();
+
 				
 				// Removes all subjects
 				int size = unit.getItemCount();
 				for (int i = 1; i < size; i++) {
 					unit.removeItemAt(1);
 				}
+				
+				
 				// Update units in subject
 				if (!chosenSubject.equals("Choose a subject")) {
 
 					s = subjects.get(subject.getSelectedIndex() - 1);
-					// Priority queue instead of linkedlist to keep the units in order
+					// TODO Priority queue instead of linkedlist to keep the units in order
 					SimpleLinkedList<Unit> units = s.getUnits();
-
+					
+					// Adds units
 					for (int i = 0; i < units.size(); i++) {
 						unit.addItem(units.get(i).getNum() + ". " + units.get(i).getName());
 					}
+					
+				// Subject has not ben chosen
+				} else {
+					s = null;
 				}
-				list.setModel(new DefaultListModel<String>());
 			}
 		});
 
+		
 		// Unit combobox
 		unit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				// Ignore
+				if (deleting) {
+					deleting = false;
+					return;
+				}
+				
+				// Name of unit
 				String chosenUnit = (String) unit.getSelectedItem();
-				list.setModel(new DefaultListModel<String>());
-
+				
 				// Updates questions in unit
 				if (!chosenUnit.equals("Choose a unit")) {
-
+					
+					// Units in subject
 					SimpleLinkedList<Unit> units = s.getUnits();
 					DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
 					u = units.get(unit.getSelectedIndex() - 1);
 					SimpleLinkedList<Question> questions = u.getQuestions();
 
+					
+					// Add questions
 					for (int i = 0; i < questions.size(); i++) {
 						model.addElement(questions.get(i).getProblemStatement());
 					}
@@ -312,15 +350,20 @@ public class QuizEditor extends JFrame {
 			}
 		});
 
-		// Formula combobox
+		
+		// Formula combobox choices
 		formula.addItem("Choose a formula");
 		formula.addItem("Create new formula");
 		formula.addItem("Use previous formula");
 		formula.addItem("No formula (Enter answers myself)");
 		formula.setBackground(lightBlue);
 
-
 		// Setting up add interface
+		
+		// If the user has a formula to add
+		
+		
+		// Formula Display
 		displayFormula.add(currentFormula);
 		displayFormula.add(Box.createVerticalStrut(addingoffset));
 		currentFormula.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -336,9 +379,11 @@ public class QuizEditor extends JFrame {
 		hasFormula.add(Box.createVerticalStrut(addingoffset));
 		problemStatement.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		hasFormula.add(problemStatement);
+		
+		// Problem Statement Display
 		enter.setEditable(true);
 		enter.setPreferredSize(new Dimension((int) enter.getPreferredSize().getWidth(),
-				(int) enter.getPreferredSize().getHeight() * 10));
+				(int) enter.getPreferredSize().getHeight() * 20));
 		JScrollPane enterScroll = new JScrollPane(enter, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		enterScroll.getVerticalScrollBar().setUnitIncrement(16);
@@ -346,28 +391,42 @@ public class QuizEditor extends JFrame {
 		enterScroll.setMinimumSize(enterScroll.getPreferredSize());
 		hasFormula.add(enterScroll);
 		hasFormula.setLayout(new BoxLayout(hasFormula, BoxLayout.Y_AXIS));
+
 		
 		
+		
+		// No formula to add
 		JPanel leftPanel = new JPanel();
 		DropPane dragImage = new DropPane();
+		
+		// Root Question Label
 		JLabel rootQuestion = new JLabel("Root Question");
 		rootQuestion.setFont(font);
 		rootQuestion.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+
 		
+		// Text Area to enter root question
 		JTextArea enterQ = new JTextArea();
 		enterQ.setLineWrap(true);
 		enterQ.setWrapStyleWord(true);
 		enterQ.setFont(small);
-		JScrollPane scrollEnter = new JScrollPane(enterQ, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		JScrollPane scrollEnter = new JScrollPane(enterQ, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollEnter.getVerticalScrollBar().setUnitIncrement(16);
-		scrollEnter.setPreferredSize(new Dimension((int)enterQ.getPreferredSize().getWidth(), (int)enterQ.getPreferredSize().getHeight() * 3));
+		scrollEnter.setPreferredSize(new Dimension((int) enterQ.getPreferredSize().getWidth(),
+				(int) enterQ.getPreferredSize().getHeight() * 3));
 		
+		// Panel with image selector and root question
 		leftPanel.add(dragImage);
 		leftPanel.add(rootQuestion);
 		leftPanel.add(scrollEnter);
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+
 		
+		// Panel with place to enter sub questions and answers and choices
 		JPanel rightPanel = new JPanel();
+		
+		// Labels for 3 columns
 		JLabel questionsLabel = new JLabel("Questions");
 		questionsLabel.setFont(small);
 		questionsLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -377,28 +436,39 @@ public class QuizEditor extends JFrame {
 		JLabel allAnswersLabel = new JLabel("Choices");
 		allAnswersLabel.setFont(small);
 		allAnswersLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		
+
+		// Question list
 		DefaultListModel<String> questionsModel = new DefaultListModel<String>();
 		JList<String> questions = new JList<String>(questionsModel);
-		JScrollPane questionsScroll = new JScrollPane(questions,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane questionsScroll = new JScrollPane(questions, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		questionsScroll.getVerticalScrollBar().setUnitIncrement(16);
 		questionsScroll.getHorizontalScrollBar().setUnitIncrement(16);
-		questionsScroll.setPreferredSize(new Dimension((int)questionsScroll.getPreferredSize().getWidth(),(int)questionsScroll.getPreferredSize().getHeight() * 2));
+		questionsScroll.setPreferredSize(new Dimension((int) questionsScroll.getPreferredSize().getWidth(),
+				(int) questionsScroll.getPreferredSize().getHeight() * 2));
+
 		
+		// Answer list
 		DefaultListModel<String> rightAnswerModel = new DefaultListModel<String>();
 		JList<String> rightAnswer = new JList<String>(rightAnswerModel);
-		JScrollPane rightAnswerScroll = new JScrollPane(rightAnswer, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane rightAnswerScroll = new JScrollPane(rightAnswer, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		rightAnswerScroll.getVerticalScrollBar().setUnitIncrement(16);
 		rightAnswerScroll.getHorizontalScrollBar().setUnitIncrement(16);
-		rightAnswerScroll.setPreferredSize(new Dimension((int)rightAnswerScroll.getPreferredSize().getWidth(), (int)rightAnswerScroll.getPreferredSize().getHeight() * 2));
-		
+		rightAnswerScroll.setPreferredSize(new Dimension((int) rightAnswerScroll.getPreferredSize().getWidth(),
+				(int) rightAnswerScroll.getPreferredSize().getHeight() * 2));
+
+		// Choicies list
 		DefaultListModel<String> allAnswersModel = new DefaultListModel<String>();
 		JList<String> allAnswers = new JList<String>(allAnswersModel);
-		JScrollPane allAnswersScroll = new JScrollPane(allAnswers, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		JScrollPane allAnswersScroll = new JScrollPane(allAnswers, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		allAnswersScroll.getVerticalScrollBar().setUnitIncrement(16);
 		allAnswersScroll.getHorizontalScrollBar().setUnitIncrement(16);
-		allAnswersScroll.setPreferredSize(new Dimension((int)allAnswersScroll.getPreferredSize().getWidth(),(int)allAnswersScroll.getPreferredSize().getHeight()*2));
-		
+		allAnswersScroll.setPreferredSize(new Dimension((int) allAnswersScroll.getPreferredSize().getWidth(),
+				(int) allAnswersScroll.getPreferredSize().getHeight() * 2));
+
+		// Enter question
 		JTextField enterQuestion = new JTextField();
 		enterQuestion.setFont(font);
 		JScrollBar scrollQuestion = new JScrollBar(JScrollBar.HORIZONTAL);
@@ -412,8 +482,9 @@ public class QuizEditor extends JFrame {
 				questionsModel.addElement(S);
 			}
 		});
+
 		
-		
+		// Enter answer
 		JTextField enterRightAnswer = new JTextField();
 		enterRightAnswer.setFont(font);
 		JScrollBar scrollRightAnswer = new JScrollBar(JScrollBar.HORIZONTAL);
@@ -427,8 +498,9 @@ public class QuizEditor extends JFrame {
 				rightAnswerModel.addElement(S);
 			}
 		});
+
 		
-		
+		// Enter choices
 		JTextField enterAllAnswers = new JTextField();
 		enterAllAnswers.setFont(font);
 		JScrollBar scrollAllAnswers = new JScrollBar(JScrollBar.HORIZONTAL);
@@ -442,8 +514,9 @@ public class QuizEditor extends JFrame {
 				allAnswersModel.addElement(S);
 			}
 		});
+
 		
-		
+		// Remove question
 		JButton removeLastQuestion = new JButton("Remove");
 		removeLastQuestion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -453,8 +526,9 @@ public class QuizEditor extends JFrame {
 			}
 		});
 		removeLastQuestion.setAlignmentX(JButton.CENTER_ALIGNMENT);
+
 		
-		
+		// Remove answer
 		JButton removeLastAnswer = new JButton("Remove");
 		removeLastAnswer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -464,8 +538,8 @@ public class QuizEditor extends JFrame {
 			}
 		});
 		removeLastAnswer.setAlignmentX(JButton.CENTER_ALIGNMENT);
-		
-		
+
+		// Remove option
 		JButton removeLastChoice = new JButton("Remove");
 		removeLastChoice.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -475,8 +549,8 @@ public class QuizEditor extends JFrame {
 			}
 		});
 		removeLastChoice.setAlignmentX(JButton.CENTER_ALIGNMENT);
-		
-		
+
+		// Question column
 		JPanel questionsPanel = new JPanel();
 		questionsPanel.setLayout(new BoxLayout(questionsPanel, BoxLayout.Y_AXIS));
 		questionsPanel.add(questionsLabel);
@@ -485,8 +559,8 @@ public class QuizEditor extends JFrame {
 		questionsPanel.add(enterQuestion);
 		questionsPanel.add(scrollQuestion);
 		questionsPanel.add(removeLastQuestion);
-		
-		
+
+		// Answer column
 		JPanel rightAnswerPanel = new JPanel();
 		rightAnswerPanel.setLayout(new BoxLayout(rightAnswerPanel, BoxLayout.Y_AXIS));
 		rightAnswerPanel.add(rightAnswerLabel);
@@ -495,8 +569,8 @@ public class QuizEditor extends JFrame {
 		rightAnswerPanel.add(enterRightAnswer);
 		rightAnswerPanel.add(scrollRightAnswer);
 		rightAnswerPanel.add(removeLastAnswer);
-		
-		
+
+		// Choices column
 		JPanel allAnswersPanel = new JPanel();
 		allAnswersPanel.setLayout(new BoxLayout(allAnswersPanel, BoxLayout.Y_AXIS));
 		allAnswersPanel.add(allAnswersLabel);
@@ -505,7 +579,9 @@ public class QuizEditor extends JFrame {
 		allAnswersPanel.add(enterAllAnswers);
 		allAnswersPanel.add(scrollAllAnswers);
 		allAnswersPanel.add(removeLastChoice);
+
 		
+		// Add 3 columns
 		rightPanel.add(Box.createHorizontalStrut(50));
 		rightPanel.add(questionsPanel);
 		rightPanel.add(Box.createHorizontalStrut(50));
@@ -513,64 +589,99 @@ public class QuizEditor extends JFrame {
 		rightPanel.add(Box.createHorizontalStrut(50));
 		rightPanel.add(allAnswersPanel);
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.X_AXIS));
-		
-		
+
+		// Add left and right column together
 		notFormula.add(leftPanel);
 		notFormula.add(rightPanel);
 		notFormula.setLayout(new BoxLayout(notFormula, BoxLayout.X_AXIS));
 
+		
+		// Formula combo box action listener
 		formula.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// only allowed when adding or editing(should never be reached either way)
+				if (!addQ && !editQ) {
+					return;
+				}
+				
+				// choice name
 				String chosenFormula = (String) formula.getSelectedItem();
-				if (chosenFormula.equals("No formula(Enter answers myself)")) {
+				
+				// enter answers
+				if (chosenFormula.equals("No formula (Enter answers myself)")) {
 					// q.setFormula(null);
-					currentFormulaDisplay.setIcon(new ImageIcon());
-					// quiz.revalidate();
+					
+//					currentFormulaDisplay.setIcon(new ImageIcon());
+					// Update frame
 					if (!noFormula) {
 						noFormula = true;
 						displayPane.remove(hasFormula);
 						displayPane.add(notFormula);
 					}
+					
+				// enter formula to autogenerate answers
 				} else {
+					// Update frame
 					if (noFormula) {
 						noFormula = false;
 						displayPane.remove(notFormula);
 						displayPane.add(hasFormula);
 					}
-					if (chosenFormula.equals("Choose a formula")) return;
+					
+					// Nothing has been chosen
+					if (chosenFormula.equals("Choose a formula")) {
+						return;
+					}
+					
 					q = new Question("", new SimpleLinkedList<Symbol>());
+					
 					// creating a new formula
 					if (chosenFormula.equals("Create new formula")) {
 						newFormula = true;
 						setVisible(false);
+						// Create formula ui
 						createFormula(symbols, currentFormulaDisplay);
+						
 						// using a previous formula
 					} else if (chosenFormula.equals("Use previous formula")) {
 						setVisible(false);
 						newFormula = false;
+						// use previous formula ui
 						previousFormula(formulas, currentFormulaDisplay);
 					}
 				}
+				// Update frame
+				quiz.revalidate();
 			}
 		});
 
-		// Add Button
+		// Add Button action listener
 		add.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (addQ)
+				// Already adding
+				if (addQ) {
 					return;
+				}
+				
+				
 				addQ = true;
 				removeQ = false;
 				editQ = false;
 				editingQ = false;
+				
+				// Update pane
 				displayPane.removeAll();
 				displayPane.add(formula);
-				if (noFormula) {
-					displayPane.add(notFormula);
-				} else {
-					displayPane.add(hasFormula);
-				}
+//				if (noFormula) {
+//					displayPane.add(notFormula);
+//				} else {
+//					displayPane.add(hasFormula);
+//				}
+				
+				
 				revalidate();
+				
+				// Update sizes
 				midPane.setPreferredSize(new Dimension((int) midPane.getMinimumSize().getWidth(),
 						(int) exit.getLocation().getY() + 50 + offset));
 				contentPane.setPreferredSize(new Dimension((int) contentPane.getPreferredSize().getWidth(),
@@ -578,7 +689,8 @@ public class QuizEditor extends JFrame {
 			}
 		});
 
-		// Remove button
+		
+		// Remove button action listener
 		remove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				removeQ = true;
@@ -599,6 +711,8 @@ public class QuizEditor extends JFrame {
 				scroll.setPreferredSize(displayPane.getPreferredSize());
 				displayPane.add(scroll);
 				revalidate();
+				
+				// Update frame size
 				midPane.setPreferredSize(new Dimension((int) midPane.getMinimumSize().getWidth(),
 						(int) exit.getLocation().getY() + 50 + offset));
 				contentPane.setPreferredSize(new Dimension((int) contentPane.getPreferredSize().getWidth(),
@@ -607,16 +721,20 @@ public class QuizEditor extends JFrame {
 			}
 		});
 
-		// Edit button
+		
+		
+		// Edit button action listener 
 		edit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				editQ = true;
 				addQ = false;
 				removeQ = false;
 				editingQ = false;
+				
 				displayPane.removeAll();
 				displayPane.setMinimumSize(
 						new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 200, 300));
+				
 				// Displays list with all questions in the unit but can only edit one at a time
 				list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 				subject.setVisible(true);
@@ -627,6 +745,8 @@ public class QuizEditor extends JFrame {
 				scroll.getHorizontalScrollBar().setUnitIncrement(16);
 				displayPane.add(scroll);
 				revalidate();
+				
+				// update frame size
 				midPane.setPreferredSize(new Dimension((int) midPane.getMinimumSize().getWidth(),
 						(int) exit.getLocation().getY() + 50 + offset));
 				contentPane.setPreferredSize(new Dimension((int) contentPane.getPreferredSize().getWidth(),
@@ -668,10 +788,10 @@ public class QuizEditor extends JFrame {
 					int[] indicies = list.getSelectedIndices();
 					DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
 					Object[] A = model.toArray();
+					// deletes questions that have been selected
 					for (int i = 0; i < indicies.length; i++) {
 						// d.deleteQuestion(s,u,questions.get(i);
 						model.removeElement(A[indicies[i]]);
-						// Remove Later
 						u.removeQuestion(questions.get(indicies[i]));
 					}
 					list.clearSelection();
@@ -679,7 +799,9 @@ public class QuizEditor extends JFrame {
 					// Adds a question
 				} else if (addQ) {
 					if (noFormula) {
-						if (questionsModel.size() != rightAnswerModel.size()) return;
+						if (questionsModel.size() != rightAnswerModel.size()) {
+							return;
+						}
 						String problemStatement = enterQ.getText();
 						SimpleLinkedList<String> specificQuestions = new SimpleLinkedList<String>();
 						SimpleLinkedList<String> specificAnswers = new SimpleLinkedList<String>();
@@ -693,7 +815,21 @@ public class QuizEditor extends JFrame {
 						for (int i = 0; i < allAnswersModel.size(); i++) {
 							possibleAnswers.add(allAnswersModel.getElementAt(i));
 						}
-						q = new Question(problemStatement,specificQuestions,specificAnswers,possibleAnswers,image);
+						for (int i = 0; i < specificAnswers.size(); i++) {
+							if (!possibleAnswers.contain(specificAnswers.get(i))) {
+								// error message
+								return;
+							}
+						}
+						enterQ.setText("");
+						enterQuestion.setText("");
+						questionsModel.removeAllElements();
+						enterRightAnswer.setText("");
+						rightAnswerModel.removeAllElements();
+						enterAllAnswers.setText("");
+						allAnswersModel.removeAllElements();
+						q = new Question(problemStatement, specificQuestions, specificAnswers, possibleAnswers,
+								copyBufferedImage(image));
 						image = null;
 					} else {
 						q.setProblemStatement(enter.getText());
@@ -705,8 +841,7 @@ public class QuizEditor extends JFrame {
 							newFormula = false;
 						}
 						// Remove Later
-						
-						
+
 						currentFormulaDisplay.setIcon(new ImageIcon());
 						enter.setText("");
 					}
@@ -718,22 +853,38 @@ public class QuizEditor extends JFrame {
 					editQ = false;
 					editingQ = true;
 					editQuestion = u.getQuestions().get((list.getSelectedIndex()));
-					String editProblemStatement = editQuestion.getProblemStatement();
-					SimpleLinkedList<Symbol> list = editQuestion.getFormula();
-
-					SimpleLinkedList<Symbol> editFormula = new SimpleLinkedList<Symbol>();
-					for (int i = 0; i < list.size(); i++) {
-						editFormula.add(list.get(i));
-					}
-					q = new Question(editProblemStatement, editFormula);
-					displayPane.removeAll();
-					subject.setVisible(true);
-					unit.setVisible(true);
-					currentFormulaDisplay.setIcon(new ImageIcon(joinBufferedImages(editFormula)));
-					enter.setText(editProblemStatement);
-
-					// Formatting
 					displayPane.add(formula);
+					if (editQuestion.isPreset()) {
+						SimpleLinkedList<String> questionsList = editQuestion.getSpecificQuestions();
+						SimpleLinkedList<String> answersList = editQuestion.getSpecificAnswers();
+						SimpleLinkedList<String> choicesList = editQuestion.getPossibleAnswers();
+						enterQ.setText(editQuestion.getProblemStatement());
+						for (int i = 0; i < questionsList.size(); i++) {
+							questionsModel.addElement(questionsList.get(i));
+						}
+						for (int i = 0; i < answersList.size(); i++) {
+							rightAnswerModel.addElement(answersList.get(i));
+						}
+						for (int i = 0; i < choicesList.size(); i++) {
+							allAnswersModel.addElement(choicesList.get(i));
+						}
+						formulaModel.setSelectedItem("No formula (Enter answers myself)");
+					} else {
+						String editProblemStatement = editQuestion.getProblemStatement();
+						SimpleLinkedList<Symbol> list = editQuestion.getFormula();
+
+						SimpleLinkedList<Symbol> editFormula = new SimpleLinkedList<Symbol>();
+						for (int i = 0; i < list.size(); i++) {
+							editFormula.add(list.get(i));
+						}
+						q = new Question(editProblemStatement, editFormula);
+						displayPane.removeAll();
+						subject.setVisible(true);
+						unit.setVisible(true);
+						currentFormulaDisplay.setIcon(new ImageIcon(joinBufferedImages(editFormula)));
+						enter.setText(editProblemStatement);
+					}
+					// Formatting
 					revalidate();
 					midPane.setPreferredSize(new Dimension((int) midPane.getMinimumSize().getWidth(),
 							(int) exit.getLocation().getY() + 50 + offset));
@@ -743,7 +894,40 @@ public class QuizEditor extends JFrame {
 					//
 				} else {
 					if (noFormula) {
-						
+						if (questionsModel.size() != rightAnswerModel.size()) {
+							return;
+						}
+						String problemStatement = enterQ.getText();
+						SimpleLinkedList<String> specificQuestions = new SimpleLinkedList<String>();
+						SimpleLinkedList<String> specificAnswers = new SimpleLinkedList<String>();
+						SimpleLinkedList<String> possibleAnswers = new SimpleLinkedList<String>();
+						for (int i = 0; i < questionsModel.size(); i++) {
+							specificQuestions.add(questionsModel.getElementAt(i));
+						}
+						for (int i = 0; i < rightAnswerModel.size(); i++) {
+							specificAnswers.add(rightAnswerModel.getElementAt(i));
+						}
+						for (int i = 0; i < allAnswersModel.size(); i++) {
+							possibleAnswers.add(allAnswersModel.getElementAt(i));
+						}
+						for (int i = 0; i < specificAnswers.size(); i++) {
+							if (!possibleAnswers.contain(specificAnswers.get(i))) {
+								// error message
+								return;
+							}
+						}
+						enterQ.setText("");
+						enterQuestion.setText("");
+						questionsModel.removeAllElements();
+						enterRightAnswer.setText("");
+						rightAnswerModel.removeAllElements();
+						enterAllAnswers.setText("");
+						allAnswersModel.removeAllElements();
+						q = new Question(problemStatement, specificQuestions, specificAnswers, possibleAnswers,
+								copyBufferedImage(image));
+						image = null;
+						u.removeQuestion(editQuestion);
+						u.addQuestion(q);
 					} else {
 						// Confirms changes
 						DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
@@ -761,10 +945,9 @@ public class QuizEditor extends JFrame {
 					q = null;
 				}
 
-				database.update(); // call database to update
 			}
 		});
-		
+
 		clear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				enter.setText("");
@@ -810,11 +993,15 @@ public class QuizEditor extends JFrame {
 					JOptionPane.showMessageDialog(null, "A valid subject has not been selected");
 					return;
 				}
-				subject.removeItem(subject.getSelectedItem());
-				subject.setSelectedIndex(0);
+				deleting = true;
+				subjectModel.removeElement(subjectModel.getSelectedItem());
+
+				deleting = true;
+				subjectModel.setSelectedItem("Choose a subject");
+
 				subjects.remove(s);
+
 				s = null;
-				database.update(); // call database to update
 			}
 		});
 
@@ -830,10 +1017,11 @@ public class QuizEditor extends JFrame {
 				}
 				SimpleLinkedList<Unit> units = s.getUnits();
 				units.remove(u);
-				unit.removeItem(unit.getSelectedItem());
+				deleting = true;
+				unitModel.removeElement(unitModel.getSelectedItem());
 				u = null;
-				unit.setSelectedIndex(0);
-				database.update(); // call database to update
+				deleting = true;
+				unitModel.setSelectedItem("Choose a unit");
 			}
 		});
 
@@ -880,7 +1068,7 @@ public class QuizEditor extends JFrame {
 		subjectPane.add(removeSubject);
 		subjectPane.setLayout(new BoxLayout(subjectPane, BoxLayout.X_AXIS));
 		subjectPane.setPreferredSize(
-				new Dimension((int) midPane.getPreferredSize().getWidth(), (int) subject.getMinimumSize().getHeight()));
+				new Dimension((int) midPane.getMinimumSize().getWidth(), (int) subject.getMinimumSize().getHeight()));
 		subjectPane.setBackground(indigo);
 		subjectPane.setMaximumSize(subjectPane.getPreferredSize());
 		midPane.add(subjectPane);
@@ -896,7 +1084,7 @@ public class QuizEditor extends JFrame {
 		unitPane.add(removeUnit);
 		unitPane.setLayout(new BoxLayout(unitPane, BoxLayout.X_AXIS));
 		unitPane.setPreferredSize(
-				new Dimension((int) midPane.getPreferredSize().getWidth(), (int) unit.getMinimumSize().getHeight()));
+				new Dimension((int) midPane.getMinimumSize().getWidth(), (int) unit.getMinimumSize().getHeight()));
 		unitPane.setBackground(indigo);
 		unitPane.setMaximumSize(unitPane.getPreferredSize());
 		midPane.add(unitPane);
@@ -920,25 +1108,33 @@ public class QuizEditor extends JFrame {
 		contentPane.add(Box.createHorizontalStrut(100));
 
 		// Scrollable
-		midPane.setPreferredSize(
-				new Dimension((int) midPane.getMinimumSize().getWidth(), (int) exit.getLocation().getY() + 50));
+		// midPane.setPreferredSize(new Dimension((int)
+		// Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
+		// (int) exit.getLocation().getY() + 50 + offset));
+		// contentPane.setPreferredSize(new Dimension((int)
+		// contentPane.getMinimumSize().getWidth(),
+		// (int) midPane.getPreferredSize().getHeight()));
 		contentPane.add(midPane);
 		contentPane.add(Box.createHorizontalStrut(100));
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
 		contentPane.setBackground(indigo);
 		JScrollPane scrollpane = new JScrollPane(contentPane, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollpane.getVerticalScrollBar().setUnitIncrement(16);
 		scrollpane.getVerticalScrollBar().setBackground(lightBlue);
 		scrollpane.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
 		scrollpane.setBorder(BorderFactory.createEmptyBorder());
 		this.setContentPane(scrollpane);
 		this.setVisible(true);
-		midPane.setPreferredSize(new Dimension((int) midPane.getMinimumSize().getWidth(),
+		midPane.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 200,
 				(int) exit.getLocation().getY() + 50 + offset));
-		contentPane.setPreferredSize(new Dimension((int) contentPane.getPreferredSize().getWidth(),
-				(int) midPane.getPreferredSize().getHeight()));
+		midPane.setMaximumSize(midPane.getPreferredSize());
+		midPane.setMinimumSize(midPane.getPreferredSize());
+		midPane.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+		contentPane.setPreferredSize(midPane.getPreferredSize());
+		contentPane.setSize(contentPane.getPreferredSize());
 		revalidate();
+
 	}
 
 	// method to add a subject
@@ -951,7 +1147,8 @@ public class QuizEditor extends JFrame {
 		addSubjectFrame.addWindowListener(new WindowListener() {
 
 			@Override
-			public void windowActivated(WindowEvent e) {}
+			public void windowActivated(WindowEvent e) {
+			}
 
 			@Override
 			public void windowClosed(WindowEvent e) {
@@ -959,22 +1156,27 @@ public class QuizEditor extends JFrame {
 			}
 
 			@Override
-			public void windowClosing(WindowEvent e) {}
+			public void windowClosing(WindowEvent e) {
+			}
 
 			@Override
-			public void windowDeactivated(WindowEvent e) {}
+			public void windowDeactivated(WindowEvent e) {
+			}
 
 			@Override
-			public void windowDeiconified(WindowEvent e) {}
+			public void windowDeiconified(WindowEvent e) {
+			}
 
 			@Override
-			public void windowIconified(WindowEvent e) {}
+			public void windowIconified(WindowEvent e) {
+			}
 
 			@Override
-			public void windowOpened(WindowEvent e) {}
-			
+			public void windowOpened(WindowEvent e) {
+			}
+
 		});
-		
+
 		// Components
 		JPanel contentPanel = new JPanel();
 		JLabel enterName = new JLabel("Enter the  name of the subject");
@@ -995,28 +1197,25 @@ public class QuizEditor extends JFrame {
 		// Scrollable
 		JScrollPane scrollpane = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		
-		
+
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
 		scroll.getHorizontalScrollBar().setUnitIncrement(16);
-		
-		
 
 		// Formatting
 		logo.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		
+
 		enterName.setForeground(orange);
 		enterName.setFont(font);
 		enterName.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		
+
 		enterGrade.setForeground(orange);
 		enterGrade.setFont(font);
 		enterGrade.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		
+
 		enterLevel.setForeground(orange);
 		enterLevel.setFont(font);
 		enterLevel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		
+
 		units.setForeground(orange);
 		units.setFont(font);
 		units.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -1039,23 +1238,21 @@ public class QuizEditor extends JFrame {
 		addUnit.setBackground(lightBlue);
 		addUnit.setFont(font);
 		addUnit.setAlignmentX(CENTER_ALIGNMENT);
-		
+
 		confirm.setBackground(lightBlue);
 		confirm.setFont(font);
 		confirm.setAlignmentX(JButton.CENTER_ALIGNMENT);
-		
+
 		cancel.setBackground(lightBlue);
 		cancel.setFont(font);
 		cancel.setAlignmentX(JButton.CENTER_ALIGNMENT);
 
 		scrollpane.getVerticalScrollBar().setUnitIncrement(16);
-		
-		
+
 		// List
 		SimpleLinkedList<Unit> unitlist = new SimpleLinkedList<Unit>();
 		units.setBackground(lightBlue);
 
-		
 		// Action Listeners
 		// Add unit button
 		addUnit.addActionListener(new ActionListener() {
@@ -1071,13 +1268,10 @@ public class QuizEditor extends JFrame {
 				try {
 					// Add subject
 					subjects.add(new Subject(name.getText(), Integer.parseInt(grade.getText()), level.getText()));
-					subject.addItem(name.getText() + " " + grade.getText() + " " + level.getText());
+					subjectModel.addElement(name.getText() + " " + grade.getText() + " " + level.getText());
 					addSubjectFrame.dispose();
-					database.update(); // call database to update
-					return;
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(null, "A valid grade has not been selected");
-					return;
 				}
 			}
 		});
@@ -1088,8 +1282,6 @@ public class QuizEditor extends JFrame {
 			}
 		});
 
-		
-		
 		// Adding onto the content pane
 		contentPanel.add(logo);
 		contentPanel.add(enterName);
@@ -1114,8 +1306,6 @@ public class QuizEditor extends JFrame {
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		// this.setPreferredSize(preferredSize);
 
-		
-		
 		addSubjectFrame.setContentPane(scrollpane);
 		addSubjectFrame.setVisible(true);
 
@@ -1126,13 +1316,14 @@ public class QuizEditor extends JFrame {
 
 		// Main frame
 		JFrame addUnitFrame = new JFrame("Add Unit");
-		addUnitFrame.setSize(500, 300);
+		addUnitFrame.setSize(500, 600);
 		addUnitFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		addUnitFrame.setUndecorated(true);
 		addUnitFrame.addWindowListener(new WindowListener() {
 
 			@Override
-			public void windowActivated(WindowEvent e) {}
+			public void windowActivated(WindowEvent e) {
+			}
 
 			@Override
 			public void windowClosed(WindowEvent e) {
@@ -1144,20 +1335,25 @@ public class QuizEditor extends JFrame {
 			}
 
 			@Override
-			public void windowClosing(WindowEvent e) {}
+			public void windowClosing(WindowEvent e) {
+			}
 
 			@Override
-			public void windowDeactivated(WindowEvent e) {}
+			public void windowDeactivated(WindowEvent e) {
+			}
 
 			@Override
-			public void windowDeiconified(WindowEvent e) {}
+			public void windowDeiconified(WindowEvent e) {
+			}
 
 			@Override
-			public void windowIconified(WindowEvent e) {}
+			public void windowIconified(WindowEvent e) {
+			}
 
 			@Override
-			public void windowOpened(WindowEvent e) {}
-			
+			public void windowOpened(WindowEvent e) {
+			}
+
 		});
 		// Components
 		JPanel contentPanel = new JPanel();
@@ -1170,7 +1366,7 @@ public class QuizEditor extends JFrame {
 		JButton cancel = new JButton("Cancel");
 		JScrollPane scroll = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		
+
 		// Formatting
 		logo.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
@@ -1205,19 +1401,17 @@ public class QuizEditor extends JFrame {
 				try {
 					// add unit to list
 					unitlist.add(new Unit(name.getText(), Integer.parseInt(num.getText())));
-					// if it should be added to a jlist (creating a subject)
+					String nameString = name.getText();
+					// max 16
 					if (model != null) {
-						model.addElement(name.getText());
+						model.addElement(num.getText() + ". " + nameString);
 					}
-
-					// if it should be added to the subject
 					if (s != null) {
-						unit.addItem(num.getText() + ". " + name.getText());
+						unit.addItem(num.getText() + ". " + nameString);
 					}
 					addUnitFrame.dispose();
-					database.update(); // call database to update
 					return;
-				} catch (Exception ex) {
+				} catch (NumberFormatException ex) {
 					JOptionPane.showMessageDialog(null, "A valid number has not been selected");
 				}
 			}
@@ -1244,61 +1438,11 @@ public class QuizEditor extends JFrame {
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		contentPanel.setBackground(indigo);
-		
+
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
-		
+
 		addUnitFrame.setContentPane(scroll);
 		addUnitFrame.setVisible(true);
-	}
-
-	// Method to join symbols together to form a formula
-	private BufferedImage joinBufferedImages(SimpleLinkedList<Symbol> formula) {
-
-		// get total width and max height
-		int height = 0;
-		int width = 0;
-		for (int i = 0; i < formula.size(); i++) {
-			BufferedImage image = stringToImage(formula.get(i).getId());
-			height = Math.max(image.getHeight(), height);
-			width += image.getWidth();
-		}
-		BufferedImage connectedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-
-		// Draw each picture onto the new picture
-		Graphics g = connectedImage.createGraphics();
-		int sum = 0;
-		for (int i = 0; i < formula.size(); i++) {
-			BufferedImage image = stringToImage(formula.get(i).getId());
-			g.drawImage(image, sum, 0, null);
-			sum += image.getWidth();
-		}
-		g.dispose();
-		return connectedImage;
-	}
-
-	// Testing main class
-	public static void main(String[] args) {
-		try {
-			Database database = new Database();
-			SimpleLinkedList<Subject> subjects = database.getSubjects();
-
-			Symbol add = new Operation("+");
-			Symbol pi = new Variable("pi");
-			Symbol time = new Variable("time");
-			Symbol velocity = new Variable("velocity");
-			SimpleLinkedList<Symbol> symbols = database.getSymbols();
-			;
-			SimpleLinkedList<SimpleLinkedList<Symbol>> formulas = new SimpleLinkedList<SimpleLinkedList<Symbol>>();
-			SimpleLinkedList<Symbol> tmp = new SimpleLinkedList<Symbol>();
-			tmp.add(time);
-			tmp.add(add);
-			tmp.add(velocity);
-			tmp.add(pi);
-			formulas.add(tmp);
-			quiz = new QuizEditor(database, subjects, symbols, formulas);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	// Display all previous formulas
@@ -1311,7 +1455,8 @@ public class QuizEditor extends JFrame {
 		previousFormulaFrame.addWindowListener(new WindowListener() {
 
 			@Override
-			public void windowActivated(WindowEvent e) {}
+			public void windowActivated(WindowEvent e) {
+			}
 
 			@Override
 			public void windowClosed(WindowEvent e) {
@@ -1319,22 +1464,27 @@ public class QuizEditor extends JFrame {
 			}
 
 			@Override
-			public void windowClosing(WindowEvent e) {}
-			
-			@Override
-			public void windowDeactivated(WindowEvent e) {}
+			public void windowClosing(WindowEvent e) {
+			}
 
 			@Override
-			public void windowDeiconified(WindowEvent e) {}
+			public void windowDeactivated(WindowEvent e) {
+			}
 
 			@Override
-			public void windowIconified(WindowEvent e) {}
+			public void windowDeiconified(WindowEvent e) {
+			}
 
 			@Override
-			public void windowOpened(WindowEvent e) {}
-			
+			public void windowIconified(WindowEvent e) {
+			}
+
+			@Override
+			public void windowOpened(WindowEvent e) {
+			}
+
 		});
-		
+
 		// Components
 		DefaultListModel<BufferedImage> model = new DefaultListModel<BufferedImage>();
 		JList<BufferedImage> list = new JList<BufferedImage>(model);
@@ -1348,23 +1498,22 @@ public class QuizEditor extends JFrame {
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		JScrollPane scrollpane = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		
-		
+
 		logo.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		
+
 		// setting up list
-		
+
 		for (int i = 0; i < formulas.size(); i++) {
 			model.addElement(joinBufferedImages(formulas.get(i)));
 		}
 		list.setCellRenderer(new CustomListRenderer());
 		list.setPreferredSize(list.getMinimumSize());
-		
+
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
 		scroll.getHorizontalScrollBar().setUnitIncrement(16);
 
 		// Confirm button
-		
+
 		confirm.setFont(font);
 		confirm.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		confirm.setBackground(lightBlue);
@@ -1381,7 +1530,6 @@ public class QuizEditor extends JFrame {
 			}
 		});
 
-		
 		cancel.setFont(font);
 		cancel.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		cancel.setBackground(lightBlue);
@@ -1390,7 +1538,7 @@ public class QuizEditor extends JFrame {
 				previousFormulaFrame.dispose();
 			}
 		});
-		
+
 		buttons.add(confirm);
 		buttons.add(Box.createHorizontalStrut(offset));
 		buttons.add(cancel);
@@ -1404,18 +1552,17 @@ public class QuizEditor extends JFrame {
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		contentPanel.setBackground(indigo);
-		
+
 		scrollpane.getVerticalScrollBar().setUnitIncrement(16);
 		scrollpane.getHorizontalScrollBar().setUnitIncrement(16);
-		scrollpane.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 100, (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight()));
-		
-		
+		scrollpane.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 100,
+				(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight()));
+
 		contentPane.add(Box.createHorizontalStrut(50));
 		contentPane.add(scrollpane);
 		contentPane.add(Box.createHorizontalStrut(50));
 		contentPane.setBackground(indigo);
-		
-		
+
 		previousFormulaFrame.setContentPane(contentPane);
 		previousFormulaFrame.setVisible(true);
 		revalidate();
@@ -1429,11 +1576,12 @@ public class QuizEditor extends JFrame {
 		createFormulaFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		createFormulaFrame.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		createFormulaFrame.requestFocus();
-		
+
 		createFormulaFrame.addWindowListener(new WindowListener() {
 
 			@Override
-			public void windowActivated(WindowEvent e) {}
+			public void windowActivated(WindowEvent e) {
+			}
 
 			@Override
 			public void windowClosed(WindowEvent e) {
@@ -1441,24 +1589,28 @@ public class QuizEditor extends JFrame {
 			}
 
 			@Override
-			public void windowClosing(WindowEvent e) {	}
+			public void windowClosing(WindowEvent e) {
+			}
 
 			@Override
-			public void windowDeactivated(WindowEvent e) {}
+			public void windowDeactivated(WindowEvent e) {
+			}
 
 			@Override
-			public void windowDeiconified(WindowEvent e) {}
+			public void windowDeiconified(WindowEvent e) {
+			}
 
 			@Override
-			public void windowIconified(WindowEvent e) {}
+			public void windowIconified(WindowEvent e) {
+			}
 
 			@Override
-			public void windowOpened(WindowEvent e) {}
-			
+			public void windowOpened(WindowEvent e) {
+			}
+
 		});
-		
-		
-		// Components 
+
+		// Components
 		JButton backspace = new JButton("Del");
 		JButton cancel = new JButton("Cancel");
 		JButton confirm = new JButton("Confirm");
@@ -1475,13 +1627,11 @@ public class QuizEditor extends JFrame {
 		JScrollPane scrollpane = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		JTextArea constant = new JTextArea();
-		
-		
+
 		// Lists
 		SimpleLinkedList<Symbol> formula = new SimpleLinkedList<Symbol>();
 		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
-		
-		
+
 		// Formatting
 		int cols = (int) Math.ceil(Math.sqrt(symbols.size() + 2));
 		int rows = (int) Math.ceil((double) (symbols.size() + 2) / cols);
@@ -1533,7 +1683,7 @@ public class QuizEditor extends JFrame {
 		}
 
 		// Delete last symbol
-		
+
 		backspace.setBackground(Color.WHITE);
 		backspace.setFont(font);
 		backspace.setBackground(lightBlue);
@@ -1555,7 +1705,6 @@ public class QuizEditor extends JFrame {
 
 		buttons.add(backspace);
 
-		
 		constant.setLineWrap(true);
 		constant.setWrapStyleWord(true);
 		ok.setFont(font);
@@ -1593,9 +1742,9 @@ public class QuizEditor extends JFrame {
 		constantPane.add(ok);
 		constantPane.setBackground(indigo);
 		constantPane.setLayout(new BoxLayout(constantPane, BoxLayout.X_AXIS));
-		
+
 		buttons.add(constantPane);
-		
+
 		confirm.setFont(font);
 		confirm.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		confirm.setBackground(lightBlue);
@@ -1611,7 +1760,6 @@ public class QuizEditor extends JFrame {
 			}
 		});
 
-		
 		cancel.setFont(font);
 		cancel.setAlignmentX(JButton.CENTER_ALIGNMENT);
 		cancel.setBackground(lightBlue);
@@ -1621,39 +1769,67 @@ public class QuizEditor extends JFrame {
 			}
 		});
 		// add to content pane
-		
+
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
 		scroll.getHorizontalScrollBar().setUnitIncrement(16);
-		scroll.setPreferredSize(new Dimension((int) contentPanel.getPreferredSize().getWidth(), (int) enteredFormula.getPreferredSize().getHeight() + 150));
+		scroll.setPreferredSize(new Dimension((int) contentPanel.getPreferredSize().getWidth(),
+				(int) enteredFormula.getPreferredSize().getHeight() + 150));
 		scroll.setBorder(BorderFactory.createEmptyBorder());
-		
+
 		contentPane.add(logo);
 		contentPanel.add(buttons);
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.add(scroll);
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
-		
+
 		button.add(confirm);
 		button.add(Box.createHorizontalStrut(50));
 		button.add(cancel);
 		button.setBackground(indigo);
 		contentPanel.add(button);
-		
+
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.setBackground(indigo);
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		contentPane.add(Box.createHorizontalStrut(50));
-		
+
 		scrollpane.getVerticalScrollBar().setUnitIncrement(16);
-		scrollpane.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 100, (int) Toolkit.getDefaultToolkit().getScreenSize().getHeight()));
+		scrollpane.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() - 100,
+				(int) Toolkit.getDefaultToolkit().getScreenSize().getHeight()));
 		contentPane.add(scrollpane);
-		
+
 		contentPane.add(Box.createHorizontalStrut(50));
 		contentPane.setBackground(indigo);
 		contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.X_AXIS));
-		
+
 		createFormulaFrame.setContentPane(contentPane);
 		createFormulaFrame.setVisible(true);
+	}
+
+	// Method to join symbols together to form a formula
+	private BufferedImage joinBufferedImages(SimpleLinkedList<Symbol> formula) {
+
+		// get total width and max height
+		int height = 0;
+		int width = 0;
+		for (int i = 0; i < formula.size(); i++) {
+			BufferedImage image = stringToImage(formula.get(i).getId());
+			height = Math.max(image.getHeight() / 2, height);
+			width += image.getWidth() / 2;
+		}
+		BufferedImage connectedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+		// Draw each picture onto the new picture
+		Graphics g = connectedImage.createGraphics();
+		int sum = 0;
+		for (int i = 0; i < formula.size(); i++) {
+			BufferedImage image = stringToImage(formula.get(i).getId());
+			g.drawImage(image.getScaledInstance(image.getWidth() / 2, image.getHeight() / 2, Image.SCALE_SMOOTH), sum,
+					0, null);
+			sum += image.getWidth() / 2;
+		}
+		g.dispose();
+		return connectedImage;
 	}
 
 	public static BufferedImage stringToImage(String S) {
@@ -1745,9 +1921,25 @@ public class QuizEditor extends JFrame {
 		// should not be reached
 		return null;
 	}
-	
-	
-	
+
+	// Testing main class
+	public static void main(String[] args) {
+		try {
+			Database database = new Database();
+			quiz = new QuizEditor(database);
+			SimpleLinkedList<Symbol> symbols = new SimpleLinkedList<Symbol>();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	static BufferedImage copyBufferedImage(BufferedImage bi) {
+		ColorModel cm = bi.getColorModel();
+		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		WritableRaster raster = bi.copyData(null);
+		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+	}
+
 	// Method to draw buffered images in a jlist
 	private class CustomListRenderer extends DefaultListCellRenderer {
 
@@ -1763,8 +1955,6 @@ public class QuizEditor extends JFrame {
 		}
 	}
 
-	
-	
 	private class DropPane extends JPanel {
 
 		private DropTarget dropTarget;
@@ -1773,7 +1963,7 @@ public class QuizEditor extends JFrame {
 		private boolean dragOver = false;
 		private JLabel message;
 		private BufferedImage target;
-		
+
 		public DropPane() {
 			message = new JLabel("Drop Picture Here:");
 			message.setFont(message.getFont().deriveFont(Font.BOLD, 24));
@@ -1782,7 +1972,8 @@ public class QuizEditor extends JFrame {
 			selectFile.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					JFileChooser fileChooser = new JFileChooser();
-					FileFilter imageFilter = new FileNameExtensionFilter("Image files", ImageIO.getReaderFileSuffixes());
+					FileFilter imageFilter = new FileNameExtensionFilter("Image files",
+							ImageIO.getReaderFileSuffixes());
 					fileChooser.setFileFilter(imageFilter);
 					int returnValue = fileChooser.showOpenDialog(null);
 					if (returnValue == JFileChooser.APPROVE_OPTION) {
@@ -1819,7 +2010,7 @@ public class QuizEditor extends JFrame {
 			try {
 				getMyDropTarget().addDropTargetListener(getDropTargetHandler());
 			} catch (TooManyListenersException ex) {
-//				ex.printStackTrace();
+				// ex.printStackTrace();
 			}
 		}
 
@@ -1827,16 +2018,16 @@ public class QuizEditor extends JFrame {
 		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			if (dragOver) {
-                Graphics2D g2d = (Graphics2D) g.create();
-                g2d.setColor(new Color(0, 255, 0, 64));
-                g2d.fill(new Rectangle(getWidth(), getHeight()));
-                if (dragPoint != null && target != null) {
-                    int x = dragPoint.x - 12;
-                    int y = dragPoint.y - 12;
-                    g2d.drawImage(target, x, y, this);
-                }
-                g2d.dispose();
-            }
+				Graphics2D g2d = (Graphics2D) g.create();
+				g2d.setColor(new Color(0, 255, 0, 64));
+				g2d.fill(new Rectangle(getWidth(), getHeight()));
+				if (dragPoint != null && target != null) {
+					int x = dragPoint.x - 12;
+					int y = dragPoint.y - 12;
+					g2d.drawImage(target, x, y, this);
+				}
+				g2d.dispose();
+			}
 			if (image != null) {
 				g.drawImage(image.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH), 0, 0, null);
 			}
@@ -1846,36 +2037,36 @@ public class QuizEditor extends JFrame {
 		protected class DropTargetHandler implements DropTargetListener {
 
 			protected void processDrag(DropTargetDragEvent dtde) {
-                if (dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-                    dtde.acceptDrag(DnDConstants.ACTION_COPY);
-                } else {
-                    dtde.rejectDrag();
-                }
-            }
+				if (dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+					dtde.acceptDrag(DnDConstants.ACTION_COPY);
+				} else {
+					dtde.rejectDrag();
+				}
+			}
 
-            @Override
-            public void dragEnter(DropTargetDragEvent dtde) {
-                processDrag(dtde);
-                SwingUtilities.invokeLater(new DragUpdate(true, dtde.getLocation()));
-                repaint();
-            }
+			@Override
+			public void dragEnter(DropTargetDragEvent dtde) {
+				processDrag(dtde);
+				SwingUtilities.invokeLater(new DragUpdate(true, dtde.getLocation()));
+				repaint();
+			}
 
-            @Override
-            public void dragOver(DropTargetDragEvent dtde) {
-                processDrag(dtde);
-                SwingUtilities.invokeLater(new DragUpdate(true, dtde.getLocation()));
-                repaint();
-            }
+			@Override
+			public void dragOver(DropTargetDragEvent dtde) {
+				processDrag(dtde);
+				SwingUtilities.invokeLater(new DragUpdate(true, dtde.getLocation()));
+				repaint();
+			}
 
-            @Override
-            public void dropActionChanged(DropTargetDragEvent dtde) {
-            }
+			@Override
+			public void dropActionChanged(DropTargetDragEvent dtde) {
+			}
 
-            @Override
-            public void dragExit(DropTargetEvent dte) {
-                SwingUtilities.invokeLater(new DragUpdate(false, null));
-                repaint();
-            }
+			@Override
+			public void dragExit(DropTargetEvent dte) {
+				SwingUtilities.invokeLater(new DragUpdate(false, null));
+				repaint();
+			}
 
 			@Override
 			public void drop(DropTargetDropEvent dtde) {
@@ -1887,13 +2078,12 @@ public class QuizEditor extends JFrame {
 					dtde.acceptDrop(dtde.getDropAction());
 					try {
 
-						List<?> transferData = (List<?>) transferable
-								.getTransferData(DataFlavor.javaFileListFlavor);
+						List<?> transferData = (List<?>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
 						if (transferData != null && transferData.size() > 0) {
 
 							dtde.dropComplete(true);
 							try {
-								image = ImageIO.read((File)transferData.get(transferData.size() - 1));
+								image = ImageIO.read((File) transferData.get(transferData.size() - 1));
 							} catch (IIOException exx) {
 								System.out.println("Not an image");
 							}
