@@ -114,6 +114,7 @@ class SummaryPage extends JFrame {
 		panel.setBackground(indigo);
 		
 		this.wrongQuestions = QuizTakerDisplay.getWrongQuestions();
+		this.student = student;
 		
 		//Adding data to the student account
 		student.setIncorrectQuestions(student.getIncorrectQuestions() + wrongQuestions.size());
