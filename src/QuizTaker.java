@@ -49,8 +49,8 @@ public class QuizTaker {
 	private SimpleLinkedList<Unit> units;
 	private SimpleLinkedList<Question> rootQuestions;
 	private SimpleLinkedList<Question> questions;
-	private SimpleLinkedList<Double> answers;
-	private SimpleLinkedList<double[]> choices;
+	private SimpleLinkedList<String> answers;
+	private SimpleLinkedList<String[]> choices;
 	private SimpleLinkedList<String> problemStatements;
 	private SimpleLinkedList<String[]> variableIDs;
 	private SimpleLinkedList<double[]> variableValues;
@@ -76,7 +76,7 @@ public class QuizTaker {
 		this.student = student;
 		this.chosenSubject = chosenSubject;
 		studentName = this.student.getName();
-		
+
 		window = new JFrame();
 
 		indigo = new Color(56, 53, 74);
@@ -162,8 +162,8 @@ public class QuizTaker {
 	}
 
 	private void startQuiz() {
-		answers = new SimpleLinkedList<Double>();
-		choices = new SimpleLinkedList<double[]>();
+		answers = new SimpleLinkedList<String>();
+		choices = new SimpleLinkedList<String[]>();
 		problemStatements = new SimpleLinkedList<String>();
 		variableIDs = new SimpleLinkedList<String[]>();
 		variableValues = new SimpleLinkedList<double[]>();
@@ -172,14 +172,16 @@ public class QuizTaker {
 		SimpleLinkedList<Symbol> formula;
 		SimpleLinkedList<Variable> tempVariables;
 		Question tempQ;
-		int tempRand;
+		int ansIndex;
 
-		double[] wrongAns;
+		String[] wrongAns;
+		String[] choicesArray;
 		double[] tempWrongAns;
-		double ans;
+		String ans;
 		String[] IDs;
 		double[] values;
 		String problemStatement;
+		boolean ansAdded;
 
 		rand = new Random();
 		rootQuestions = chosenUnit.getQuestions();
@@ -187,24 +189,31 @@ public class QuizTaker {
 		for (int i = 0; i < numQuestions; i++) {
 			tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size()));
 			tempVariables = new SimpleLinkedList<Variable>();
-			
-			ans = tempQ.getAnswer();
+
+			ans = tempQ.getAnswer() + "";
 			answers.add(ans);
 
 			tempWrongAns = tempQ.getFalseAnswers();
-			wrongAns = new double[3];
-			wrongAns[0] = tempWrongAns[0];
-			wrongAns[1] = tempWrongAns[1];
-			wrongAns[2] = tempWrongAns[2];
-			tempRand = rand.nextInt(4);
-			if (tempRand == 3) {
-				choices.add(new double[] { ans, wrongAns[0], wrongAns[1], wrongAns[2] });
-			} else if (tempRand == 2) {
-				choices.add(new double[] { wrongAns[0], ans, wrongAns[1], wrongAns[2] });
-			} else if (tempRand == 1) {
-				choices.add(new double[] { wrongAns[0], wrongAns[1], ans, wrongAns[2] });
-			} else {
-				choices.add(new double[] { wrongAns[0], wrongAns[1], wrongAns[2], ans });
+			wrongAns = new String[tempWrongAns.length];
+			for (int j = 0; j < tempWrongAns.length; j++) {
+				wrongAns[j] = tempWrongAns[j] + "";
+			}
+
+			choicesArray = new String[wrongAns.length + 1];
+			ansIndex = rand.nextInt(choicesArray.length);
+			ansAdded = false;
+
+			for (int j = 0; j < choicesArray.length; j++) {
+				if (ansAdded) {
+					choicesArray[j] = wrongAns[j-1];
+				} else {
+					if(j == ansIndex) {
+						choicesArray[j] = ans;
+						ansAdded = true;
+					} else {
+						choicesArray[j] = wrongAns[j];
+					}
+				}
 			}
 
 			problemStatement = tempQ.getProblemStatement();
@@ -213,7 +222,7 @@ public class QuizTaker {
 			formula = tempQ.getFormula();
 			for (int j = 0; j < formula.size(); j++) {
 				if (formula.get(j) instanceof Variable) {
-					if(!((Variable) formula.get(j)).isConstant()) {
+					if (!((Variable) formula.get(j)).isConstant()) {
 						boolean variableUsed = false;
 						for (int k = 0; k < tempVariables.size(); k++) {
 							if (tempVariables.get(k).getId().equals(formula.get(j).getId())) {
@@ -221,7 +230,8 @@ public class QuizTaker {
 								break;
 							}
 						}
-						if (variableUsed) continue;
+						if (variableUsed)
+							continue;
 						tempVariables.add((Variable) formula.get(j));
 					}
 				}
@@ -294,7 +304,7 @@ public class QuizTaker {
 			formula = tempQ.getFormula();
 			for (int j = 0; j < formula.size(); j++) {
 				if (formula.get(j) instanceof Variable) {
-					if(!((Variable) formula.get(j)).isConstant()) {
+					if (!((Variable) formula.get(j)).isConstant()) {
 						boolean variableUsed = false;
 						for (int k = 0; k < tempVariables.size(); k++) {
 							if (tempVariables.get(k).getId().equals(formula.get(j).getId())) {
@@ -302,7 +312,8 @@ public class QuizTaker {
 								break;
 							}
 						}
-						if (variableUsed) continue;
+						if (variableUsed)
+							continue;
 						tempVariables.add((Variable) formula.get(j));
 					}
 				}
@@ -323,9 +334,9 @@ public class QuizTaker {
 		window.dispose();
 
 	}
-	
+
 	private void findNumEachQuestions() {
-		
+
 	}
 
 	////////////////////////////////////////////////////// PRIVATE
@@ -392,18 +403,18 @@ public class QuizTaker {
 
 	}
 
-	private class StartKeyListener implements KeyListener{
+	private class StartKeyListener implements KeyListener {
 
 		@Override
 		public void keyTyped(KeyEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void keyPressed(KeyEvent e) {
 			// TODO Auto-generated method stub
-			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				boolean validNum = true;
 
 				try {
@@ -423,11 +434,11 @@ public class QuizTaker {
 		@Override
 		public void keyReleased(KeyEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 	}
-	
+
 	private class LogoPanel extends JPanel {
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
@@ -436,8 +447,8 @@ public class QuizTaker {
 			g.drawImage(logo, (int) ((window.getWidth() / 2) - (logo.getWidth() / 2)), 0, null);
 
 			g.setColor(lightBlue);
-			g.drawString("Current User: " + studentName, window.getHeight()/50, window.getHeight()/50);
-			
+			g.drawString("Current User: " + studentName, window.getHeight() / 50, window.getHeight() / 50);
+
 			repaint();
 		}
 	}
