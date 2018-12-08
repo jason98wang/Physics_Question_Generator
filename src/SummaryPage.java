@@ -16,24 +16,18 @@ import javax.swing.JPanel;
 
 import data_structures.SimpleLinkedList;
 
-/*
- * [SummaryPage.java]
- * The UI at the end of the quiz
- * Author: Jason Wang
- * Nov. 20, 2018
- */
 class SummaryPage extends JFrame {
 
 	private static JFrame window;
 
-	private JLabel title;
-	private JLabel accuracy;
-	private JButton exit, redo,homePage;
-	private Student student; 
-	private SimpleLinkedList<Question> wrongQuestions;
-	private Color indigo = new Color(56, 53, 74);
-	private Color lightBlue = new Color(162, 236, 250);
-	private Font font = new Font("Arial",Font.BOLD,30);
+	JLabel title;
+	JLabel accuracy;
+	JButton exit, redo,homePage;
+	Student student; 
+	SimpleLinkedList<Question> wrongQuestions;
+	Color indigo = new Color(56, 53, 74);
+	Color lightBlue = new Color(162, 236, 250);
+	Font font = new Font("Arial",Font.BOLD,30);
 	
 	// Constructor
 	SummaryPage(SimpleLinkedList<Question> wrongQuestions, Student student) {
@@ -43,7 +37,7 @@ class SummaryPage extends JFrame {
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setResizable(false);
 
-		// Set up the main panel
+		// Set up the game panel
 		JPanel panel = new JPanel();
 		panel.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setUndecorated(true);
@@ -54,7 +48,6 @@ class SummaryPage extends JFrame {
 		// Make the frame visible
 		this.setVisible(true);
 
-		//Creating summary page title label 
 		title = new JLabel("Summary Page");
 		title.setFont(new Font("Serif", Font.BOLD, 100));
 
@@ -62,43 +55,38 @@ class SummaryPage extends JFrame {
 		title.setHorizontalAlignment(JLabel.CENTER);
 		title.setForeground(lightBlue);
 
-		//Adding the title to the main panel 
 		panel.add(title);
 		panel.add(Box.createRigidArea(new Dimension(0, 200)));
 		panel.setLayout(new BoxLayout(panel, getDefaultCloseOperation()));
 
 		this.setContentPane(panel);
 
-		//calculating the accuracy of the the quiz 
-		double precentage = ((QuizTakerDisplay.getQuestions().size() - QuizTakerDisplay.getQuestionWrong()) / (double)QuizTakerDisplay.getQuestions().size()) * 100.00;
-		
-		//creating new label for the accuracy 
+		double precentage = ((QuizTakerDisplay.questions.size() - QuizTakerDisplay.questionWrong) / (double)QuizTakerDisplay.questions.size()) * 100.00;
 		accuracy = new JLabel(String.format("%.2f", precentage) + "%");
-	
+		
+		System.out.println(QuizTakerDisplay.questionWrong);
+
 		accuracy.setFont(new Font("Serif", Font.BOLD, 150));
-		accuracy.setForeground(lightBlue);	
+		accuracy.setForeground(lightBlue);
+			
 		accuracy.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		accuracy.setHorizontalAlignment(JLabel.CENTER);
 		
-		//adding accuracy to the main panel 
 		panel.add(accuracy);
 		panel.add(Box.createRigidArea(new Dimension(0, 200)));
 		
-		
-		//Initializing the text in the exit button, re-do wrong questions button and home page
-		exit = new JButton("Exit");
+		exit = new JButton("        Exit        ");
 		exit.setFont(font);
 		redo = new JButton("Redo Wrong Questions");
 		redo.setFont(font);
 		homePage= new JButton("Back to Main Page");
 		homePage.setFont(font);
 		
-		//adding listeners for each button 
 		redo.addActionListener( new RedoListener());
 		exit.addActionListener( new ExitListener());
 		homePage.addActionListener( new HomePageListener());
 		
-		//adding the three buttons on to the Jpanel with proper spacing
+		
 		JPanel panel1 = new JPanel();
 		panel1.add(exit);
 		panel1.add(Box.createRigidArea(new Dimension(100, 0)));
@@ -110,20 +98,23 @@ class SummaryPage extends JFrame {
 		panel1.setBackground(indigo);
 		panel.add(panel1);
 		
-		//setting the background color to indigo
 		panel.setBackground(indigo);
 		
-		this.wrongQuestions = QuizTakerDisplay.getWrongQuestions();
+		this.wrongQuestions = QuizTakerDisplay.wrongQuestions;
 		
-		//Adding data to the student account
 		student.setIncorrectQuestions(student.getIncorrectQuestions() + wrongQuestions.size());
-		student.setTotalQuestions(student.getTotalQuestions() + QuizTakerDisplay.getQuestions().size());
+		student.setTotalQuestions(student.getTotalQuestions() + QuizTakerDisplay.questions.size());
 		
 		
 		Login.getDatabase().update();
 		
-	} // End of constructor
+		
+		
+		
+		
 
+
+	} // End of constructor
 
 	private class ExitListener implements ActionListener {
 		@Override
