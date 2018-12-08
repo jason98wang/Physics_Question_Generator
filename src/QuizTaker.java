@@ -254,8 +254,8 @@ public class QuizTaker {
 	}
 
 	static void startQuiz(SimpleLinkedList<Question> rootQuestions) {
-		SimpleLinkedList<Double> answers = new SimpleLinkedList<Double>();
-		SimpleLinkedList<double[]> choices = new SimpleLinkedList<double[]>();
+		SimpleLinkedList<String> answers = new SimpleLinkedList<String>();
+		SimpleLinkedList<String[]> choices = new SimpleLinkedList<String[]>();
 		SimpleLinkedList<String> problemStatements = new SimpleLinkedList<String>();
 		SimpleLinkedList<String[]> variableIDs = new SimpleLinkedList<String[]>();
 		SimpleLinkedList<double[]> variableValues = new SimpleLinkedList<double[]>();
@@ -264,14 +264,16 @@ public class QuizTaker {
 		SimpleLinkedList<Symbol> formula;
 		SimpleLinkedList<Variable> tempVariables;
 		Question tempQ;
-		int tempRand;
+		int ansIndex;
 
-		double[] wrongAns;
+		String[] wrongAns;
+		String[] choicesArray;
 		double[] tempWrongAns;
-		double ans;
+		String ans;
 		String[] IDs;
 		double[] values;
 		String problemStatement;
+		boolean ansAdded;
 
 		rand = new Random();
 
@@ -279,23 +281,30 @@ public class QuizTaker {
 			tempQ = rootQuestions.get(i);
 			tempVariables = new SimpleLinkedList<Variable>();
 
-			ans = tempQ.getAnswer();
+			ans = tempQ.getAnswer() + "";
 			answers.add(ans);
 
 			tempWrongAns = tempQ.getFalseAnswers();
-			wrongAns = new double[3];
-			wrongAns[0] = tempWrongAns[0];
-			wrongAns[1] = tempWrongAns[1];
-			wrongAns[2] = tempWrongAns[2];
-			tempRand = rand.nextInt(4);
-			if (tempRand == 3) {
-				choices.add(new double[] { ans, wrongAns[0], wrongAns[1], wrongAns[2] });
-			} else if (tempRand == 2) {
-				choices.add(new double[] { wrongAns[0], ans, wrongAns[1], wrongAns[2] });
-			} else if (tempRand == 1) {
-				choices.add(new double[] { wrongAns[0], wrongAns[1], ans, wrongAns[2] });
-			} else {
-				choices.add(new double[] { wrongAns[0], wrongAns[1], wrongAns[2], ans });
+			wrongAns = new String[tempWrongAns.length];
+			for (int j = 0; j < tempWrongAns.length; j++) {
+				wrongAns[j] = tempWrongAns[j] + "";
+			}
+
+			choicesArray = new String[wrongAns.length + 1];
+			ansIndex = rand.nextInt(choicesArray.length);
+			ansAdded = false;
+
+			for (int j = 0; j < choicesArray.length; j++) {
+				if (ansAdded) {
+					choicesArray[j] = wrongAns[j-1];
+				} else {
+					if(j == ansIndex) {
+						choicesArray[j] = ans;
+						ansAdded = true;
+					} else {
+						choicesArray[j] = wrongAns[j];
+					}
+				}
 			}
 
 			problemStatement = tempQ.getProblemStatement();
