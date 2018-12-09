@@ -35,8 +35,8 @@ class QuizTakerDisplay extends JFrame {
 	private static JFrame window;
 
 	private boolean questionAnswered;
-	private boolean correct = false, 
-    private boolean correct1 = false;
+	private boolean correct = false;
+	private boolean correct1 = false;
 
 	//Need to change
 	private JButton answer1, answer2, answer3, answer4;
@@ -82,9 +82,8 @@ class QuizTakerDisplay extends JFrame {
 	QuizTakerDisplay(SimpleLinkedList<String> question, SimpleLinkedList<String[]> choices,
 			SimpleLinkedList<String> answers, SimpleLinkedList<String[]> variableIDs,
 			SimpleLinkedList<double[]> variableValues, SimpleLinkedList<Question> rootQuestions, Student student) {
-
+		
 		super("Practice Like A Physicist");
-
 		// Set the frame to full screen
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
@@ -142,7 +141,9 @@ class QuizTakerDisplay extends JFrame {
 		this.rootQuestions = rootQuestions;
 
 		// creating buttons for each choice based on number of options
-
+		panel1 = new JPanel();
+		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
+		
 		panel1 = new JPanel();
 		if (variableIDs.get(questionNum) == null) {
 			displayWordAnswerQuestions();
@@ -175,6 +176,7 @@ class QuizTakerDisplay extends JFrame {
 		try {
 			nextButton = new JButton(new ImageIcon(ImageIO.read(new File("nextButton.png"))));
 		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 		nextButton.setContentAreaFilled(false);
 		nextButton.setBorder(BorderFactory.createEmptyBorder());
@@ -224,9 +226,10 @@ class QuizTakerDisplay extends JFrame {
 		panel.setBackground(indigo);
 		JPanel panel3 = new JPanel();
 
-		//		nextButton.setAlignmentX(JButton.LEFT_ALIGNMENT);
+		//nextButton.setAlignmentX(JButton.LEFT_ALIGNMENT);
 		exitButton.setFont(font3);
 		exitButton.addActionListener(new ExitButtonListener());
+		
 		panel3.setBackground(indigo);
 		panel3.setOpaque(true);
 		panel3.setLayout(new BoxLayout(panel3, BoxLayout.X_AXIS));
@@ -357,7 +360,7 @@ class QuizTakerDisplay extends JFrame {
 
 			System.out.println("COrrect" + correct);
 			System.out.println("COrrect" + finished);
-			
+
 			if (!right || !clicked || !finished) {
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
@@ -378,25 +381,63 @@ class QuizTakerDisplay extends JFrame {
 				displayNumberAnswerQuestions();
 			}
 
+			SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
+			for (int i = 0; i < choices.get(questionNum).length; i++) {
+				JButton button = new JButton();
+				if (rootQuestions.get(questionNum).isPreset()) {
+					button.setText(choices.get(questionNum)[i]);
+				} else {
+					button.setText(String.format("%.2f", Double.parseDouble(choices.get(questionNum)[i])));
+				}
+				button.setFont(font3);
+				button.setOpaque(true);
+				button.setBorderPainted(true);
+				buttonlist.add(button);
+				button.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						if (button.getText().equals((answers.get(questionNum)))) {
+
+							correct = true;
+							finished = true;
+							//NEED TO CHANGE
+							for (int i = 0; i < buttonlist.size(); i++) {
+								if ((buttonlist.get(i).getBackground()) != defaultColor) {
+									right = false;
+								}
+							}
+							button.setBackground(Color.GREEN);
+							playMusic();
+						} else {
+							button.setBackground(Color.RED);
+						}
+						clicked = true;
+					}
+				});
+
+				panel1.add(button);
+				panel1.add(Box.createRigidArea(new Dimension(100, 0)));
+
+			}
+
 			right = true;
 			clicked = false;
-			finished = false; 
+			finished = false;
 
 			ids = variableIDs.get(questionNum);
 			values = variableValues.get(questionNum);
-
-			for (int j = 0; j < ids.length; j++) {
-				try {
-					panel2.add(new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
-					JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
-					value.setFont(font2);
-					value.setForeground(lightBlue);
-					panel2.add(value);
-				} catch (Exception ex) {
-					ex.printStackTrace();
+			if (ids != null) {
+				for (int j = 0; j < ids.length; j++) {
+					try {
+						panel2.add(new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
+						JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
+						value.setFont(font2);
+						value.setForeground(lightBlue);
+						panel2.add(value);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 				}
 			}
-
 			questionLabel.setText("<html><div style='text-align: center;'>" +
 
 					getQuestions().get(questionNum) + "</div></html");

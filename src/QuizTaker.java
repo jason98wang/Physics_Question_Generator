@@ -202,17 +202,18 @@ public class QuizTaker {
 		Question tempQ;
 
 		rootQuestions = chosenUnit.getQuestions();
-
+		
 		for (int i = 0; i < numQuestions; i++) {
 			tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size()));
-
+			
 			if (tempQ.isPreset()) {
+				System.out.println(tempQ.getProblemStatement());
 				addWordQuestion(tempQ);
 			} else {
+				System.out.println(tempQ.getProblemStatement());
 				addNumQuestion(tempQ);
 			}
 		}
-
 		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions, student);
 		window.dispose();
 
@@ -229,17 +230,17 @@ public class QuizTaker {
 		boolean ansAdded;
 		int ansIndex;
 
-		stringQuestions = tempQ.getStringQuestions(rand.nextInt(3) + 1);
+		stringQuestions = tempQ.getStringQuestions(1);
 
-		for (int row = 0; row < stringQuestions.length; row++) {
-			problemStatement = stringQuestions[row][0];
+//		for (int row = 0; row < stringQuestions.length; row++) {
+			problemStatement = stringQuestions[0][0];
 
-			ans = stringQuestions[row][1];
+			ans = stringQuestions[0][1];
 
 			wrongAns = new String[3];
-			wrongAns[0] = stringQuestions[row][2];
-			wrongAns[1] = stringQuestions[row][3];
-			wrongAns[2] = stringQuestions[row][4];
+			wrongAns[0] = stringQuestions[0][2];
+			wrongAns[1] = stringQuestions[0][3];
+			wrongAns[2] = stringQuestions[0][4];
 
 			choicesArray = new String[4];
 			ansIndex = rand.nextInt(choicesArray.length);
@@ -263,9 +264,10 @@ public class QuizTaker {
 			choices.add(choicesArray);
 			variableIDs.add(null);
 			variableValues.add(null);
+			
 			questions.add(new Question(tempQ.getProblemStatement(), tempQ.getSpecificQuestions(),
 					tempQ.getSpecificAnswers(), tempQ.getPossibleAnswers(), tempQ.getImage()));
-		}
+//		}
 
 	}
 
@@ -304,7 +306,7 @@ public class QuizTaker {
 				choicesArray[j] = wrongAns[j - 1];
 			} else {
 				if (j == ansIndex) {
-					choicesArray[j] = ans;
+					choicesArray[j] = String.format("%.4s", ans);
 					ansAdded = true;
 				} else {
 					choicesArray[j] = wrongAns[j];
