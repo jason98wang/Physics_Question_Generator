@@ -145,33 +145,37 @@ class QuizTakerDisplay extends JFrame {
 		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
 		
 		panel1 = new JPanel();
+		panel2 = new JPanel();
 		if (variableIDs.get(questionNum) == null) {
 			displayWordAnswerQuestions();
+			System.out.println("word");
 		} else {
 			displayNumberAnswerQuestions();
-		}
-
-		//creating panel for the variables 
-		panel2 = new JPanel();
-		ids = variableIDs.get(0);
-		values = variableValues.get(0);
-		for (int j = 0; j < ids.length; j++) {
-			try {
+			//creating panel for the variables 			
+			ids = variableIDs.get(0);
+			values = variableValues.get(0);
+			for (int j = 0; j < ids.length; j++) {
 				try {
-					Double.parseDouble(ids[j]);
-				} catch (NumberFormatException e) {
-					panel2.add(new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
-					JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
-					value.setFont(font2);
-					value.setForeground(lightBlue);
-					panel2.add(value);
+					try {
+						Double.parseDouble(ids[j]);
+					} catch (NumberFormatException e) {
+						panel2.add(new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
+						JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
+						value.setFont(font2);
+						value.setForeground(lightBlue);
+						panel2.add(value);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+			panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
+			panel2.setBackground(indigo);
+			System.out.println("num");
 		}
-		panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
-		panel2.setBackground(indigo);
+		
+	
+
 		nextButton = new JButton();
 		try {
 			nextButton = new JButton(new ImageIcon(ImageIO.read(new File("nextButton.png"))));
@@ -294,8 +298,9 @@ class QuizTakerDisplay extends JFrame {
 			buttonlist.add(button);
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
+					System.out.println(button.getText());
+					System.out.println(String.format("%.2f", Double.parseDouble(answers.get(questionNum))));
 					if (button.getText().equals(String.format("%.2f", Double.parseDouble(answers.get(questionNum))))) {
-
 						correct = true;
 						finished = true;
 						for (int i = 0; i < buttonlist.size(); i++) {
@@ -358,15 +363,11 @@ class QuizTakerDisplay extends JFrame {
 			panel2.removeAll();
 			panel1.removeAll();
 
-			System.out.println("COrrect" + correct);
-			System.out.println("COrrect" + finished);
-
 			if (!right || !clicked || !finished) {
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
 				}
 				questionWrong++;
-				System.out.println(rootQuestions.get(questionNum).getProblemStatement());
 			}
 			questionNum++;
 			if (questionNum == getQuestions().size()) {
@@ -379,65 +380,29 @@ class QuizTakerDisplay extends JFrame {
 				displayWordAnswerQuestions();
 			} else {
 				displayNumberAnswerQuestions();
-			}
-
-			SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
-			for (int i = 0; i < choices.get(questionNum).length; i++) {
-				JButton button = new JButton();
-				if (rootQuestions.get(questionNum).isPreset()) {
-					button.setText(choices.get(questionNum)[i]);
-				} else {
-					button.setText(String.format("%.2f", Double.parseDouble(choices.get(questionNum)[i])));
-				}
-				button.setFont(font3);
-				button.setOpaque(true);
-				button.setBorderPainted(true);
-				buttonlist.add(button);
-				button.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						if (button.getText().equals((answers.get(questionNum)))) {
-
-							correct = true;
-							finished = true;
-							//NEED TO CHANGE
-							for (int i = 0; i < buttonlist.size(); i++) {
-								if ((buttonlist.get(i).getBackground()) != defaultColor) {
-									right = false;
-								}
-							}
-							button.setBackground(Color.GREEN);
-							playMusic();
-						} else {
-							button.setBackground(Color.RED);
+				ids = variableIDs.get(questionNum);
+				values = variableValues.get(questionNum);
+				if (ids != null) {
+					for (int j = 0; j < ids.length; j++) {
+						try {
+							panel2.add(new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
+							JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
+							value.setFont(font2);
+							value.setForeground(lightBlue);
+							panel2.add(value);
+						} catch (Exception ex) {
+							ex.printStackTrace();
 						}
-						clicked = true;
 					}
-				});
-
-				panel1.add(button);
-				panel1.add(Box.createRigidArea(new Dimension(100, 0)));
-
+				}
 			}
+
 
 			right = true;
 			clicked = false;
 			finished = false;
 
-			ids = variableIDs.get(questionNum);
-			values = variableValues.get(questionNum);
-			if (ids != null) {
-				for (int j = 0; j < ids.length; j++) {
-					try {
-						panel2.add(new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
-						JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
-						value.setFont(font2);
-						value.setForeground(lightBlue);
-						panel2.add(value);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-			}
+
 			questionLabel.setText("<html><div style='text-align: center;'>" +
 
 					getQuestions().get(questionNum) + "</div></html");

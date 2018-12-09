@@ -207,10 +207,8 @@ public class QuizTaker {
 			tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size()));
 			
 			if (tempQ.isPreset()) {
-				System.out.println(tempQ.getProblemStatement());
 				addWordQuestion(tempQ);
 			} else {
-				System.out.println(tempQ.getProblemStatement());
 				addNumQuestion(tempQ);
 			}
 		}
