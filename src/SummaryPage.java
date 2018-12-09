@@ -139,7 +139,7 @@ class SummaryPage extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (wrongQuestions.size() != 0) {
-				QuizTaker.startQuiz(wrongQuestions);
+				new QuizTaker(wrongQuestions);
 				dispose();
 			} else {
 				JOptionPane.showMessageDialog(null, "No wrong question to do! Choose a new unit and practice again.");

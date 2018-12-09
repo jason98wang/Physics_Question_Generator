@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 public class ViewStats extends JFrame {
 	private static JFrame window;
@@ -58,9 +59,6 @@ public class ViewStats extends JFrame {
 
 		this.setContentPane(panel);
 
-		JPanel left = new JPanel();
-		left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
-		JPanel right = new JPanel();
 
 		this.student = student;
 		studentName = student.getName();
@@ -88,8 +86,9 @@ public class ViewStats extends JFrame {
 		panel.setBackground(indigo);
 		panel.add(name);
 
-		JLabel stats = new JLabel(String.format("%.2f", accuracy) + "%");
+		JLabel stats = new JLabel(String.format("Accuracy " + "%.2f", accuracy) + "%");
 		stats.setFont(new Font("Serif", Font.BOLD, 150));
+		stats.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
 		stats.setHorizontalAlignment(JLabel.CENTER);
 		stats.setForeground(lightBlue);
 
@@ -103,26 +102,27 @@ public class ViewStats extends JFrame {
 		total.setHorizontalAlignment(JLabel.CENTER);
 		total.setForeground(lightBlue);
 
-		left.add(wrong);
-		left.add(Box.createRigidArea(new Dimension(0, 100)));
-		left.add(total);
-		left.add(Box.createRigidArea(new Dimension(0, 100)));
-		left.add(back);
-		left.setBackground(indigo);
-
 		panel.add(Box.createRigidArea(new Dimension(0, 100)));
 		
-		JPanel all = new JPanel();
-		all.setLayout(new BoxLayout(all, BoxLayout.X_AXIS));
-		all.add(Box.createHorizontalStrut(50));
-		all.add(left);
-		all.setBackground(indigo);
-		stats.setAlignmentY(JLabel.CENTER_ALIGNMENT);
-		right.add(stats);
-		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
-		right.setBackground(indigo);
-		all.add(right);
-		panel.add(all);
+		panel.add(stats);
+		
+		panel.add(Box.createRigidArea(new Dimension(0, 150)));
+		
+		JPanel panel1 = new JPanel();
+		panel1.add(wrong);
+		panel1.add(Box.createRigidArea(new Dimension(100, 0)));
+		panel1.add(total);
+		panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
+		panel1.setBackground(indigo);
+		panel.add(panel1);
+		
+//		panel.add(Box.createRigidArea(new Dimension(0, 150)));
+//		stats.setAlignmentX(JTextArea.LEFT_ALIGNMENT);
+//		panel.add(back);
+		
+		
+	
+
 	} // End of constructor
 
 }
