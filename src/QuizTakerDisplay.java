@@ -29,24 +29,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-
 class QuizTakerDisplay extends JFrame {
 
 	// Class variables
 	private static JFrame window;
 
 	private boolean questionAnswered;
-	private boolean correct = false, correct1 = false;
+	private boolean correct = false, 
+    private boolean correct1 = false;
 
 	//Need to change
-	JButton answer1, answer2, answer3, answer4;
+	private JButton answer1, answer2, answer3, answer4;
 	private JButton nextButton, exitButton;
 
 	private JLabel label;
 	private JLabel questionLabel;
 	private JPanel panel1;
 	private JLabel clapping = new JLabel(new ImageIcon("clapping.gif"));
-
 
 	private long time;
 
@@ -75,6 +74,7 @@ class QuizTakerDisplay extends JFrame {
 	private boolean right = true;
 	private boolean clicked = false;
 	private boolean finished = false;
+	private boolean wordAnswer = false;
 
 	private SimpleLinkedList<JButton> buttonList = new SimpleLinkedList<JButton>();
 
@@ -142,41 +142,12 @@ class QuizTakerDisplay extends JFrame {
 		this.rootQuestions = rootQuestions;
 
 		// creating buttons for each choice based on number of options
+
 		panel1 = new JPanel();
-		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
-		for (int i = 0; i < choices.get(0).length; i++) {
-			JButton button = new JButton(String.format("%.2f", Double.parseDouble(choices.get(questionNum)[i])));
-			button.setFont(font3);
-			button.setOpaque(true);
-			button.setBorderPainted(true);
-			buttonlist.add(button);
-			button.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					if (button.getText().equals(String.format("%.2f", Double.parseDouble(answers.get(questionNum))))) {
-						//changing color of button to green if question is correct
-
-						correct = true;
-						finished = true;
-						for (int i = 0; i < buttonlist.size(); i++) {
-							if ((buttonlist.get(i).getBackground()) != defaultColor) {
-								right = false;
-							}
-						}
-						button.setBackground(Color.GREEN);
-						playMusic();
-					} else {
-						//if question is wrong change background to green
-						button.setBackground(Color.RED);
-					}
-					clicked = true;
-				}
-			});
-
-			//adding the button to the panel
-			panel1.add(button);
-			panel1.add(Box.createRigidArea(new Dimension(100, 0)));
-			panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
-			panel1.setBackground(indigo);
+		if (variableIDs.get(questionNum) == null) {
+			displayWordAnswerQuestions();
+		} else {
+			displayNumberAnswerQuestions();
 		}
 
 		//creating panel for the variables 
@@ -205,7 +176,7 @@ class QuizTakerDisplay extends JFrame {
 			nextButton = new JButton(new ImageIcon(ImageIO.read(new File("nextButton.png"))));
 		} catch (Exception ex) {
 		}
-		nextButton.setContentAreaFilled(false); 
+		nextButton.setContentAreaFilled(false);
 		nextButton.setBorder(BorderFactory.createEmptyBorder());
 		exitButton = new JButton("Exit");
 
@@ -285,7 +256,6 @@ class QuizTakerDisplay extends JFrame {
 		this.student = student;
 		//panel.remove(clap);
 
-
 	} // End of constructor
 
 	public static SimpleLinkedList<String> getQuestions() {
@@ -299,15 +269,82 @@ class QuizTakerDisplay extends JFrame {
 	public static int getQuestionWrong() {
 		return questionWrong;
 	}
-	
+
 	public void playMusic() {
 		InputStream correctMusic;
 		try {
 			correctMusic = new FileInputStream(new File("CorrectSound.wav"));
-		AudioStream sounds = new AudioStream(correctMusic);
-		AudioPlayer.player.start(sounds);
-		}catch(Exception e) {
+			AudioStream sounds = new AudioStream(correctMusic);
+			AudioPlayer.player.start(sounds);
+		} catch (Exception e) {
 			System.out.println("error");
+		}
+	}
+
+	public void displayNumberAnswerQuestions() {
+		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
+		for (int i = 0; i < choices.get(questionNum).length; i++) {
+			JButton button = new JButton(String.format("%.2f", Double.parseDouble(choices.get(questionNum)[i])));
+			button.setFont(font3);
+			button.setOpaque(true);
+			button.setBorderPainted(true);
+			buttonlist.add(button);
+			button.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if (button.getText().equals(String.format("%.2f", Double.parseDouble(answers.get(questionNum))))) {
+
+						correct = true;
+						finished = true;
+						for (int i = 0; i < buttonlist.size(); i++) {
+							if ((buttonlist.get(i).getBackground()) != defaultColor) {
+								right = false;
+							}
+						}
+						button.setBackground(Color.GREEN);
+						playMusic();
+					} else {
+						button.setBackground(Color.RED);
+					}
+					clicked = true;
+				}
+			});
+
+			panel1.add(button);
+			panel1.add(Box.createRigidArea(new Dimension(100, 0)));
+			panel1.setBackground(indigo);
+		}
+	}
+
+	public void displayWordAnswerQuestions() {
+		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
+		for (int i = 0; i < choices.get(questionNum).length; i++) {
+			JButton button = new JButton(choices.get(questionNum)[i]);
+			button.setFont(font3);
+			button.setOpaque(true);
+			button.setBorderPainted(true);
+			buttonlist.add(button);
+			button.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if (button.getText().equals(answers.get(questionNum))) {
+						correct = true;
+						finished = true;
+						for (int i = 0; i < buttonlist.size(); i++) {
+							if ((buttonlist.get(i).getBackground()) != defaultColor) {
+								right = false;
+							}
+						}
+						button.setBackground(Color.GREEN);
+						playMusic();
+					} else {
+						button.setBackground(Color.RED);
+					}
+					clicked = true;
+				}
+			});
+
+			panel1.add(button);
+			panel1.add(Box.createRigidArea(new Dimension(100, 0)));
+			panel1.setBackground(indigo);
 		}
 	}
 
@@ -317,8 +354,10 @@ class QuizTakerDisplay extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			panel2.removeAll();
 			panel1.removeAll();
-			
 
+			System.out.println("COrrect" + correct);
+			System.out.println("COrrect" + finished);
+			
 			if (!right || !clicked || !finished) {
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
@@ -333,42 +372,15 @@ class QuizTakerDisplay extends JFrame {
 				return;
 			}
 
-			SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
-			for (int i = 0; i < choices.get(questionNum).length; i++) {
-				JButton button = new JButton(String.format("%.2f", Double.parseDouble(choices.get(questionNum)[i])));
-				button.setFont(font3);
-				button.setOpaque(true);
-				button.setBorderPainted(true);
-				buttonlist.add(button);
-				button.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						if (button.getText().equals(String.format("%.2f", Double.parseDouble(answers.get(questionNum))))) {
-
-							correct = true;
-							finished = true;
-							//NEED TO CHANGE
-							for (int i = 0; i < buttonlist.size(); i++) {
-								if ((buttonlist.get(i).getBackground()) != defaultColor) {
-									right = false;
-								}
-							}
-							button.setBackground(Color.GREEN);
-							playMusic();
-						} else {
-							button.setBackground(Color.RED);
-						}
-						clicked = true;
-					}
-				});
-
-				panel1.add(button);
-				panel1.add(Box.createRigidArea(new Dimension(100, 0)));
-
+			if (variableIDs.get(questionNum) == null) {
+				displayWordAnswerQuestions();
+			} else {
+				displayNumberAnswerQuestions();
 			}
 
 			right = true;
 			clicked = false;
-			finished = false;
+			finished = false; 
 
 			ids = variableIDs.get(questionNum);
 			values = variableValues.get(questionNum);
