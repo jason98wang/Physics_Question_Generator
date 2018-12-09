@@ -44,7 +44,7 @@ class QuizTakerDisplay extends JFrame {
 
 	private JLabel label;
 	private JLabel questionLabel;
-	private JPanel panel1;
+	private JPanel panel,panel1;
 	private JLabel clapping = new JLabel(new ImageIcon("clapping.gif"));
 
 	private long time;
@@ -89,7 +89,7 @@ class QuizTakerDisplay extends JFrame {
 		this.setResizable(false);
 		window = this;
 		// Set up the main panel
-		JPanel panel = new JPanel() {
+		panel = new JPanel() {
 			//Label clap = new JLabel(clapping);
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
@@ -110,12 +110,7 @@ class QuizTakerDisplay extends JFrame {
 						}
 					} else {
 						time = System.currentTimeMillis();
-						this.add(clapping);
 					}
-					//					correct1 = false;
-					//					this.add(clapp);
-
-					//this.remove(clap);
 				}
 
 				repaint();
@@ -143,10 +138,10 @@ class QuizTakerDisplay extends JFrame {
 		panel1 = new JPanel();
 		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
 
-		panel1 = new JPanel();
 		panel2 = new JPanel();
 		panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
 		panel2.setBackground(indigo);
+		
 		if (variableIDs.get(questionNum) == null) {
 			displayWordAnswerQuestions();
 			//panel2.add(new JLabel (new ImageIcon(rootQuestions.get(questionNum).getImage())));
@@ -170,8 +165,6 @@ class QuizTakerDisplay extends JFrame {
 					e.printStackTrace();
 				}
 			}
-
-			System.out.println("num");
 		}
 
 		nextButton = new JButton();
@@ -188,6 +181,7 @@ class QuizTakerDisplay extends JFrame {
 				"<html><div style='text-align: center;'>" + getQuestionStatment().get(questionNum) + "</div></html");
 		questionLabel.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
 		questionLabel.setHorizontalAlignment(JLabel.CENTER);
+
 
 		double lengthOnRow = Math.ceil(getQuestionStatment().get(questionNum).length() / 3.00);
 
@@ -217,6 +211,7 @@ class QuizTakerDisplay extends JFrame {
 						questionLabel.getPreferredSize().getHeight() * (questionLabel.getPreferredSize().getWidth()
 								/ Toolkit.getDefaultToolkit().getScreenSize().getWidth())))));
 		questionLabel.setMinimumSize(questionLabel.getPreferredSize());
+		
 		panel.add(questionLabel);
 		panel.add(Box.createRigidArea(new Dimension(0, x)));
 		panel2.setAlignmentX(JPanel.CENTER_ALIGNMENT);
@@ -259,7 +254,7 @@ class QuizTakerDisplay extends JFrame {
 		wrongQuestions = new SimpleLinkedList<Question>();
 
 		this.student = student;
-		//panel.remove(clap);
+
 
 	} // End of constructor
 
@@ -281,9 +276,7 @@ class QuizTakerDisplay extends JFrame {
 			correctMusic = new FileInputStream(new File("CorrectSound.wav"));
 			AudioStream sounds = new AudioStream(correctMusic);
 			AudioPlayer.player.start(sounds);
-		} catch (Exception e) {
-			System.out.println("error");
-		}
+		} catch (Exception e) {}
 	}
 
 	public void displayNumberAnswerQuestions() {
@@ -296,7 +289,7 @@ class QuizTakerDisplay extends JFrame {
 			buttonlist.add(button);
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					System.out.println(answers.get(questionNum) + " " + button.getText());
+					
 					if (button.getText().equals(answers.get(questionNum))) {
 						correct = true;
 						finished = true;
@@ -359,6 +352,7 @@ class QuizTakerDisplay extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			panel2.removeAll();
 			panel1.removeAll();
+		
 
 			if (!right || !clicked || !finished) {
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
@@ -399,23 +393,22 @@ class QuizTakerDisplay extends JFrame {
 			right = true;
 			clicked = false;
 			finished = false;
-
-			questionLabel.setText("<html><div style='text-align: center;'>" +
-
-					getQuestionStatment().get(questionNum) + "</div></html");
+		
+			questionLabel.setText("<html><div style='text-align: center;'>" + getQuestionStatment().get(questionNum) + "</div></html");
+			System.out.println(questionLabel.size());
 			questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
 					(int) (Math.ceil(
 							questionLabel.getPreferredSize().getHeight() * (questionLabel.getPreferredSize().getWidth()
 									/ Toolkit.getDefaultToolkit().getScreenSize().getWidth())))));
+			System.out.println(questionLabel.size());
 			questionLabel.setMinimumSize(questionLabel.getPreferredSize());
+			System.out.println(questionLabel.size());
+			
 
 			label.setText("Question #" + Integer.toString(questionNum + 1));
-
+		
+			
 			revalidate();
-			questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
-					(int) (Math.ceil(
-							questionLabel.getPreferredSize().getHeight() * (questionLabel.getPreferredSize().getWidth()
-									/ Toolkit.getDefaultToolkit().getScreenSize().getWidth())))));
 		}
 	}
 

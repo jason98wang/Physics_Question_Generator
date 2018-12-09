@@ -70,8 +70,8 @@ class SummaryPage extends JFrame {
 		this.setContentPane(panel);
 
 		//calculating the accuracy of the the quiz 
-		double precentage = ((QuizTakerDisplay.getQuestions().size() - QuizTakerDisplay.getQuestionWrong())
-				/ (double) QuizTakerDisplay.getQuestions().size()) * 100.00;
+		double precentage = ((QuizTakerDisplay.getQuestionStatment().size() - QuizTakerDisplay.getQuestionWrong())
+				/ (double) QuizTakerDisplay.getQuestionStatment().size()) * 100.00;
 
 		//creating new label for the accuracy 
 		accuracy = new JLabel(String.format("%.2f", precentage) + "%");
@@ -121,7 +121,7 @@ class SummaryPage extends JFrame {
 
 		//Adding data to the student account
 		student.setIncorrectQuestions(student.getIncorrectQuestions() + QuizTakerDisplay.getQuestionWrong());
-		student.setTotalQuestions(student.getTotalQuestions() + QuizTakerDisplay.getQuestions().size());
+		student.setTotalQuestions(student.getTotalQuestions() + QuizTakerDisplay.getQuestionStatment().size());
 
 		Login.getDatabase().update();
 
