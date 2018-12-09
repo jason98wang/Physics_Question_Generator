@@ -1815,7 +1815,6 @@ public class QuizEditor extends JFrame {
 		JButton confirm = new JButton("Confirm");
 		JButton ok = new JButton("OK");
 		JLabel enteredFormula = new JLabel();
-		JLabel logo = new JLabel(new ImageIcon("logo.png"));
 		JPanel button = new JPanel();
 		JPanel buttons = new JPanel();
 		JPanel constantPane = new JPanel();
@@ -1836,7 +1835,7 @@ public class QuizEditor extends JFrame {
 		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
 
 		// Formatting the layout
-		int cols = (int) Math.ceil(Math.sqrt(symbols.size() + 2));
+		int cols = (int) Math.ceil(Math.sqrt(symbols.size() + 2)) - 1;
 		int rows = (int) Math.ceil((double) (symbols.size() + 2) / cols);
 		buttons.setLayout(new GridLayout(rows, cols));
 
@@ -2044,7 +2043,7 @@ public class QuizEditor extends JFrame {
 		scroll.setBorder(BorderFactory.createEmptyBorder());
 		
 		// add to content pane
-		contentPane.add(logo);
+		// contentPane.add(logo);
 		contentPanel.add(buttons);
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.add(scroll);

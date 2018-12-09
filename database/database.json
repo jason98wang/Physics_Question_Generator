@@ -64,10 +64,70 @@
       "id": "g"
     },
     {
-      "id": "xForce"
+      "id": "Fx"
     },
     {
-      "id": "yForce"
+      "id": "Fy"
+    },
+    {
+      "id": "e"
+    },
+    {
+      "id": "lambda"
+    },
+    {
+      "id": "Fa"
+    },
+    {
+      "id": "sigma"
+    },
+    {
+      "id": "Ech"
+    },
+    {
+      "id": "Eel"
+    },
+    {
+      "id": "Fe"
+    },
+    {
+      "id": "Fel"
+    },
+    {
+      "id": "Eg"
+    },
+    {
+      "id": "Fg"
+    },
+    {
+      "id": "Ek"
+    },
+    {
+      "id": "Ffk"
+    },
+    {
+      "id": "Fm"
+    },
+    {
+      "id": "Fn"
+    },
+    {
+      "id": "En"
+    },
+    {
+      "id": "Fsp"
+    },
+    {
+      "id": "Ffs"
+    },
+    {
+      "id": "Ft"
+    },
+    {
+      "id": "Eth"
+    },
+    {
+      "id": "k"
     }
   ],
   "operations": [
@@ -118,8 +178,8 @@
         },
         {
           "password": "u",
-          "total": "57",
-          "incorrect": "35",
+          "total": "69",
+          "incorrect": "40",
           "studentNumber": "u",
           "name": "u"
         }
@@ -278,7 +338,7 @@
               "image": "null",
               "pa": [],
               "problem": "A pencil, not in motion, is suspended on a taut string. Determine the stretch (delta x) of the string if ...",
-              "formula": " sqrt ( ( ( yForce - ( mass mul g ) ) mul 2 ) div mass ) "
+              "formula": " sqrt ( ( ( Fy - ( mass mul g ) ) mul 2 ) div mass ) "
             }
           ]
         },
