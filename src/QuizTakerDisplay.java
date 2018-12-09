@@ -1,5 +1,16 @@
 
 //Graphics & GUI imports
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+//Keyboard imports
+import java.io.File;
+
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -18,21 +29,6 @@ import javax.swing.JTextArea;
 import com.sun.media.jfxmedia.Media;
 
 import data_structures.SimpleLinkedList;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-
-import java.awt.Toolkit;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-//Keyboard imports
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 
 class QuizTakerDisplay extends JFrame {
 
@@ -285,7 +281,6 @@ class QuizTakerDisplay extends JFrame {
 	        System.out.println("Error with playing sound.");
 	        ex.printStackTrace();
 	    }
-
 	}
 
 	public void displayNumberAnswerQuestions() {
