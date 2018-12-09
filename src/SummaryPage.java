@@ -100,17 +100,17 @@ class SummaryPage extends JFrame {
 		exit.addActionListener(new ExitListener());
 		homePage.addActionListener(new HomePageListener());
 
-		//adding the three buttons on to the Jpanel with proper spacing
-		JPanel panel1 = new JPanel();
-		panel1.add(exit);
-		panel1.add(Box.createRigidArea(new Dimension(100, 0)));
-		panel1.add(redo);
-		panel1.add(Box.createRigidArea(new Dimension(100, 0)));
-		panel1.add(homePage);
-		panel1.add(Box.createRigidArea(new Dimension(100, 0)));
-		panel1.setAlignmentX(CENTER_ALIGNMENT);
-		panel1.setBackground(indigo);
-		panel.add(panel1);
+		//adding the three buttons on to the Panel with proper spacing
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.add(exit);
+		buttonPanel.add(Box.createRigidArea(new Dimension(100, 0)));
+		buttonPanel.add(redo);
+		buttonPanel.add(Box.createRigidArea(new Dimension(100, 0)));
+		buttonPanel.add(homePage);
+		buttonPanel.add(Box.createRigidArea(new Dimension(100, 0)));
+		buttonPanel.setAlignmentX(CENTER_ALIGNMENT);
+		buttonPanel.setBackground(indigo);
+		panel.add(buttonPanel);
 
 		//setting the background color to indigo
 		panel.setBackground(indigo);

@@ -122,22 +122,22 @@ public class ViewStats extends JFrame {
 		panel.add(Box.createRigidArea(new Dimension(0, 150)));
 		
 		//adding labels to the left side of the screen
-		JPanel panel1 = new JPanel();
-		panel1.add(wrong);
-		panel1.add(Box.createRigidArea(new Dimension(100, 0)));
-		panel1.add(total);
-		panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
-		panel1.setBackground(indigo);
-		panel.add(panel1);
+		JPanel leftPanel = new JPanel();
+		leftPanel.add(wrong);
+		leftPanel.add(Box.createRigidArea(new Dimension(100, 0)));
+		leftPanel.add(total);
+		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.X_AXIS));
+		leftPanel.setBackground(indigo);
+		panel.add(leftPanel);
 		panel.add(Box.createRigidArea(new Dimension(0,150)));
 			
 		//creating a panel to add the backButton and align it to the left side
-		JPanel backPanel = new JPanel();
-		backPanel.add(Box.createRigidArea(new Dimension(100,0)));
-		backPanel.add(back);
-		backPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-		backPanel.setBackground(indigo);
-		panel.add(backPanel);
+		JPanel backButtonPanel = new JPanel();
+		backButtonPanel.add(Box.createRigidArea(new Dimension(100,0)));
+		backButtonPanel.add(back);
+		backButtonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+		backButtonPanel.setBackground(indigo);
+		panel.add(backButtonPanel);
 		
 		
 	

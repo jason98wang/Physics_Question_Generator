@@ -1,5 +1,5 @@
 
-//Graphics & GUI imports
+//Imports
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -8,9 +8,7 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-//Keyboard imports
 import java.io.File;
-
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -25,31 +23,26 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-
-
 import data_structures.SimpleLinkedList;
 
 class QuizTakerDisplay extends JFrame {
 
-	// Class variables
+	// Declaring Variables
 	private static JFrame window;
 
-	private boolean questionAnswered;
 	private boolean correct = false;
 	private boolean correct1 = false;
 
-	//Need to change
-	private JButton answer1, answer2, answer3, answer4;
 	private JButton nextButton, exitButton;
 
 	private JLabel label;
 	private JLabel questionLabel;
-	private JPanel panel,panel1;
+	private JPanel panel, choicesPanel;
 	private JLabel clapping = new JLabel(new ImageIcon("clapping.gif"));
 
 	private long time;
 
-	private JPanel panel2;
+	private JPanel variablePanel;
 	private Font font1 = new Font("Serif", Font.BOLD, 100);
 	private Font font2 = new Font("Arial", Font.ITALIC, 50);
 	private Font font3 = new Font("Serif", Font.BOLD, 25);
@@ -73,9 +66,6 @@ class QuizTakerDisplay extends JFrame {
 	private boolean right = true;
 	private boolean clicked = false;
 	private boolean finished = false;
-	private boolean wordAnswer = false;
-
-	private SimpleLinkedList<JButton> buttonList = new SimpleLinkedList<JButton>();
 
 	// Constructor
 	QuizTakerDisplay(SimpleLinkedList<String> question, SimpleLinkedList<String[]> choices,
@@ -88,9 +78,10 @@ class QuizTakerDisplay extends JFrame {
 		this.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		this.setResizable(false);
 		window = this;
+
 		// Set up the main panel
 		panel = new JPanel() {
-			//Label clap = new JLabel(clapping);
+
 			public void paintComponent(Graphics g) {
 				super.paintComponent(g);
 
@@ -117,7 +108,7 @@ class QuizTakerDisplay extends JFrame {
 			}
 		};
 
-		//setting size of main panel
+		//setting size of main panel based on screen size
 		panel.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
 
 		// Focus the frame
@@ -135,19 +126,20 @@ class QuizTakerDisplay extends JFrame {
 		this.rootQuestions = rootQuestions;
 
 		// creating buttons for each choice based on number of options
-		panel1 = new JPanel();
+		choicesPanel = new JPanel();
 		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
 
-		panel2 = new JPanel();
-		panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
-		panel2.setBackground(indigo);
-		
+		variablePanel = new JPanel();
+		variablePanel.setLayout(new BoxLayout(variablePanel, BoxLayout.X_AXIS));
+		variablePanel.setBackground(indigo);
+
+		//determine if the current question contains a number or word answer
 		if (variableIDs.get(questionNum) == null) {
 			displayWordAnswerQuestions();
-			//panel2.add(new JLabel (new ImageIcon(rootQuestions.get(questionNum).getImage())));
+			//variablePanel.add(new JLabel (new ImageIcon(rootQuestions.get(questionNum).getImage())));
 		} else {
 			displayNumberAnswerQuestions();
-			//creating panel for the variables 			
+			//creating panel for the variables and displaying them		
 			ids = variableIDs.get(0);
 			values = variableValues.get(0);
 			for (int j = 0; j < ids.length; j++) {
@@ -155,11 +147,11 @@ class QuizTakerDisplay extends JFrame {
 					try {
 						Double.parseDouble(ids[j]);
 					} catch (NumberFormatException e) {
-						panel2.add(new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
+						variablePanel.add(new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
 						JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
 						value.setFont(font2);
 						value.setForeground(lightBlue);
-						panel2.add(value);
+						variablePanel.add(value);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -167,6 +159,7 @@ class QuizTakerDisplay extends JFrame {
 			}
 		}
 
+		//creating the next button
 		nextButton = new JButton();
 		try {
 			nextButton = new JButton(new ImageIcon(ImageIO.read(new File("nextButton.png"))));
@@ -175,31 +168,27 @@ class QuizTakerDisplay extends JFrame {
 		}
 		nextButton.setContentAreaFilled(false);
 		nextButton.setBorder(BorderFactory.createEmptyBorder());
-		exitButton = new JButton("Exit");
+		nextButton.addActionListener(new NextButtonListener());
 
+		//creating the exit page button
+		exitButton = new JButton("Exit");
+		exitButton.setFont(font3);
+		exitButton.addActionListener(new ExitButtonListener());
+
+		//creating a label for the question number
+		label = new JLabel("Question #" + Integer.toString(questionNum + 1));
+		label.setFont(new Font("Serif", Font.BOLD, 100));
+		label.setForeground(orange);
+
+		//Creating a label for the question and centering it on the page
 		questionLabel = new JLabel(
 				"<html><div style='text-align: center;'>" + getQuestionStatment().get(questionNum) + "</div></html");
 		questionLabel.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
 		questionLabel.setHorizontalAlignment(JLabel.CENTER);
-
-
-		double lengthOnRow = Math.ceil(getQuestionStatment().get(questionNum).length() / 3.00);
-
-		int size;
-
-		if (lengthOnRow < 47) {
-			size = 100;
-		} else {
-			size = (int) (100 - (lengthOnRow - 46));
-		}
-
-		questionLabel.setFont(new Font("Serif", Font.BOLD, size));
+		questionLabel.setFont(new Font("Serif", Font.BOLD, 100));
 		questionLabel.setForeground(lightBlue);
 
-		label = new JLabel("Question #" + Integer.toString(questionNum + 1));
-		label.setFont(new Font("Serif", Font.BOLD, 100));
-		label.setForeground(orange);
-		nextButton.addActionListener(new NextButtonListener());
+		//setting the size of question label based on the size of the question
 		int x = 50;
 		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		panel.add(Box.createRigidArea(new Dimension(0, x)));
@@ -211,92 +200,122 @@ class QuizTakerDisplay extends JFrame {
 						questionLabel.getPreferredSize().getHeight() * (questionLabel.getPreferredSize().getWidth()
 								/ Toolkit.getDefaultToolkit().getScreenSize().getWidth())))));
 		questionLabel.setMinimumSize(questionLabel.getPreferredSize());
-		
+
+		//adding panels and labels to the main panel 
 		panel.add(questionLabel);
 		panel.add(Box.createRigidArea(new Dimension(0, x)));
-		panel2.setAlignmentX(JPanel.CENTER_ALIGNMENT);
-		panel.add(panel2);
+		variablePanel.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+		panel.add(variablePanel);
 		panel.add(Box.createRigidArea(new Dimension(0, x)));
-		panel1.setAlignmentX(JPanel.CENTER_ALIGNMENT);
-		panel.add(panel1);
+		choicesPanel.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+		panel.add(choicesPanel);
 		panel.add(Box.createRigidArea(new Dimension(0, x)));
 		panel.setBackground(indigo);
-		JPanel panel3 = new JPanel();
 
-		//nextButton.setAlignmentX(JButton.LEFT_ALIGNMENT);
-		exitButton.setFont(font3);
-		exitButton.addActionListener(new ExitButtonListener());
-
-		panel3.setBackground(indigo);
-		panel3.setOpaque(true);
-		panel3.setLayout(new BoxLayout(panel3, BoxLayout.X_AXIS));
-		panel3.add(Box.createHorizontalStrut(50));
-		panel3.add(exitButton);
+		//create panel to add the back button and the exit butotn 
+		JPanel bottomPanel = new JPanel();
+		bottomPanel.setBackground(indigo);
+		bottomPanel.setOpaque(true);
+		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
+		bottomPanel.add(Box.createHorizontalStrut(50));
+		bottomPanel.add(exitButton);
 		Component c = Box.createHorizontalStrut((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth());
-		panel3.add(c);
-		panel3.add(nextButton);
-		panel3.add(Box.createHorizontalStrut(50));
-		panel.add(panel3);
+		bottomPanel.add(c);
+		bottomPanel.add(nextButton);
+		bottomPanel.add(Box.createHorizontalStrut(50));
+		panel.add(bottomPanel);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
+		//creating a scroll wheel in case the question is too large to fit on screen 
 		JScrollPane scroll = new JScrollPane(panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
 
 		this.setContentPane(scroll);
-		java.awt.Rectangle r = panel3.getBounds();
+		java.awt.Rectangle r = bottomPanel.getBounds();
+
+		//setting the size of the panel
 		panel.setPreferredSize(
 				new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), r.y + r.height + 50));
 		c.setPreferredSize(new Dimension((int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth()
 				- exitButton.getWidth() - nextButton.getWidth() - 100), 0));
 
+		//reseting variables
 		questionWrong = 0;
 		wrongQuestions = new SimpleLinkedList<Question>();
 
 		this.student = student;
 
-
 	} // End of constructor
 
+	/**
+	 * getQuestionStatment
+	 * This method returns the question statement
+	 * @return questionStatement, the question statement 
+	 */
 	public static SimpleLinkedList<String> getQuestionStatment() {
 		return questionStatement;
 	}
 
+	/**
+	 * getWrongQuestions
+	 * This method returns the list of wrong questions 
+	 * @return wrongQuestions, SimpleLinkedList of wrong questions in the question type
+	 */
 	public static SimpleLinkedList<Question> getWrongQuestions() {
 		return wrongQuestions;
 	}
 
+	/**
+	 * getQuestionWrong
+	 * This method returns the number of wrong questions
+	 * @return questionWrong, the number of questions the user got wrong 
+	 */
 	public static int getQuestionWrong() {
 		return questionWrong;
 	}
 
+	/**
+	 * playMusic
+	 * This method plays a sound signifying the user got the question correct
+	 */
 	public void playMusic() {
 		try {
-	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("CorrectSound.wav").getAbsoluteFile());
-	        Clip clip = AudioSystem.getClip();
-	        clip.open(audioInputStream);
-	        clip.start();
-	    } catch(Exception ex) {
-	        System.out.println("Error with playing sound.");
-	        ex.printStackTrace();
-	    }
+			AudioInputStream audioInputStream = AudioSystem
+					.getAudioInputStream(new File("CorrectSound.wav").getAbsoluteFile());
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioInputStream);
+			clip.start();
+		} catch (Exception ex) {
+			System.out.println("Error with playing sound.");
+			ex.printStackTrace();
+		}
 	}
 
+	/**
+	 * displayNumberAnswerQuestions
+	 * This method displays a question of the number type(Number as an answer)
+	 */
 	public void displayNumberAnswerQuestions() {
+		//creating buttons and adding them to a list of buttons 
 		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
+		//create buttons based on the number of choices needed
 		for (int i = 0; i < choices.get(questionNum).length; i++) {
+			//round the number displayed on the button
 			JButton button = new JButton(String.format("%.2f", Double.parseDouble(choices.get(questionNum)[i])));
 			button.setFont(font3);
 			button.setOpaque(true);
 			button.setBorderPainted(false);
 			buttonlist.add(button);
+			//create actionListner for the button created
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					
 					if (button.getText().equals(answers.get(questionNum))) {
+						//if the user gets the question right, change color to green, play music and move on to the next question
 						correct = true;
 						finished = true;
 						for (int i = 0; i < buttonlist.size(); i++) {
+							//set the question to incorrect if the user made an incorrect choice prior to the correct one
 							if ((buttonlist.get(i).getBackground()) != defaultColor) {
 								right = false;
 							}
@@ -304,32 +323,45 @@ class QuizTakerDisplay extends JFrame {
 						button.setBackground(Color.GREEN);
 						playMusic();
 					} else {
+						//if the user gets the question wrong, change the color of button to red
 						button.setBackground(Color.RED);
 					}
+					//set true if the user attempts the question
 					clicked = true;
 				}
 			});
 
-			panel1.add(button);
-			panel1.add(Box.createRigidArea(new Dimension(100, 0)));
-			panel1.setBackground(indigo);
+			//add the created button choicesPanel
+			choicesPanel.add(button);
+			choicesPanel.add(Box.createRigidArea(new Dimension(100, 0)));
+			choicesPanel.setBackground(null);
 		}
 	}
 
+	/**
+	 * displayWordAnswerQuestions
+	 * This method displays a question of the word type(word as an answer, customized added by teacher)
+	 */
 	public void displayWordAnswerQuestions() {
+		//creating buttons and adding them to a list of buttons 
 		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
+		//creating buttons based on number of choices 
 		for (int i = 0; i < choices.get(questionNum).length; i++) {
 			JButton button = new JButton(choices.get(questionNum)[i]);
 			button.setFont(font3);
 			button.setOpaque(true);
 			button.setBorderPainted(false);
+			
 			buttonlist.add(button);
+			//create action listener for the button
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					if (button.getText().equals(answers.get(questionNum))) {
+						//if the user gets the question right, change color to green, play music and move on to the next question
 						correct = true;
 						finished = true;
 						for (int i = 0; i < buttonlist.size(); i++) {
+							///set the question to incorrect if the user made an incorrect choice prior to the correct one
 							if ((buttonlist.get(i).getBackground()) != defaultColor) {
 								right = false;
 							}
@@ -337,15 +369,17 @@ class QuizTakerDisplay extends JFrame {
 						button.setBackground(Color.GREEN);
 						playMusic();
 					} else {
+						//change button color to red if the user gets the question wrong
 						button.setBackground(Color.RED);
 					}
 					clicked = true;
 				}
 			});
 
-			panel1.add(button);
-			panel1.add(Box.createRigidArea(new Dimension(100, 0)));
-			panel1.setBackground(indigo);
+			//adding button to the choicesPanel
+			choicesPanel.add(button);
+			choicesPanel.add(Box.createRigidArea(new Dimension(100, 0)));
+			choicesPanel.setBackground(indigo);
 		}
 	}
 
@@ -353,39 +387,51 @@ class QuizTakerDisplay extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			panel2.removeAll();
-			panel1.removeAll();
-		
+			//remove labels/images currently on the panel
+			variablePanel.removeAll();
+			choicesPanel.removeAll();
 
+			//Add question to wrongQuesitons and add on to number of questions wrong if the user didnt get the question correct
 			if (!right || !clicked || !finished) {
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
 				}
 				questionWrong++;
 			}
+			
+			//increase the question number index 
 			questionNum++;
+			
+			//if we reached the end, close this page and create summary page
 			if (questionNum == getQuestionStatment().size()) {
 				new SummaryPage(wrongQuestions, student);
 				dispose();
 				return;
 			}
 
+			//determine if the next question is a word answer question of number answer
 			if (variableIDs.get(questionNum) == null) {
+				
+				//display the word answer question
 				displayWordAnswerQuestions();
 
-				//panel2.add(new JLabel (new ImageIcon(rootQuestions.get(questionNum).getImage())));
+				//add the picture added by the teacher
+				//variablePanel.add(new JLabel (new ImageIcon(rootQuestions.get(questionNum).getImage())));
 			} else {
+				//display the number answer question
 				displayNumberAnswerQuestions();
+				
+				//add the picture of the vaiables and its values
 				ids = variableIDs.get(questionNum);
 				values = variableValues.get(questionNum);
 				if (ids != null) {
 					for (int j = 0; j < ids.length; j++) {
 						try {
-							panel2.add(new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
+							variablePanel.add(new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
 							JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
 							value.setFont(font2);
 							value.setForeground(lightBlue);
-							panel2.add(value);
+							variablePanel.add(value);
 						} catch (Exception ex) {
 							ex.printStackTrace();
 						}
@@ -393,32 +439,31 @@ class QuizTakerDisplay extends JFrame {
 				}
 			}
 
+			//resetting theses attributes for the next question
 			right = true;
 			clicked = false;
 			finished = false;
+
+			//change the question on question label and reformat based on the question length
+			questionLabel.setText("<html><div style='text-align: center;'>" + getQuestionStatment().get(questionNum)
+					+ "</div></html");
 		
-			
-			questionLabel.setText("<html><div style='text-align: center;'>" + getQuestionStatment().get(questionNum) + "</div></html");
-			//questionLabel = new JLabel("<html><div style='text-align: center;'>" + getQuestionStatment().get(questionNum) + "</div></html");
-			System.out.println(questionLabel.size());
 			questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
 					(int) (Math.ceil(
 							questionLabel.getPreferredSize().getHeight() * (questionLabel.getPreferredSize().getWidth()
 									/ Toolkit.getDefaultToolkit().getScreenSize().getWidth())))));
-			System.out.println(questionLabel.size());
 			questionLabel.setMinimumSize(questionLabel.getPreferredSize());
-			System.out.println(questionLabel.size());
-			
 
+			//change the question number of the label
 			label.setText("Question #" + Integer.toString(questionNum + 1));
-		
-			
+
 			revalidate();
 		}
 	}
 
 	private class ExitButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			//dispose the window if the exit button is clicked
 			window.dispose();
 		}
 	}
