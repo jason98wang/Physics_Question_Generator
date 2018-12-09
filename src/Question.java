@@ -138,12 +138,12 @@ public class Question {
 						for (int k = 2; k < 5; k++) {
 							if (questions[i][k] != null) {
 								if (questions[i][k].equals(possibleAnswers.get(rand))) {
-									repeatedQuestion = true;
+									repeatedChoice = true;
 								}
 							}
 						}
 						if (possibleAnswers.get(rand).equals(questions[i][0])) {
-							repeatedQuestion = true;
+							repeatedChoice = true;
 						}
 					} while (repeatedChoice);
 					questions[i][j] = possibleAnswers.get(rand);
