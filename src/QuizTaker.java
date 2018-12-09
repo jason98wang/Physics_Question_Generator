@@ -43,8 +43,6 @@ import javax.swing.JComboBox;
 public class QuizTaker {
 
 	private int numQuestions;
-	private int numNumQuestions;
-	private int numWordQuestions;
 
 	private SimpleLinkedList<Unit> units;
 	private SimpleLinkedList<Question> rootQuestions;
@@ -107,11 +105,11 @@ public class QuizTaker {
 		exit = new JButton("EXIT");
 		exit.addActionListener(new ExitButtonActionListener());
 		exit.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
+
 		stats = new JButton("Account Info");
-		stats.addActionListener( new StatsListener());
+		stats.addActionListener(new StatsListener());
 		stats.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
+
 		unit = new JComboBox<String>();
 		unit.addActionListener(new UnitActionListener());
 		unit.addKeyListener(new StartKeyListener());
@@ -214,35 +212,59 @@ public class QuizTaker {
 				addNumQuestion(tempQ);
 			}
 		}
-		for (int i = 0; i < answers.size(); i++) {
-			System.out.println(answers.get(i));
-		}
+
 		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions, student);
 		window.dispose();
 
 	}
 
-	private void findNumEachQuestions() {
-
-		numNumQuestions = rand.nextInt(numQuestions + 1);
-		numWordQuestions = numQuestions - numNumQuestions;
-
-	}
-
 	private void addWordQuestion(Question tempQ) {
 
-		if (numWordQuestions == 0) {
-			return;
-		}
+		String ans;
+		String problemStatement;
+		String[] wrongAns;
+		String[] choicesArray;
+		String[][] stringQuestions;
 
-		int num = rand.nextInt(numWordQuestions) + 1;
-		numWordQuestions -= num;
-		String[][] stringQuestions = tempQ.getStringQuestions(num);
+		boolean ansAdded;
+		int ansIndex;
+
+		stringQuestions = tempQ.getStringQuestions(rand.nextInt(3) + 1);
 
 		for (int row = 0; row < stringQuestions.length; row++) {
-			for (int col = 0; col < stringQuestions[0].length; col++) {
+			problemStatement = stringQuestions[row][0];
 
+			ans = stringQuestions[row][1];
+
+			wrongAns = new String[3];
+			wrongAns[0] = stringQuestions[row][2];
+			wrongAns[1] = stringQuestions[row][3];
+			wrongAns[2] = stringQuestions[row][4];
+
+			choicesArray = new String[4];
+			ansIndex = rand.nextInt(choicesArray.length);
+			ansAdded = false;
+
+			for (int j = 0; j < choicesArray.length; j++) {
+				if (ansAdded) {
+					choicesArray[j] = wrongAns[j - 1];
+				} else {
+					if (j == ansIndex) {
+						choicesArray[j] = ans;
+						ansAdded = true;
+					} else {
+						choicesArray[j] = wrongAns[j];
+					}
+				}
 			}
+
+			problemStatements.add(problemStatement);
+			answers.add(ans);
+			choices.add(choicesArray);
+			variableIDs.add(null);
+			variableValues.add(null);
+			questions.add(new Question(tempQ.getProblemStatement(), tempQ.getSpecificQuestions(),
+					tempQ.getSpecificAnswers(), tempQ.getPossibleAnswers(), tempQ.getImage()));
 		}
 
 	}
@@ -371,7 +393,6 @@ public class QuizTaker {
 			}
 
 			if (validNum && (numQuestions >= 1)) {
-				findNumEachQuestions();
 				startQuiz();
 			} else {
 				JOptionPane.showMessageDialog(null, "Invalid # of Questions");
@@ -409,7 +430,6 @@ public class QuizTaker {
 				}
 
 				if (validNum && (numQuestions >= 1)) {
-					findNumEachQuestions();
 					startQuiz();
 				} else {
 					JOptionPane.showMessageDialog(null, "Invalid # of Questions");
@@ -438,16 +458,15 @@ public class QuizTaker {
 			repaint();
 		}
 	}
-	
-	private class StatsListener implements ActionListener{
+
+	private class StatsListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			new ViewStats(student);
-			
+
 		}
-		
+
 	}
-	
-	
+
 }
