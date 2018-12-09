@@ -69,6 +69,7 @@ public class QuizTaker {
 	private JPanel optionsPanel;
 	private JButton start;
 	private JButton exit;
+	private JButton stats;
 	private JComboBox<String> unit;
 	private JTextField numQuestionsField;
 
@@ -106,7 +107,11 @@ public class QuizTaker {
 		exit = new JButton("EXIT");
 		exit.addActionListener(new ExitButtonActionListener());
 		exit.setAlignmentX(Component.CENTER_ALIGNMENT);
-
+		
+		stats = new JButton("Account Info");
+		stats.addActionListener( new StatsListener());
+		stats.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
 		unit = new JComboBox<String>();
 		unit.addActionListener(new UnitActionListener());
 		unit.addKeyListener(new StartKeyListener());
@@ -139,6 +144,7 @@ public class QuizTaker {
 		mainPanel.add(optionsPanel);
 		mainPanel.add(start);
 		mainPanel.add(exit);
+		mainPanel.add(stats);
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0,
 				(int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 5), 0));
 		mainPanel.setVisible(true);
@@ -432,4 +438,16 @@ public class QuizTaker {
 			repaint();
 		}
 	}
+	
+	private class StatsListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			new ViewStats(student);
+			
+		}
+		
+	}
+	
+	
 }

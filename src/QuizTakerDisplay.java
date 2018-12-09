@@ -1,9 +1,9 @@
 
 //Graphics & GUI imports
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,25 +11,24 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.SpringLayout;
 
 import data_structures.SimpleLinkedList;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 //Keyboard imports
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
 
 class QuizTakerDisplay extends JFrame {
 
@@ -47,6 +46,8 @@ class QuizTakerDisplay extends JFrame {
 	private JLabel questionLabel;
 	private JPanel panel1;
 	private JLabel clapping = new JLabel(new ImageIcon("clapping.gif"));
+
+
 	private long time;
 
 	private JPanel panel2;
@@ -71,7 +72,11 @@ class QuizTakerDisplay extends JFrame {
 	private SimpleLinkedList<Question> rootQuestions;
 
 	private static Student student;
-	private boolean right = false;
+	private boolean right = true;
+	private boolean clicked = false;
+	private boolean finished = false;
+
+	private SimpleLinkedList<JButton> buttonList = new SimpleLinkedList<JButton>();
 
 	// Constructor
 	QuizTakerDisplay(SimpleLinkedList<String> question, SimpleLinkedList<String[]> choices,
@@ -118,7 +123,7 @@ class QuizTakerDisplay extends JFrame {
 				repaint();
 			}
 		};
-		
+
 		//setting size of main panel
 		panel.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
 
@@ -139,29 +144,31 @@ class QuizTakerDisplay extends JFrame {
 		// creating buttons for each choice based on number of options
 		panel1 = new JPanel();
 		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
-
 		for (int i = 0; i < choices.get(0).length; i++) {
-			JButton button = new JButton(choices.get(questionNum)[i]);
+			JButton button = new JButton(String.format("%.2f", Double.parseDouble(choices.get(questionNum)[i])));
 			button.setFont(font3);
 			button.setOpaque(true);
 			button.setBorderPainted(true);
 			buttonlist.add(button);
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					if ((buttonlist.get(buttonlist.size() - 1).getText()).equals(answers.get(questionNum))) {
+					if (button.getText().equals(String.format("%.2f", Double.parseDouble(answers.get(questionNum))))) {
 						//changing color of button to green if question is correct
-						button.setBackground(Color.GREEN);
-						correct = true;
-						//NEED TO CHANGE
-						//if ((buttonlist.get(buttonlist.size() - 1).getBackground()) == defaultColor && answer2.getBackground() == defaultColor
-						//		&& answer4.getBackground() == defaultColor) {
-							//right = true;
-						//}
-					} else {
-						//if question is wrong change backgroung to green
-						(buttonlist.get(buttonlist.size() - 1)).setBackground(Color.RED);
-					}
 
+						correct = true;
+						finished = true;
+						for (int i = 0; i < buttonlist.size(); i++) {
+							if ((buttonlist.get(i).getBackground()) != defaultColor) {
+								right = false;
+							}
+						}
+						button.setBackground(Color.GREEN);
+						playMusic();
+					} else {
+						//if question is wrong change background to green
+						button.setBackground(Color.RED);
+					}
+					clicked = true;
 				}
 			});
 
@@ -198,6 +205,8 @@ class QuizTakerDisplay extends JFrame {
 			nextButton = new JButton(new ImageIcon(ImageIO.read(new File("nextButton.png"))));
 		} catch (Exception ex) {
 		}
+		nextButton.setContentAreaFilled(false); 
+		nextButton.setBorder(BorderFactory.createEmptyBorder());
 		exitButton = new JButton("Exit");
 
 		questionLabel = new JLabel(
@@ -275,9 +284,9 @@ class QuizTakerDisplay extends JFrame {
 
 		this.student = student;
 		//panel.remove(clap);
+
+
 	} // End of constructor
-
-
 
 	public static SimpleLinkedList<String> getQuestions() {
 		return questions;
@@ -287,12 +296,20 @@ class QuizTakerDisplay extends JFrame {
 		return wrongQuestions;
 	}
 
-
-
 	public static int getQuestionWrong() {
 		return questionWrong;
 	}
-
+	
+	public void playMusic() {
+		InputStream correctMusic;
+		try {
+			correctMusic = new FileInputStream(new File("CorrectSound.wav"));
+		AudioStream sounds = new AudioStream(correctMusic);
+		AudioPlayer.player.start(sounds);
+		}catch(Exception e) {
+			System.out.println("error");
+		}
+	}
 
 	private class NextButtonListener implements ActionListener {
 
@@ -300,36 +317,47 @@ class QuizTakerDisplay extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			panel2.removeAll();
 			panel1.removeAll();
-			questionNum++;
 			
+
+			if (!right || !clicked || !finished) {
+				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
+					wrongQuestions.add(rootQuestions.get(questionNum));
+				}
+				questionWrong++;
+				System.out.println(rootQuestions.get(questionNum).getProblemStatement());
+			}
+			questionNum++;
 			if (questionNum == getQuestions().size()) {
-				new SummaryPage(getWrongQuestions(), student);
+				new SummaryPage(wrongQuestions, student);
 				dispose();
 				return;
 			}
 
-			
 			SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
 			for (int i = 0; i < choices.get(questionNum).length; i++) {
-				JButton button = new JButton(choices.get(questionNum)[i]);
+				JButton button = new JButton(String.format("%.2f", Double.parseDouble(choices.get(questionNum)[i])));
 				button.setFont(font3);
 				button.setOpaque(true);
 				button.setBorderPainted(true);
 				buttonlist.add(button);
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						if ((buttonlist.get(buttonlist.size() - 1).getText()).equals(answers.get(questionNum))) {
-							(buttonlist.get(buttonlist.size() - 1)).setBackground(Color.GREEN);
-							correct = true;
-							//NEED TO CHANGE
-							if ((buttonlist.get(buttonlist.size() - 1).getBackground()) == defaultColor && answer2.getBackground() == defaultColor
-									&& answer4.getBackground() == defaultColor) {
-								right = true;
-							}
-						} else {
-							(buttonlist.get(buttonlist.size() - 1)).setBackground(Color.RED);
-						}
+						if (button.getText().equals(String.format("%.2f", Double.parseDouble(answers.get(questionNum))))) {
 
+							correct = true;
+							finished = true;
+							//NEED TO CHANGE
+							for (int i = 0; i < buttonlist.size(); i++) {
+								if ((buttonlist.get(i).getBackground()) != defaultColor) {
+									right = false;
+								}
+							}
+							button.setBackground(Color.GREEN);
+							playMusic();
+						} else {
+							button.setBackground(Color.RED);
+						}
+						clicked = true;
 					}
 				});
 
@@ -338,13 +366,9 @@ class QuizTakerDisplay extends JFrame {
 
 			}
 
-			if (!right) {
-				if (!getWrongQuestions().contain(rootQuestions.get(questionNum))) {
-					getWrongQuestions().add(rootQuestions.get(questionNum));
-				}
-				questionWrong++;
-			}
-			right = false;
+			right = true;
+			clicked = false;
+			finished = false;
 
 			ids = variableIDs.get(questionNum);
 			values = variableValues.get(questionNum);
@@ -361,8 +385,9 @@ class QuizTakerDisplay extends JFrame {
 				}
 			}
 
-			questionLabel
-					.setText("<html><div style='text-align: center;'>" + getQuestions().get(questionNum) + "</div></html");
+			questionLabel.setText("<html><div style='text-align: center;'>" +
+
+					getQuestions().get(questionNum) + "</div></html");
 			questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
 					(int) (Math.ceil(
 							questionLabel.getPreferredSize().getHeight() * (questionLabel.getPreferredSize().getWidth()

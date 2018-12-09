@@ -145,24 +145,20 @@ public class Database {
 						q = new Question(problemStatement, formula);
 						formulas.add(formula);
 					} else { // if question is not calculable
-						BufferedImage image = stringToImage((String) question.get("image")); // SimpleLinkedList<String> 
-						JSONArray specificQuestions = (JSONArray) question.get("sq");
-						JSONArray specificAnswers = (JSONArray) question.get("sa");
-						JSONArray possibleAnswers = (JSONArray) question.get("pa");
+						BufferedImage image = stringToImage((String) question.get("image"));
+						JSONArray questionsAnswers = (JSONArray) question.get("qa"); // questions and answers
+						JSONArray possibleAnswers = (JSONArray) question.get("pa"); // possible answers
 
-						SimpleLinkedList<String> sq = new SimpleLinkedList<String>();
-						SimpleLinkedList<String> sa = new SimpleLinkedList<String>();
-						SimpleLinkedList<String> pa = new SimpleLinkedList<String>();
+						SimpleLinkedList<String> sq = new SimpleLinkedList<String>(); // specific questions
+						SimpleLinkedList<String> sa = new SimpleLinkedList<String>(); // specific answers
+						SimpleLinkedList<String> pa = new SimpleLinkedList<String>(); // possible answers
 
-						for (Object d : specificQuestions) {
+						for (Object d : questionsAnswers) {
 							JSONObject jo = (JSONObject) d;
-							String str = (String) jo.get("q");
-							sq.add(str);
-						}
-						for (Object d : specificAnswers) {
-							JSONObject jo = (JSONObject) d;
-							String str = (String) jo.get("a");
-							sa.add(str);
+							String possibleQuestion = (String) jo.get("q");
+							String possibleAnswer = (String) jo.get("a");
+							sq.add(possibleQuestion);
+							sa.add(possibleAnswer);
 						}
 						for (Object d : possibleAnswers) {
 							JSONObject jo = (JSONObject) d;
@@ -282,23 +278,17 @@ public class Database {
 					if (question.isNumerical()) {
 						qobj.put("formula", question.toString());
 						qobj.put("image", "null");
-						qobj.put("sq", new JSONArray());
-						qobj.put("sa", new JSONArray());
+						qobj.put("qa", new JSONArray());
 						qobj.put("pa", new JSONArray());
 					} else {
-						JSONArray sq = new JSONArray();
-						JSONArray sa = new JSONArray();
+						JSONArray qa = new JSONArray();
 						JSONArray pa = new JSONArray();
 
 						for (int l = 0; l < question.getSpecificQuestions().size(); l++) {
 							JSONObject aobj = new JSONObject();
 							aobj.put("q", question.getSpecificQuestions().get(l));
-							sq.add(aobj);
-						}
-						for (int l = 0; l < question.getSpecificAnswers().size(); l++) {
-							JSONObject aobj = new JSONObject();
 							aobj.put("a", question.getSpecificAnswers().get(l));
-							sa.add(aobj);
+							qa.add(aobj);
 						}
 						for (int l = 0; l < question.getPossibleAnswers().size(); l++) {
 							JSONObject aobj = new JSONObject();
@@ -308,8 +298,7 @@ public class Database {
 
 						qobj.put("formula", "null");
 						qobj.put("image", question.imageToString());
-						qobj.put("sq", sq);
-						qobj.put("sa", sa);
+						qobj.put("qa", qa);
 						qobj.put("pa", pa);
 					}
 

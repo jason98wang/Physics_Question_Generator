@@ -2,5 +2,5 @@
 *.class
 /bin/
 *.DS_Store
-database/database.json
+*.json
 .classpath
