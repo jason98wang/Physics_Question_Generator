@@ -26,7 +26,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import com.sun.media.jfxmedia.Media;
 
 import data_structures.SimpleLinkedList;
 
@@ -289,7 +288,7 @@ class QuizTakerDisplay extends JFrame {
 			JButton button = new JButton(String.format("%.2f", Double.parseDouble(choices.get(questionNum)[i])));
 			button.setFont(font3);
 			button.setOpaque(true);
-			button.setBorderPainted(true);
+			button.setBorderPainted(false);
 			buttonlist.add(button);
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -323,7 +322,7 @@ class QuizTakerDisplay extends JFrame {
 			JButton button = new JButton(choices.get(questionNum)[i]);
 			button.setFont(font3);
 			button.setOpaque(true);
-			button.setBorderPainted(true);
+			button.setBorderPainted(false);
 			buttonlist.add(button);
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -399,8 +398,8 @@ class QuizTakerDisplay extends JFrame {
 			finished = false;
 		
 			
-			//questionLabel.setText("<html><div style='text-align: center;'>" + getQuestionStatment().get(questionNum) + "</div></html");
-			questionLabel = new JLabel("<html><div style='text-align: center;'>" + getQuestionStatment().get(questionNum) + "</div></html");
+			questionLabel.setText("<html><div style='text-align: center;'>" + getQuestionStatment().get(questionNum) + "</div></html");
+			//questionLabel = new JLabel("<html><div style='text-align: center;'>" + getQuestionStatment().get(questionNum) + "</div></html");
 			System.out.println(questionLabel.size());
 			questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
 					(int) (Math.ceil(
