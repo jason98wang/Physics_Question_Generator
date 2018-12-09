@@ -134,35 +134,35 @@ class QuizTakerDisplay extends JFrame {
 		this.rootQuestions = rootQuestions;
 		
 		//traverse and make the longest question be at the top of the list
-				if (question.size() > 1) {
-					int max = -1;
-					int index = 0;
-					for (int i = 0; i < question.size(); i++) {
-						if (question.get(i).length() > max) {
-							max = question.get(i).length();
-							index = i;
-						}
-					}
-					
-					question.addToFront(question.get(index));
-					question.remove(index + 1);
-
-					choices.addToFront(choices.get(index));
-					choices.remove(index + 1);
-
-					answers.addToFront(answers.get(index));
-					answers.remove(index + 1);
-
-					variableIDs.addToFront(variableIDs.get(index));
-					variableIDs.remove(index + 1);
-
-					variableValues.addToFront(variableValues.get(index));
-					variableValues.remove(index + 1);
-
-					rootQuestions.addToFront(rootQuestions.get(index));
-					rootQuestions.remove(index + 1);
-
-				}
+//				if (question.size() > 1) {
+//					int max = -1;
+//					int index = 0;
+//					for (int i = 0; i < question.size(); i++) {
+//						if (question.get(i).length() > max) {
+//							max = question.get(i).length();
+//							index = i;
+//						}
+//					}
+//					
+//					question.addToFront(question.get(index));
+//					question.remove(index + 1);
+//
+//					choices.addToFront(choices.get(index));
+//					choices.remove(index + 1);
+//
+//					answers.addToFront(answers.get(index));
+//					answers.remove(index + 1);
+//
+//					variableIDs.addToFront(variableIDs.get(index));
+//					variableIDs.remove(index + 1);
+//
+//					variableValues.addToFront(variableValues.get(index));
+//					variableValues.remove(index + 1);
+//
+//					rootQuestions.addToFront(rootQuestions.get(index));
+//					rootQuestions.remove(index + 1);
+//
+//				}
 
 		// creating buttons for each choice based on number of options
 		choicesPanel = new JPanel();
@@ -500,7 +500,7 @@ class QuizTakerDisplay extends JFrame {
 					100 + height * (int) (Math.ceil(
 							(double)width / Toolkit.getDefaultToolkit().getScreenSize().getWidth()))));
 			questionLabel.setMaximumSize(questionLabel.getPreferredSize());
-			
+			questionLabel.setMinimumSize(questionLabel.getPreferredSize());
 			
 			//change the question number of the label
 			label.setText("Question #" + Integer.toString(questionNum + 1));
