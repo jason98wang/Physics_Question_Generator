@@ -146,6 +146,8 @@ class QuizTakerDisplay extends JFrame {
 		
 		panel1 = new JPanel();
 		panel2 = new JPanel();
+		panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
+		panel2.setBackground(indigo);
 		if (variableIDs.get(questionNum) == null) {
 			displayWordAnswerQuestions();
 			System.out.println("word");
@@ -169,8 +171,7 @@ class QuizTakerDisplay extends JFrame {
 					e.printStackTrace();
 				}
 			}
-			panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
-			panel2.setBackground(indigo);
+
 			System.out.println("num");
 		}
 		

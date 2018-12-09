@@ -190,8 +190,8 @@
         },
         {
           "password": "1",
-          "total": "186",
-          "incorrect": "155",
+          "total": "211",
+          "incorrect": "171",
           "studentNumber": "1",
           "name": "1"
         }
@@ -264,7 +264,7 @@
               "image": "null",
               "pa": [],
               "problem": "A pencil, not in motion, is suspended on a taut string. Determine the stretch (delta x) of the string if ...",
-              "formula": " sqrt ( ( ( yForce - ( mass mul g ) ) mul 2 div mass ) "
+              "formula": " sqrt ( ( ( yForce - ( mass mul g ) ) mul 2 ) div mass ) "
             }
           ]
         },
