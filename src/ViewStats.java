@@ -94,6 +94,7 @@ public class ViewStats extends JFrame {
 		
 		
 		panel.setBackground(indigo);
+		panel.add(name);
 		
 
 		
