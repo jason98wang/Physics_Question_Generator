@@ -304,7 +304,7 @@ public class QuizTaker {
 				choicesArray[j] = wrongAns[j - 1];
 			} else {
 				if (j == ansIndex) {
-					choicesArray[j] = String.format("%.4s", ans);
+					choicesArray[j] = String.format("%.2f", Double.parseDouble(ans));
 					ansAdded = true;
 				} else {
 					choicesArray[j] = wrongAns[j];
