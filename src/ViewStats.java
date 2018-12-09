@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -117,8 +118,12 @@ public class ViewStats extends JFrame {
 		panel.add(panel1);
 		
 //		panel.add(Box.createRigidArea(new Dimension(0, 150)));
-//		stats.setAlignmentX(JTextArea.LEFT_ALIGNMENT);
-//		panel.add(back);
+		back.setAlignmentX(JButton.LEFT_ALIGNMENT);
+		JPanel a = new JPanel();
+		a.add(back);
+		a.setLayout(new FlowLayout(FlowLayout.LEFT));
+		a.setBackground(indigo);
+		panel.add(a);
 		
 		
 	
