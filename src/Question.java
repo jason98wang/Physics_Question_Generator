@@ -142,6 +142,9 @@ public class Question {
 								}
 							}
 						}
+						if (possibleAnswers.get(rand).equals(questions[i][0])) {
+							repeatedQuestion = true;
+						}
 					} while (repeatedChoice);
 					questions[i][j] = possibleAnswers.get(rand);
 				}
