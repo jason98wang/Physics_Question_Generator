@@ -3,7 +3,6 @@
 import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,25 +10,24 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.SpringLayout;
 
 import data_structures.SimpleLinkedList;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 //Keyboard imports
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
 
 class QuizTakerDisplay extends JFrame {
 
@@ -47,6 +45,8 @@ class QuizTakerDisplay extends JFrame {
 	private JLabel questionLabel;
 	private JPanel panel1;
 	private JLabel clapping = new JLabel(new ImageIcon("clapping.gif"));
+
+
 	private long time;
 
 	private JPanel panel2;
@@ -162,6 +162,7 @@ class QuizTakerDisplay extends JFrame {
 							}
 						}
 						button.setBackground(Color.GREEN);
+						playMusic();
 					} else {
 						//if question is wrong change background to green
 						button.setBackground(Color.RED);
@@ -280,6 +281,8 @@ class QuizTakerDisplay extends JFrame {
 
 		this.student = student;
 		//panel.remove(clap);
+
+
 	} // End of constructor
 
 	public static SimpleLinkedList<String> getQuestions() {
@@ -292,6 +295,17 @@ class QuizTakerDisplay extends JFrame {
 
 	public static int getQuestionWrong() {
 		return questionWrong;
+	}
+	
+	public void playMusic() {
+		InputStream correctMusic;
+		try {
+			correctMusic = new FileInputStream(new File("CorrectSound.wav"));
+		AudioStream sounds = new AudioStream(correctMusic);
+		AudioPlayer.player.start(sounds);
+		}catch(Exception e) {
+			System.out.println("error");
+		}
 	}
 
 	private class NextButtonListener implements ActionListener {
@@ -325,8 +339,7 @@ class QuizTakerDisplay extends JFrame {
 				buttonlist.add(button);
 				button.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						if (button.getText()
-								.equals(String.format("%.2f", Double.parseDouble(answers.get(questionNum))))) {
+						if (button.getText().equals(String.format("%.2f", Double.parseDouble(answers.get(questionNum))))) {
 
 							correct = true;
 							finished = true;
@@ -337,7 +350,7 @@ class QuizTakerDisplay extends JFrame {
 								}
 							}
 							button.setBackground(Color.GREEN);
-
+							playMusic();
 						} else {
 							button.setBackground(Color.RED);
 						}
