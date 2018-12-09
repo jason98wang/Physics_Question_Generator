@@ -46,7 +46,7 @@ class QuizTakerDisplay extends JFrame {
 	private JLabel questionLabel;
 	private JPanel panel, choicesPanel;
 	private JLabel clapping = new JLabel(new ImageIcon("clapping.gif"));
-
+	private Dimension bottom, choice;
 	private long time;
 
 	private JPanel variablePanel, bottomPanel;
@@ -286,7 +286,8 @@ class QuizTakerDisplay extends JFrame {
 		//reseting variables
 		questionWrong = 0;
 		wrongQuestions = new SimpleLinkedList<Question>();
-
+		choice = choicesPanel.getMinimumSize();
+		bottom = bottomPanel.getMinimumSize();
 		this.student = student;
 	} // End of constructor
 
@@ -491,29 +492,34 @@ class QuizTakerDisplay extends JFrame {
 			//change the question on question label and reformat based on the question length
 			questionLabel.setText("<html><div style='text-align: center;'>" + getQuestionStatment().get(questionNum)
 					+ "</div></html");
-			questionLabel.revalidate();
 			Graphics g = questionLabel.getGraphics();
 			int width = g.getFontMetrics(questionLabel.getFont()).stringWidth(getQuestionStatment().get(questionNum));
 			int height = g.getFontMetrics(questionLabel.getFont()).getHeight();
 //			System.out.println(x);
-			System.out.println((int) (Math.ceil(
-					(double)width / Toolkit.getDefaultToolkit().getScreenSize().getWidth())));
 			questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
 					100 + height * (int) (Math.ceil(
 							(double)width / Toolkit.getDefaultToolkit().getScreenSize().getWidth()))));
-			questionLabel.setSize(questionLabel.getPreferredSize());
+			questionLabel.setMaximumSize(questionLabel.getPreferredSize());
+			
 			
 			//change the question number of the label
 			label.setText("Question #" + Integer.toString(questionNum + 1));
-			bottomPanel.setPreferredSize(new Dimension((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(),nextButton.getHeight()));
+			bottomPanel.setPreferredSize(bottom);
+			bottomPanel.setMaximumSize(bottomPanel.getPreferredSize());
+			choicesPanel.setPreferredSize(choice);
+			choicesPanel.setMaximumSize(choicesPanel.getPreferredSize());
+			revalidate();
 			java.awt.Rectangle r = bottomPanel.getBounds();
+			
 			panel.setPreferredSize(
 					new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), r.y + r.height));
 			panel.setSize(panel.getPreferredSize());
-
-			System.out.println(panel.getPreferredSize());
-			System.out.println(panel.getSize());
+			panel.setMinimumSize(panel.getPreferredSize());
+			panel.setMaximumSize(panel.getPreferredSize());
 			revalidate();
+//			System.out.println(choicesPanel.getSize());
+//			System.out.println(panel.getSize());
+			
 		}
 	}
 
