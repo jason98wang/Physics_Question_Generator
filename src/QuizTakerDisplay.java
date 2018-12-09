@@ -1,6 +1,9 @@
 
 //Graphics & GUI imports
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -11,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
+import com.sun.media.jfxmedia.Media;
 
 import data_structures.SimpleLinkedList;
 import sun.audio.AudioPlayer;
@@ -271,12 +276,16 @@ class QuizTakerDisplay extends JFrame {
 	}
 
 	public void playMusic() {
-		InputStream correctMusic;
 		try {
-			correctMusic = new FileInputStream(new File("CorrectSound.wav"));
-			AudioStream sounds = new AudioStream(correctMusic);
-			AudioPlayer.player.start(sounds);
-		} catch (Exception e) {}
+	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("CorrectSound.wav").getAbsoluteFile());
+	        Clip clip = AudioSystem.getClip();
+	        clip.open(audioInputStream);
+	        clip.start();
+	    } catch(Exception ex) {
+	        System.out.println("Error with playing sound.");
+	        ex.printStackTrace();
+	    }
+
 	}
 
 	public void displayNumberAnswerQuestions() {
