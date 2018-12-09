@@ -300,16 +300,16 @@ class QuizTakerDisplay extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			panel2.removeAll();
 			panel1.removeAll();
-			questionNum++;
+			
 
 			if (!right || !clicked || !finished) {
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
 				}
 				questionWrong++;
-				System.out.println("added");
+				System.out.println(rootQuestions.get(questionNum).getProblemStatement());
 			}
-
+			questionNum++;
 			if (questionNum == getQuestions().size()) {
 				new SummaryPage(wrongQuestions, student);
 				dispose();

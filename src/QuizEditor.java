@@ -602,13 +602,12 @@ public class QuizEditor extends JFrame {
 
 					// Units in subject
 					SimpleLinkedList<Unit> units = s.getUnits();
-					DefaultListModel<String> model = (DefaultListModel<String>) list.getModel();
 					u = units.get(unit.getSelectedIndex() - 1);
 					SimpleLinkedList<Question> questions = u.getQuestions();
-
+					listModel.removeAllElements();
 					// Add questions
 					for (int i = 0; i < questions.size(); i++) {
-						model.addElement(questions.get(i).getProblemStatement());
+						listModel.addElement(questions.get(i).getProblemStatement());
 					}
 				}
 			}
@@ -698,11 +697,11 @@ public class QuizEditor extends JFrame {
 				// Update pane
 				displayPane.removeAll();
 				displayPane.add(formula);
-				// if (noFormula) {
-				// displayPane.add(notFormula);
-				// } else {
-				// displayPane.add(hasFormula);
-				// }
+				 if (noFormula) {
+					 displayPane.add(notFormula);
+				 } else {
+					 displayPane.add(hasFormula);
+				 }
 
 				revalidate();
 
@@ -861,6 +860,7 @@ public class QuizEditor extends JFrame {
 						q = new Question(problemStatement, specificQuestions, specificAnswers, possibleAnswers,
 								copyBufferedImage(image));
 						image = null;
+						listModel.addElement(problemStatement);
 					} else {
 						//
 						q.setProblemStatement(enter.getText());
@@ -880,9 +880,10 @@ public class QuizEditor extends JFrame {
 						// clears everything
 						currentFormulaDisplay.setIcon(new ImageIcon());
 						enter.setText("");
+						listModel.addElement(q.getProblemStatement());
 					}
 					// Adds to list of questions and jlist which contains the questions in the unit
-					listModel.addElement(q.getProblemStatement());
+					
 					u.addQuestion(q);
 					q = null;
 					
@@ -894,9 +895,11 @@ public class QuizEditor extends JFrame {
 					editingQ = true;
 					// question that is being edited
 					editQuestion = u.getQuestions().get((list.getSelectedIndex()));
+					displayPane.removeAll();
 					displayPane.add(formula);
 					// no formula
 					if (editQuestion.isPreset()) {
+						displayPane.add(notFormula);
 						image = editQuestion.getImage();
 						SimpleLinkedList<String> questionsList = editQuestion.getSpecificQuestions();
 						SimpleLinkedList<String> answersList = editQuestion.getSpecificAnswers();
@@ -915,6 +918,7 @@ public class QuizEditor extends JFrame {
 						formulaModel.setSelectedItem("No formula (Enter answers myself)");
 					// has a formula
 					} else {
+						displayPane.add(hasFormula);
 						// update formula and problem statement
 						String editProblemStatement = editQuestion.getProblemStatement();
 						SimpleLinkedList<Symbol> list = editQuestion.getFormula();
@@ -924,7 +928,6 @@ public class QuizEditor extends JFrame {
 							editFormula.add(list.get(i));
 						}
 						q = new Question(editProblemStatement, editFormula);
-						displayPane.removeAll();
 						currentFormulaDisplay.setIcon(new ImageIcon(joinBufferedImages(editFormula)));
 						enter.setText(editProblemStatement);
 					}
@@ -981,7 +984,7 @@ public class QuizEditor extends JFrame {
 						u.removeQuestion(editQuestion);
 						u.addQuestion(q);
 						listModel.removeElement(editQuestion.getProblemStatement());
-						listModel.addElement(q.getProblemStatement());
+						listModel.addElement(problemStatement);
 					} else {
 						// there must be a formula 
 						if (q.getFormula() == null || q.getFormula().size() == 0) {
@@ -1385,7 +1388,7 @@ public class QuizEditor extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				addSubjectFrame.setVisible(false);
-				addUnit(unitList, unitModel, addSubjectFrame);
+				addUnit(null, unitList, unitModel, addSubjectFrame);
 			}
 		});
 
@@ -1415,7 +1418,7 @@ public class QuizEditor extends JFrame {
 				addSubjectFrame.dispose();
 			}
 		});
-
+		
 		// add subject if it is editing
 		if (sub != null) {
 			name.setText(sub.getName());
@@ -2228,6 +2231,9 @@ public class QuizEditor extends JFrame {
 	 * @return buffered image in another bufferedimage object
 	 */
 	static BufferedImage copyBufferedImage(BufferedImage bi) {
+		if (bi == null) {
+			return bi;
+		}
 		ColorModel cm = bi.getColorModel();
 		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
 		WritableRaster raster = bi.copyData(null);
