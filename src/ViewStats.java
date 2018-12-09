@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -116,12 +117,12 @@ public class ViewStats extends JFrame {
 		all.add(Box.createHorizontalStrut(50));
 		all.add(left);
 		all.setBackground(indigo);
-		
+		stats.setAlignmentY(JLabel.CENTER_ALIGNMENT);
 		right.add(stats);
+		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
 		right.setBackground(indigo);
 		all.add(right);
 		panel.add(all);
-		System.out.println(name.getSize());
 	} // End of constructor
 
 }
