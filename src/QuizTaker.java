@@ -286,7 +286,7 @@ public class QuizTaker {
 
 		tempVariables = new SimpleLinkedList<Variable>();
 
-		ans = tempQ.getAnswer() + "";
+		ans = String.format("%.2f",tempQ.getAnswer());
 		answers.add(ans);
 
 		tempWrongAns = tempQ.getFalseAnswers();
@@ -304,7 +304,7 @@ public class QuizTaker {
 				choicesArray[j] = wrongAns[j - 1];
 			} else {
 				if (j == ansIndex) {
-					choicesArray[j] = String.format("%.2f", Double.parseDouble(ans));
+					choicesArray[j] = ans;
 					ansAdded = true;
 				} else {
 					choicesArray[j] = wrongAns[j];

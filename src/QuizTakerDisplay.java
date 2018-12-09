@@ -298,6 +298,7 @@ class QuizTakerDisplay extends JFrame {
 			buttonlist.add(button);
 			button.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
+					System.out.println(answers.get(questionNum) + " " + button.getText());
 					if (button.getText().equals(answers.get(questionNum))) {
 						correct = true;
 						finished = true;
