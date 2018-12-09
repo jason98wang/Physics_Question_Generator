@@ -28,7 +28,7 @@ class SummaryPage extends JFrame {
 
 	private JLabel title;
 	private JLabel accuracy;
-	private JButton exit, redo, homePage;
+	private JButton exit, redo, homePage, stats;
 	private Student student;
 	private SimpleLinkedList<Question> wrongQuestions;
 	private Color indigo = new Color(56, 53, 74);
@@ -92,11 +92,15 @@ class SummaryPage extends JFrame {
 		redo.setFont(font);
 		homePage = new JButton("Back to Main Page");
 		homePage.setFont(font);
+		stats = new JButton("View Stats");
+		stats.setFont(font);
+				
 
 		//adding listeners for each button 
 		redo.addActionListener(new RedoListener());
 		exit.addActionListener(new ExitListener());
 		homePage.addActionListener(new HomePageListener());
+		stats.addActionListener(new StatsListener());
 
 		//adding the three buttons on to the Jpanel with proper spacing
 		JPanel panel1 = new JPanel();
@@ -105,6 +109,8 @@ class SummaryPage extends JFrame {
 		panel1.add(redo);
 		panel1.add(Box.createRigidArea(new Dimension(100, 0)));
 		panel1.add(homePage);
+		panel1.add(Box.createRigidArea(new Dimension(100, 0)));
+		panel1.add(stats);
 		panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
 		panel1.setAlignmentX(CENTER_ALIGNMENT);
 		panel1.setBackground(indigo);
@@ -154,6 +160,16 @@ class SummaryPage extends JFrame {
 			dispose();
 		}
 
+	}
+	
+	private class StatsListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			new ViewStats(student);
+			
+		}
+		
 	}
 
 }
