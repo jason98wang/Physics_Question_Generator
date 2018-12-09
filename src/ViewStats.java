@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -8,6 +9,7 @@ import java.io.File;
 import java.util.function.DoubleToIntFunction;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -24,6 +26,7 @@ public class ViewStats extends JFrame {
 	private int studentWrongQuestions;
 	private int studentTotalQuestions;
 	private double accuracy = 0;
+	private Color orange = new Color(255, 168, 104);
 
 	private JButton back;
 
@@ -73,10 +76,12 @@ public class ViewStats extends JFrame {
 			}
 		});
 		back.setFont(font);
+		back.setContentAreaFilled(false); 
+		back.setBorder(BorderFactory.createEmptyBorder());
 
 		JLabel name = new JLabel(studentName);
-		name.setFont(new Font("Serif", Font.BOLD, 50));
-		name.setForeground(lightBlue);
+		name.setFont(new Font("Serif", Font.BOLD, 100));
+		name.setForeground(orange);
 		name.setSize(name.getPreferredSize());
 		name.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		
@@ -84,8 +89,7 @@ public class ViewStats extends JFrame {
 		panel.add(name);
 
 		JLabel stats = new JLabel(String.format("%.2f", accuracy) + "%");
-		stats.setFont(new Font("Serif", Font.BOLD, 50));
-		stats.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		stats.setFont(new Font("Serif", Font.BOLD, 150));
 		stats.setHorizontalAlignment(JLabel.CENTER);
 		stats.setForeground(lightBlue);
 
@@ -102,21 +106,23 @@ public class ViewStats extends JFrame {
 		left.add(wrong);
 		left.add(Box.createRigidArea(new Dimension(0, 100)));
 		left.add(total);
-		left.add(Box.createRigidArea(new Dimension(0, 10)));
+		left.add(Box.createRigidArea(new Dimension(0, 100)));
 		left.add(back);
 		left.setBackground(indigo);
 
-		panel.add(Box.createRigidArea(new Dimension(0, 200)));
+		panel.add(Box.createRigidArea(new Dimension(0, 100)));
+		
 		JPanel all = new JPanel();
 		all.setLayout(new BoxLayout(all, BoxLayout.X_AXIS));
 		all.add(Box.createHorizontalStrut(50));
 		all.add(left);
 		all.setBackground(indigo);
+		stats.setAlignmentY(JLabel.CENTER_ALIGNMENT);
 		right.add(stats);
+		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
 		right.setBackground(indigo);
 		all.add(right);
 		panel.add(all);
-		System.out.println(name.getSize());
 	} // End of constructor
 
 }
