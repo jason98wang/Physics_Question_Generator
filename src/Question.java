@@ -56,6 +56,7 @@ public class Question {
 	}
 
 	Question(String problemStatement, SimpleLinkedList<String> specificQuestions, SimpleLinkedList<String> specificAnswers, SimpleLinkedList<String> possibleAnswers, BufferedImage image) {
+		this.problemStatement = problemStatement;
 		this.specificQuestions = specificQuestions;
 		this.specificAnswers = specificAnswers;
 		this.possibleAnswers = possibleAnswers;
@@ -167,10 +168,10 @@ public class Question {
 	 * @return answer, the double value representing the answer to the question with the randomized variable values
 	 */
 	public double getAnswer() {
-
+		
 		boolean previouslyFound;
 		int previouslyFoundAt = 0;
-
+		
 		//Randomize values of variables in formula (besides pi, which remains as pi)
 		for (int i = 0; i < formula.size(); i++) {
 			previouslyFound = false; //Reset flag to false
