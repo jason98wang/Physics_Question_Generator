@@ -73,6 +73,7 @@ class QuizTakerDisplay extends JFrame {
 	private static Student student;
 	private boolean right = true;
 	private boolean clicked = false;
+	private boolean finished = false;
 
 	private SimpleLinkedList<JButton> buttonList = new SimpleLinkedList<JButton>();
 
@@ -154,6 +155,7 @@ class QuizTakerDisplay extends JFrame {
 						//changing color of button to green if question is correct
 
 						correct = true;
+						finished = true;
 						for (int i = 0; i < buttonlist.size(); i++) {
 							if ((buttonlist.get(i).getBackground()) != defaultColor) {
 								right = false;
@@ -300,7 +302,7 @@ class QuizTakerDisplay extends JFrame {
 			panel1.removeAll();
 			questionNum++;
 
-			if (!right || !clicked) {
+			if (!right || !clicked || !finished) {
 				if (!wrongQuestions.contain(rootQuestions.get(questionNum))) {
 					wrongQuestions.add(rootQuestions.get(questionNum));
 				}
@@ -327,6 +329,7 @@ class QuizTakerDisplay extends JFrame {
 								.equals(String.format("%.2f", Double.parseDouble(answers.get(questionNum))))) {
 
 							correct = true;
+							finished = true;
 							//NEED TO CHANGE
 							for (int i = 0; i < buttonlist.size(); i++) {
 								if ((buttonlist.get(i).getBackground()) != defaultColor) {
@@ -349,6 +352,7 @@ class QuizTakerDisplay extends JFrame {
 
 			right = true;
 			clicked = false;
+			finished = false;
 
 			ids = variableIDs.get(questionNum);
 			values = variableValues.get(questionNum);
