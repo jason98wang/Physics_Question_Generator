@@ -104,12 +104,13 @@ public class Question {
 		String[][] questions = new String[num][5];
 		int rand;
 		boolean repeatedQuestion;
+		
 		for (int i = 0; i < num; i++) {
 			do {
 				repeatedQuestion = false;
 				rand = (int)(Math.round(Math.random()*(specificQuestions.size()-1)));
 				for (int j = 0; j < specificQuestions.size(); j++) {
-					if (specificQuestions.get(j).equals(specificQuestions.get(rand))) {
+					if (rand != j && specificQuestions.get(j).equals(specificQuestions.get(rand))) {
 						repeatedQuestion = true;
 					}
 				}
@@ -135,8 +136,8 @@ public class Question {
 						repeatedChoice = false;
 						rand = (int)(Math.round(Math.random()*(possibleAnswers.size()-1)));
 						for (int k = 2; k < 5; k++) {
-							if (questions[k] != null) {
-								if (questions[k].equals(possibleAnswers.get(rand))) {
+							if (questions[i][k] != null) {
+								if (questions[i][k].equals(possibleAnswers.get(rand))) {
 									repeatedQuestion = true;
 								}
 							}
@@ -146,6 +147,7 @@ public class Question {
 				}
 			}
 			//Insert false answers
+			
 		}
 		return questions;
 	}
