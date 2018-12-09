@@ -1,6 +1,20 @@
 
 //Graphics & GUI imports
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+//Keyboard imports
+import java.io.File;
+
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -13,21 +27,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import data_structures.SimpleLinkedList;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-
-import java.awt.Toolkit;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-//Keyboard imports
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 
 class QuizTakerDisplay extends JFrame {
 
@@ -271,11 +270,11 @@ class QuizTakerDisplay extends JFrame {
 	}
 
 	public void playMusic() {
-		InputStream correctMusic;
 		try {
-			correctMusic = new FileInputStream(new File("CorrectSound.wav"));
-			AudioStream sounds = new AudioStream(correctMusic);
-			AudioPlayer.player.start(sounds);
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File("CorrectSound.wav"));
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioIn);
+			clip.start();
 		} catch (Exception e) {}
 	}
 
