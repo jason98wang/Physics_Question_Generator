@@ -393,7 +393,9 @@ class QuizTakerDisplay extends JFrame {
 			clicked = false;
 			finished = false;
 		
-			questionLabel.setText("<html><div style='text-align: center;'>" + getQuestionStatment().get(questionNum) + "</div></html");
+			
+			//questionLabel.setText("<html><div style='text-align: center;'>" + getQuestionStatment().get(questionNum) + "</div></html");
+			questionLabel = new JLabel("<html><div style='text-align: center;'>" + getQuestionStatment().get(questionNum) + "</div></html");
 			System.out.println(questionLabel.size());
 			questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
 					(int) (Math.ceil(
