@@ -60,9 +60,8 @@ class QuizTakerDisplay extends JFrame {
 	private int questionNum = 0;
 	private String[] ids;
 	private double[] values;
-	private double[][] wrongAnswer;
 	private static int questionWrong;
-	private static SimpleLinkedList<String> questions;
+	private static SimpleLinkedList<String> questionStatement;
 	private static SimpleLinkedList<Question> wrongQuestions;
 	private SimpleLinkedList<String> answers;
 	private SimpleLinkedList<String[]> choices;
@@ -82,7 +81,7 @@ class QuizTakerDisplay extends JFrame {
 	QuizTakerDisplay(SimpleLinkedList<String> question, SimpleLinkedList<String[]> choices,
 			SimpleLinkedList<String> answers, SimpleLinkedList<String[]> variableIDs,
 			SimpleLinkedList<double[]> variableValues, SimpleLinkedList<Question> rootQuestions, Student student) {
-		
+
 		super("Practice Like A Physicist");
 		// Set the frame to full screen
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -133,7 +132,7 @@ class QuizTakerDisplay extends JFrame {
 		// Make the frame visible
 		this.setVisible(true);
 
-		this.questions = question;
+		this.questionStatement = question;
 		this.choices = choices;
 		this.answers = answers;
 		this.variableIDs = variableIDs;
@@ -143,14 +142,14 @@ class QuizTakerDisplay extends JFrame {
 		// creating buttons for each choice based on number of options
 		panel1 = new JPanel();
 		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
-		
+
 		panel1 = new JPanel();
 		panel2 = new JPanel();
 		panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
 		panel2.setBackground(indigo);
 		if (variableIDs.get(questionNum) == null) {
 			displayWordAnswerQuestions();
-			System.out.println("word");
+			//panel2.add(new JLabel (new ImageIcon(rootQuestions.get(questionNum).getImage())));
 		} else {
 			displayNumberAnswerQuestions();
 			//creating panel for the variables 			
@@ -174,8 +173,6 @@ class QuizTakerDisplay extends JFrame {
 
 			System.out.println("num");
 		}
-		
-	
 
 		nextButton = new JButton();
 		try {
@@ -188,11 +185,11 @@ class QuizTakerDisplay extends JFrame {
 		exitButton = new JButton("Exit");
 
 		questionLabel = new JLabel(
-				"<html><div style='text-align: center;'>" + getQuestions().get(questionNum) + "</div></html");
+				"<html><div style='text-align: center;'>" + getQuestionStatment().get(questionNum) + "</div></html");
 		questionLabel.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
 		questionLabel.setHorizontalAlignment(JLabel.CENTER);
 
-		double lengthOnRow = Math.ceil(getQuestions().get(questionNum).length() / 3.00);
+		double lengthOnRow = Math.ceil(getQuestionStatment().get(questionNum).length() / 3.00);
 
 		int size;
 
@@ -234,7 +231,7 @@ class QuizTakerDisplay extends JFrame {
 		//nextButton.setAlignmentX(JButton.LEFT_ALIGNMENT);
 		exitButton.setFont(font3);
 		exitButton.addActionListener(new ExitButtonListener());
-		
+
 		panel3.setBackground(indigo);
 		panel3.setOpaque(true);
 		panel3.setLayout(new BoxLayout(panel3, BoxLayout.X_AXIS));
@@ -266,8 +263,8 @@ class QuizTakerDisplay extends JFrame {
 
 	} // End of constructor
 
-	public static SimpleLinkedList<String> getQuestions() {
-		return questions;
+	public static SimpleLinkedList<String> getQuestionStatment() {
+		return questionStatement;
 	}
 
 	public static SimpleLinkedList<Question> getWrongQuestions() {
@@ -370,7 +367,7 @@ class QuizTakerDisplay extends JFrame {
 				questionWrong++;
 			}
 			questionNum++;
-			if (questionNum == getQuestions().size()) {
+			if (questionNum == getQuestionStatment().size()) {
 				new SummaryPage(wrongQuestions, student);
 				dispose();
 				return;
@@ -378,6 +375,8 @@ class QuizTakerDisplay extends JFrame {
 
 			if (variableIDs.get(questionNum) == null) {
 				displayWordAnswerQuestions();
+
+				//panel2.add(new JLabel (new ImageIcon(rootQuestions.get(questionNum).getImage())));
 			} else {
 				displayNumberAnswerQuestions();
 				ids = variableIDs.get(questionNum);
@@ -397,15 +396,13 @@ class QuizTakerDisplay extends JFrame {
 				}
 			}
 
-
 			right = true;
 			clicked = false;
 			finished = false;
 
-
 			questionLabel.setText("<html><div style='text-align: center;'>" +
 
-					getQuestions().get(questionNum) + "</div></html");
+					getQuestionStatment().get(questionNum) + "</div></html");
 			questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
 					(int) (Math.ceil(
 							questionLabel.getPreferredSize().getHeight() * (questionLabel.getPreferredSize().getWidth()
