@@ -104,7 +104,7 @@ public class Question {
 		String[][] questions = new String[num][5];
 		int rand;
 		boolean repeatedQuestion;
-		
+
 		for (int i = 0; i < num; i++) {
 			do {
 				repeatedQuestion = false;
@@ -115,41 +115,19 @@ public class Question {
 					}
 				}
 			} while (repeatedQuestion);
+
 			questions[i][0] = specificQuestions.get(rand);
 			questions[i][1] = specificAnswers.get(rand);
-			if (possibleAnswers.size() == 1) {
-				questions[i][2] = possibleAnswers.get(0);
-				questions[i][3] = possibleAnswers.get(0);
-				questions[i][4] = possibleAnswers.get(0);
-			} else if (possibleAnswers.size() == 2) {
-				questions[i][2] = possibleAnswers.get(0);
-				questions[i][3] = possibleAnswers.get(1);
-				questions[i][4] = possibleAnswers.get(0);
-			} else if (possibleAnswers.size() == 3) {
-				questions[i][2] = possibleAnswers.get(0);
-				questions[i][3] = possibleAnswers.get(1);
-				questions[i][4] = possibleAnswers.get(2);
-			} else { //Randomize all possibleChoices
-				boolean repeatedChoice;
-				for (int j = 2; j < 5; j++) {
-					do {
-						repeatedChoice = false;
-						rand = (int)(Math.round(Math.random()*(possibleAnswers.size()-1)));
-						for (int k = 2; k < 5; k++) {
-							if (questions[i][k] != null) {
-								if (questions[i][k].equals(possibleAnswers.get(rand))) {
-									repeatedChoice = true;
-								}
-							}
-						}
-						if ((possibleAnswers.get(rand)).equals(questions[i][1])) {
-							repeatedChoice = true;
-						}
-					} while (repeatedChoice);
-					questions[i][j] = possibleAnswers.get(rand);
+
+			boolean[] repeated = new boolean[possibleAnswers.size()];
+			repeated[rand] = true;
+			for (int j = 2; j < 5; j++) {
+				while (repeated[rand]) {
+					rand = (int)(Math.random()*(possibleAnswers.size()));
 				}
+				repeated[rand] = true;
+				questions[i][j] = possibleAnswers.get(rand);
 			}
-			
 		}
 		return questions;
 	}
@@ -172,10 +150,10 @@ public class Question {
 	 * @return answer, the double value representing the answer to the question with the randomized variable values
 	 */
 	public double getAnswer() {
-		
+
 		boolean previouslyFound;
 		int previouslyFoundAt = 0;
-		
+
 		//Randomize values of variables in formula (besides pi, which remains as pi)
 		for (int i = 0; i < formula.size(); i++) {
 			previouslyFound = false; //Reset flag to false
