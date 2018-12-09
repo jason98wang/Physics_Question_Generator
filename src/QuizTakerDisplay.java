@@ -132,6 +132,37 @@ class QuizTakerDisplay extends JFrame {
 		this.variableIDs = variableIDs;
 		this.variableValues = variableValues;
 		this.rootQuestions = rootQuestions;
+		
+		//traverse and make the longest question be at the top of the list
+				if (question.size() > 1) {
+					int max = -1;
+					int index = 0;
+					for (int i = 0; i < question.size(); i++) {
+						if (question.get(i).length() > max) {
+							max = question.get(i).length();
+							index = i;
+						}
+					}
+					
+					question.addToFront(question.get(index));
+					question.remove(index + 1);
+
+					choices.addToFront(choices.get(index));
+					choices.remove(index + 1);
+
+					answers.addToFront(answers.get(index));
+					answers.remove(index + 1);
+
+					variableIDs.addToFront(variableIDs.get(index));
+					variableIDs.remove(index + 1);
+
+					variableValues.addToFront(variableValues.get(index));
+					variableValues.remove(index + 1);
+
+					rootQuestions.addToFront(rootQuestions.get(index));
+					rootQuestions.remove(index + 1);
+
+				}
 
 		// creating buttons for each choice based on number of options
 		choicesPanel = new JPanel();
@@ -146,7 +177,7 @@ class QuizTakerDisplay extends JFrame {
 			displayWordAnswerQuestions();
 			
 			//adding the custom inputed picture
-			Image pic = (rootQuestions.get(questionNum).getImage()).getScaledInstance(150, 120, Image.SCALE_DEFAULT);
+			Image pic = (rootQuestions.get(questionNum).getImage()).getScaledInstance(300, 120, Image.SCALE_DEFAULT);
 			variablePanel.add(new JLabel (new ImageIcon(pic)));
 		} else {
 			displayNumberAnswerQuestions();
@@ -428,7 +459,7 @@ class QuizTakerDisplay extends JFrame {
 				displayWordAnswerQuestions();
 
 				//add the picture added by the teacher
-				Image pic = (rootQuestions.get(questionNum).getImage()).getScaledInstance(150, 120, Image.SCALE_DEFAULT);
+				Image pic = (rootQuestions.get(questionNum).getImage()).getScaledInstance(300, 120, Image.SCALE_DEFAULT);
 				variablePanel.add(new JLabel (new ImageIcon(pic)));
 			} else {
 				//display the number answer question

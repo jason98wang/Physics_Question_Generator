@@ -14,6 +14,10 @@ public class SimpleLinkedList<E> {
 			tail = node;
 		}
 	}
+	
+	public void addToFront(E item) {
+		head = new Node<E>(item, head);
+	}
 
 	public E get(int index) {
 		Node<E> tempNode = head;
