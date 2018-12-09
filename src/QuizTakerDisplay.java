@@ -204,6 +204,7 @@ class QuizTakerDisplay extends JFrame {
 			nextButton = new JButton(new ImageIcon(ImageIO.read(new File("nextButton.png"))));
 		} catch (Exception ex) {
 		}
+		nextButton.setContentAreaFilled(false); 
 		exitButton = new JButton("Exit");
 
 		questionLabel = new JLabel(
