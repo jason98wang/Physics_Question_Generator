@@ -24,6 +24,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -48,7 +49,8 @@ class QuizTakerDisplay extends JFrame {
 
 	private long time;
 
-	private JPanel variablePanel;
+	private JPanel variablePanel, bottomPanel;
+	private Component c;
 	private Font font1 = new Font("Serif", Font.BOLD, 100);
 	private Font font2 = new Font("Arial", Font.ITALIC, 50);
 	private Font font3 = new Font("Serif", Font.BOLD, 25);
@@ -222,16 +224,17 @@ class QuizTakerDisplay extends JFrame {
 		panel.setBackground(indigo);
 
 		//create panel to add the back button and the exit butotn 
-		JPanel bottomPanel = new JPanel();
+		bottomPanel = new JPanel();
 		bottomPanel.setBackground(indigo);
 		bottomPanel.setOpaque(true);
 		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.X_AXIS));
 		bottomPanel.add(Box.createHorizontalStrut(50));
 		bottomPanel.add(exitButton);
-		Component c = Box.createHorizontalStrut((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth());
+		c = Box.createHorizontalStrut((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth());
 		bottomPanel.add(c);
 		bottomPanel.add(nextButton);
 		bottomPanel.add(Box.createHorizontalStrut(50));
+		bottomPanel.setBackground(indigo);
 		panel.add(bottomPanel);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
@@ -254,7 +257,6 @@ class QuizTakerDisplay extends JFrame {
 		wrongQuestions = new SimpleLinkedList<Question>();
 
 		this.student = student;
-
 	} // End of constructor
 
 	/**
@@ -388,7 +390,8 @@ class QuizTakerDisplay extends JFrame {
 			//adding button to the choicesPanel
 			choicesPanel.add(button);
 			choicesPanel.add(Box.createRigidArea(new Dimension(100, 0)));
-			choicesPanel.setBackground(indigo);
+			choicesPanel.setBackground(null);
+			
 		}
 	}
 
@@ -462,14 +465,23 @@ class QuizTakerDisplay extends JFrame {
 			int width = g.getFontMetrics(questionLabel.getFont()).stringWidth(getQuestionStatment().get(questionNum));
 			int height = g.getFontMetrics(questionLabel.getFont()).getHeight();
 //			System.out.println(x);
+			System.out.println((int) (Math.ceil(
+					(double)width / Toolkit.getDefaultToolkit().getScreenSize().getWidth())));
 			questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
-					height * (int) (Math.ceil(
+					100 + height * (int) (Math.ceil(
 							(double)width / Toolkit.getDefaultToolkit().getScreenSize().getWidth()))));
-			questionLabel.setMinimumSize(questionLabel.getPreferredSize());
-
+			questionLabel.setSize(questionLabel.getPreferredSize());
+			
 			//change the question number of the label
 			label.setText("Question #" + Integer.toString(questionNum + 1));
+			bottomPanel.setPreferredSize(new Dimension((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(),nextButton.getHeight()));
+			java.awt.Rectangle r = bottomPanel.getBounds();
+			panel.setPreferredSize(
+					new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), r.y + r.height));
+			panel.setSize(panel.getPreferredSize());
 
+			System.out.println(panel.getPreferredSize());
+			System.out.println(panel.getSize());
 			revalidate();
 		}
 	}
