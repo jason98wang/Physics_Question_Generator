@@ -116,17 +116,33 @@ public class Question {
 				}
 			} while (repeatedQuestion);
 
-			questions[i][0] = specificQuestions.get(rand);
-			questions[i][1] = specificAnswers.get(rand);
-
-			boolean[] repeated = new boolean[possibleAnswers.size()];
-			repeated[rand] = true;
-			for (int j = 2; j < 5; j++) {
-				while (repeated[rand]) {
-					rand = (int)(Math.random()*(possibleAnswers.size()));
+			if (possibleAnswers.size() < 4) {
+				if (possibleAnswers.size() == 1) {
+					questions[i][2] = possibleAnswers.get(0);
+					questions[i][3] = possibleAnswers.get(0);
+					questions[i][4] = possibleAnswers.get(0);
+				} else if (possibleAnswers.size() == 2) {
+					questions[i][2] = possibleAnswers.get(0);
+					questions[i][3] = possibleAnswers.get(1);
+					questions[i][4] = possibleAnswers.get(0);
+				} else if (possibleAnswers.size() == 3) {
+					questions[i][2] = possibleAnswers.get(0);
+					questions[i][3] = possibleAnswers.get(1);
+					questions[i][4] = possibleAnswers.get(2);
 				}
+			} else {
+				questions[i][0] = specificQuestions.get(rand);
+				questions[i][1] = specificAnswers.get(rand);
+
+				boolean[] repeated = new boolean[possibleAnswers.size()];
 				repeated[rand] = true;
-				questions[i][j] = possibleAnswers.get(rand);
+				for (int j = 2; j < 5; j++) {
+					while (repeated[rand]) {
+						rand = (int)(Math.random()*(possibleAnswers.size()));
+					}
+					repeated[rand] = true;
+					questions[i][j] = possibleAnswers.get(rand);
+				}
 			}
 		}
 		return questions;
