@@ -42,19 +42,21 @@ public class ViewStats extends JFrame {
 		// Set up the main panel
 		JPanel panel = new JPanel();
 		panel.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
-		panel.setLayout(new BoxLayout(panel, getDefaultCloseOperation()));
+//		panel.setMinimumSize(panel.getPreferredSize());
+		panel.setSize(panel.getPreferredSize());
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		this.setUndecorated(true);
-
+		
 		// Focus the frame
 		this.requestFocusInWindow();
 
 		// Make the frame visible
 		this.setVisible(true);
 
-		this.add(panel);
+		this.setContentPane(panel);
 
 		JPanel left = new JPanel();
-		left.setLayout(new BoxLayout(left, getDefaultCloseOperation()));
+		left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
 		JPanel right = new JPanel();
 
 		this.student = student;
@@ -63,54 +65,58 @@ public class ViewStats extends JFrame {
 		studentTotalQuestions = student.getTotalQuestions();
 		accuracy = ((studentTotalQuestions - studentWrongQuestions) / (double) studentTotalQuestions) * 100.00;
 
-		try {
-			back = new JButton(new ImageIcon(ImageIO.read(new File("BackButton.png"))));
-		} catch (Exception ex) {
-			back.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					dispose();
-				}
-			});
-		}
+
+		back = new JButton(new ImageIcon("BackButton.png"));
+		back.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+			}
+		});
 		back.setFont(font);
 
 		JLabel name = new JLabel(studentName);
-		name.setFont(new Font("Serif", Font.BOLD, 100));
-		name.setAlignmentX(JLabel.CENTER_ALIGNMENT);
-		name.setHorizontalAlignment(JLabel.CENTER);
+		name.setFont(new Font("Serif", Font.BOLD, 50));
 		name.setForeground(lightBlue);
-
+		name.setSize(name.getPreferredSize());
+		name.setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		
 		panel.setBackground(indigo);
 		panel.add(name);
 
 		JLabel stats = new JLabel(String.format("%.2f", accuracy) + "%");
-		stats.setFont(new Font("Serif", Font.BOLD, 100));
+		stats.setFont(new Font("Serif", Font.BOLD, 50));
 		stats.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		stats.setHorizontalAlignment(JLabel.CENTER);
 		stats.setForeground(lightBlue);
 
 		JLabel wrong = new JLabel("Total Incorrect: " + Integer.toString(studentWrongQuestions));
-		wrong.setFont(new Font("Serif", Font.BOLD, 100));
+		wrong.setFont(new Font("Serif", Font.BOLD, 50));
 		wrong.setHorizontalAlignment(JLabel.CENTER);
 		wrong.setForeground(lightBlue);
 
 		JLabel total = new JLabel("Total Questions: " + Integer.toString(studentTotalQuestions));
-		total.setFont(new Font("Serif", Font.BOLD, 100));
+		total.setFont(new Font("Serif", Font.BOLD, 50));
 		total.setHorizontalAlignment(JLabel.CENTER);
 		total.setForeground(lightBlue);
 
 		left.add(wrong);
-		left.add(Box.createRigidArea(new Dimension(0, 300)));
+		left.add(Box.createRigidArea(new Dimension(0, 100)));
 		left.add(total);
 		left.add(Box.createRigidArea(new Dimension(0, 10)));
 		left.add(back);
 		left.setBackground(indigo);
 
 		panel.add(Box.createRigidArea(new Dimension(0, 200)));
-		panel.add(left);
-
+		JPanel all = new JPanel();
+		all.setLayout(new BoxLayout(all, BoxLayout.X_AXIS));
+		all.add(Box.createHorizontalStrut(50));
+		all.add(left);
+		all.setBackground(indigo);
 		right.add(stats);
-
+		right.setBackground(indigo);
+		all.add(right);
+		panel.add(all);
+		System.out.println(name.getSize());
 	} // End of constructor
 
 }

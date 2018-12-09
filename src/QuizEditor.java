@@ -1259,7 +1259,7 @@ public class QuizEditor extends JFrame {
 		
 		// frame setup
 		JFrame addSubjectFrame = new JFrame("Add Subject");
-		addSubjectFrame.setSize(500, 700);
+		addSubjectFrame.setSize(550, 700);
 		addSubjectFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		addSubjectFrame.setUndecorated(true);
 		
@@ -1452,6 +1452,7 @@ public class QuizEditor extends JFrame {
 		contentPanel.add(cancel);
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.setBackground(indigo);
+		contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		// this.setPreferredSize(preferredSize);
 
@@ -1471,7 +1472,7 @@ public class QuizEditor extends JFrame {
 
 		// Main frame
 		JFrame addUnitFrame = new JFrame("Add Unit");
-		addUnitFrame.setSize(500, 600);
+		addUnitFrame.setSize(550, 600);
 		addUnitFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		addUnitFrame.setUndecorated(true);
 		// window listener to set the subject creating frame or the main frame to visible depending on which frame the method was called from
@@ -1612,9 +1613,8 @@ public class QuizEditor extends JFrame {
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 		contentPanel.setBackground(indigo);
-
+		contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
-
 		addUnitFrame.setContentPane(scroll);
 		addUnitFrame.setVisible(true);
 	}
@@ -1756,7 +1756,6 @@ public class QuizEditor extends JFrame {
 		contentPane.add(scrollPane);
 		contentPane.add(Box.createHorizontalStrut(50));
 		contentPane.setBackground(indigo);
-
 		previousFormulaFrame.setContentPane(contentPane);
 		previousFormulaFrame.setVisible(true);
 		revalidate();

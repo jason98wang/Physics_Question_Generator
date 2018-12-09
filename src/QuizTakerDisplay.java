@@ -1,6 +1,7 @@
 
 //Graphics & GUI imports
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -205,6 +206,7 @@ class QuizTakerDisplay extends JFrame {
 		} catch (Exception ex) {
 		}
 		nextButton.setContentAreaFilled(false); 
+		nextButton.setBorder(BorderFactory.createEmptyBorder());
 		exitButton = new JButton("Exit");
 
 		questionLabel = new JLabel(
