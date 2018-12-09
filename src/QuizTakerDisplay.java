@@ -1,10 +1,16 @@
-
+/*
+ * [QuizTakerDisplay.java]
+ * The User Interface where the user takes the quiz
+ * Author: Jason Wang
+ * Nov. 20, 2018
+ */
 //Imports
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -136,7 +142,10 @@ class QuizTakerDisplay extends JFrame {
 		//determine if the current question contains a number or word answer
 		if (variableIDs.get(questionNum) == null) {
 			displayWordAnswerQuestions();
-			//variablePanel.add(new JLabel (new ImageIcon(rootQuestions.get(questionNum).getImage())));
+			
+			//adding the custom inputed picture
+			Image pic = (rootQuestions.get(questionNum).getImage()).getScaledInstance(150, 120, Image.SCALE_DEFAULT);
+			variablePanel.add(new JLabel (new ImageIcon(pic)));
 		} else {
 			displayNumberAnswerQuestions();
 			//creating panel for the variables and displaying them		
@@ -416,7 +425,8 @@ class QuizTakerDisplay extends JFrame {
 				displayWordAnswerQuestions();
 
 				//add the picture added by the teacher
-				//variablePanel.add(new JLabel (new ImageIcon(rootQuestions.get(questionNum).getImage())));
+				Image pic = (rootQuestions.get(questionNum).getImage()).getScaledInstance(150, 120, Image.SCALE_DEFAULT);
+				variablePanel.add(new JLabel (new ImageIcon(pic)));
 			} else {
 				//display the number answer question
 				displayNumberAnswerQuestions();
@@ -461,6 +471,10 @@ class QuizTakerDisplay extends JFrame {
 		}
 	}
 
+	/*
+	 * [ExitButtonListener.java]
+	 * Private class ActionListener for the exit button
+	 */
 	private class ExitButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			//dispose the window if the exit button is clicked
