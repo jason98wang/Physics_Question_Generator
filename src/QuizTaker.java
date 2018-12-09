@@ -73,18 +73,18 @@ public class QuizTaker {
 	private JComboBox<String> unit;
 	private JTextField numQuestionsField;
 
-	QuizTaker(Student student, Subject chosenSubject) {
+	///////////////////////////////////////////////////////////////////// CONSTRUCTORS///////////////////////
+
+	public QuizTaker(Student student, Subject chosenSubject) {
 		this.student = student;
 		this.chosenSubject = chosenSubject;
 		studentName = student.getName();
+		rand = new Random();
 
 		window = new JFrame();
 
 		indigo = new Color(56, 53, 74);
 		lightBlue = new Color(162, 236, 250);
-
-		////////////////////////////////////////////////// GUI
-		////////////////////////////////////////////////// STUFF/////////////////////////////////////
 
 		window.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 
@@ -157,6 +157,32 @@ public class QuizTaker {
 		window.setVisible(true);
 	}
 
+	public QuizTaker(SimpleLinkedList<Question> rootQuestions) {
+		answers = new SimpleLinkedList<String>();
+		choices = new SimpleLinkedList<String[]>();
+		problemStatements = new SimpleLinkedList<String>();
+		variableIDs = new SimpleLinkedList<String[]>();
+		variableValues = new SimpleLinkedList<double[]>();
+		questions = new SimpleLinkedList<Question>();
+
+		Question tempQ;
+
+		for (int i = 0; i < rootQuestions.size(); i++) {
+			tempQ = rootQuestions.get(i);
+
+			if (tempQ.isPreset()) {
+				addWordQuestion(tempQ);
+			} else {
+				addNumQuestion(tempQ);
+			}
+		}
+		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions, student);
+		window.dispose();
+
+	}
+
+	///////////////////////////////////////////////////////// METHODS//////////////////////////
+
 	private void addUnits() {
 
 		units = chosenSubject.getUnits();
@@ -175,180 +201,21 @@ public class QuizTaker {
 		variableValues = new SimpleLinkedList<double[]>();
 		questions = new SimpleLinkedList<Question>();
 
-		SimpleLinkedList<Symbol> formula;
-		SimpleLinkedList<Variable> tempVariables;
 		Question tempQ;
-		int ansIndex;
 
-		String[] wrongAns;
-		String[] choicesArray;
-		double[] tempWrongAns;
-		String ans;
-		String[] IDs;
-		double[] values;
-		String problemStatement;
-		boolean ansAdded;
-
-		rand = new Random();
 		rootQuestions = chosenUnit.getQuestions();
 
 		for (int i = 0; i < numQuestions; i++) {
 			tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size()));
-			tempVariables = new SimpleLinkedList<Variable>();
 
-			ans = tempQ.getAnswer() + "";
-			answers.add(ans);
-
-			tempWrongAns = tempQ.getFalseAnswers();
-			wrongAns = new String[tempWrongAns.length];
-			for (int j = 0; j < tempWrongAns.length; j++) {
-				wrongAns[j] = tempWrongAns[j] + "";
+			if (tempQ.isPreset()) {
+				addWordQuestion(tempQ);
+			} else {
+				addNumQuestion(tempQ);
 			}
-
-			choicesArray = new String[wrongAns.length + 1];
-			ansIndex = rand.nextInt(choicesArray.length);
-			ansAdded = false;
-
-			for (int j = 0; j < choicesArray.length; j++) {
-				if (ansAdded) {
-					choicesArray[j] = wrongAns[j-1];
-				} else {
-					if(j == ansIndex) {
-						choicesArray[j] = ans;
-						ansAdded = true;
-					} else {
-						choicesArray[j] = wrongAns[j];
-					}
-				}
-			}
-			choices.add(choicesArray);
-
-			problemStatement = tempQ.getProblemStatement();
-			problemStatements.add(problemStatement);
-
-			formula = tempQ.getFormula();
-			for (int j = 0; j < formula.size(); j++) {
-				if (formula.get(j) instanceof Variable) {
-					if (!((Variable) formula.get(j)).isConstant()) {
-						boolean variableUsed = false;
-						for (int k = 0; k < tempVariables.size(); k++) {
-							if (tempVariables.get(k).getId().equals(formula.get(j).getId())) {
-								variableUsed = true;
-								break;
-							}
-						}
-						if (variableUsed)
-							continue;
-						tempVariables.add((Variable) formula.get(j));
-					}
-				}
-			}
-			IDs = new String[tempVariables.size()];
-			values = new double[tempVariables.size()];
-			for (int k = 0; k < tempVariables.size(); k++) {
-				IDs[k] = tempVariables.get(k).getId();
-				values[k] = tempVariables.get(k).getValue();
-			}
-			variableIDs.add(IDs);
-			variableValues.add(values);
-
-			questions.add(new Question(problemStatement, formula));
-
 		}
-		for(int i =0;i<answers.size();i++) {
+		for (int i = 0; i < answers.size(); i++) {
 			System.out.println(answers.get(i));
-		}
-		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions, student);
-		window.dispose();
-
-	}
-
-	static void startQuiz(SimpleLinkedList<Question> rootQuestions) {
-		SimpleLinkedList<String> answers = new SimpleLinkedList<String>();
-		SimpleLinkedList<String[]> choices = new SimpleLinkedList<String[]>();
-		SimpleLinkedList<String> problemStatements = new SimpleLinkedList<String>();
-		SimpleLinkedList<String[]> variableIDs = new SimpleLinkedList<String[]>();
-		SimpleLinkedList<double[]> variableValues = new SimpleLinkedList<double[]>();
-		SimpleLinkedList<Question> questions = new SimpleLinkedList<Question>();
-
-		SimpleLinkedList<Symbol> formula;
-		SimpleLinkedList<Variable> tempVariables;
-		Question tempQ;
-		int ansIndex;
-
-		String[] wrongAns;
-		String[] choicesArray;
-		double[] tempWrongAns;
-		String ans;
-		String[] IDs;
-		double[] values;
-		String problemStatement;
-		boolean ansAdded;
-
-		rand = new Random();
-
-		for (int i = 0; i < rootQuestions.size(); i++) {
-			tempQ = rootQuestions.get(i);
-			tempVariables = new SimpleLinkedList<Variable>();
-
-			ans = tempQ.getAnswer() + "";
-			answers.add(ans);
-
-			tempWrongAns = tempQ.getFalseAnswers();
-			wrongAns = new String[tempWrongAns.length];
-			for (int j = 0; j < tempWrongAns.length; j++) {
-				wrongAns[j] = tempWrongAns[j] + "";
-			}
-
-			choicesArray = new String[wrongAns.length + 1];
-			ansIndex = rand.nextInt(choicesArray.length);
-			ansAdded = false;
-
-			for (int j = 0; j < choicesArray.length; j++) {
-				if (ansAdded) {
-					choicesArray[j] = wrongAns[j-1];
-				} else {
-					if(j == ansIndex) {
-						choicesArray[j] = ans;
-						ansAdded = true;
-					} else {
-						choicesArray[j] = wrongAns[j];
-					}
-				}
-			}
-			choices.add(choicesArray);
-
-			problemStatement = tempQ.getProblemStatement();
-			problemStatements.add(problemStatement);
-
-			formula = tempQ.getFormula();
-			for (int j = 0; j < formula.size(); j++) {
-				if (formula.get(j) instanceof Variable) {
-					if (!((Variable) formula.get(j)).isConstant()) {
-						boolean variableUsed = false;
-						for (int k = 0; k < tempVariables.size(); k++) {
-							if (tempVariables.get(k).getId().equals(formula.get(j).getId())) {
-								variableUsed = true;
-								break;
-							}
-						}
-						if (variableUsed)
-							continue;
-						tempVariables.add((Variable) formula.get(j));
-					}
-				}
-			}
-			IDs = new String[tempVariables.size()];
-			values = new double[tempVariables.size()];
-			for (int k = 0; k < tempVariables.size(); k++) {
-				IDs[k] = tempVariables.get(k).getId();
-				values[k] = tempVariables.get(k).getValue();
-			}
-			variableIDs.add(IDs);
-			variableValues.add(values);
-
-			questions.add(new Question(problemStatement, formula));
-
 		}
 		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions, student);
 		window.dispose();
@@ -357,6 +224,103 @@ public class QuizTaker {
 
 	private void findNumEachQuestions() {
 
+		numNumQuestions = rand.nextInt(numQuestions + 1);
+		numWordQuestions = numQuestions - numNumQuestions;
+
+	}
+
+	private void addWordQuestion(Question tempQ) {
+
+		if (numWordQuestions == 0) {
+			return;
+		}
+
+		int num = rand.nextInt(numWordQuestions) + 1;
+		numWordQuestions -= num;
+		String[][] stringQuestions = tempQ.getStringQuestions(num);
+
+		for (int row = 0; row < stringQuestions.length; row++) {
+			for (int col = 0; col < stringQuestions[0].length; col++) {
+
+			}
+		}
+
+	}
+
+	private void addNumQuestion(Question tempQ) {
+
+		SimpleLinkedList<Symbol> formula;
+		SimpleLinkedList<Variable> tempVariables;
+
+		int ansIndex;
+		String[] wrongAns;
+		String[] choicesArray;
+		double[] tempWrongAns;
+		String ans;
+		String[] IDs;
+		double[] values;
+		String problemStatement;
+		boolean ansAdded;
+
+		tempVariables = new SimpleLinkedList<Variable>();
+
+		ans = tempQ.getAnswer() + "";
+		answers.add(ans);
+
+		tempWrongAns = tempQ.getFalseAnswers();
+		wrongAns = new String[tempWrongAns.length];
+		for (int j = 0; j < tempWrongAns.length; j++) {
+			wrongAns[j] = tempWrongAns[j] + "";
+		}
+
+		choicesArray = new String[wrongAns.length + 1];
+		ansIndex = rand.nextInt(choicesArray.length);
+		ansAdded = false;
+
+		for (int j = 0; j < choicesArray.length; j++) {
+			if (ansAdded) {
+				choicesArray[j] = wrongAns[j - 1];
+			} else {
+				if (j == ansIndex) {
+					choicesArray[j] = ans;
+					ansAdded = true;
+				} else {
+					choicesArray[j] = wrongAns[j];
+				}
+			}
+		}
+		choices.add(choicesArray);
+
+		problemStatement = tempQ.getProblemStatement();
+		problemStatements.add(problemStatement);
+
+		formula = tempQ.getFormula();
+		for (int j = 0; j < formula.size(); j++) {
+			if (formula.get(j) instanceof Variable) {
+				if (!((Variable) formula.get(j)).isConstant()) {
+					boolean variableUsed = false;
+					for (int k = 0; k < tempVariables.size(); k++) {
+						if (tempVariables.get(k).getId().equals(formula.get(j).getId())) {
+							variableUsed = true;
+							break;
+						}
+					}
+					if (variableUsed)
+						continue;
+					tempVariables.add((Variable) formula.get(j));
+				}
+			}
+		}
+		IDs = new String[tempVariables.size()];
+		values = new double[tempVariables.size()];
+		for (int k = 0; k < tempVariables.size(); k++) {
+			IDs[k] = tempVariables.get(k).getId();
+			values[k] = tempVariables.get(k).getValue();
+		}
+		variableIDs.add(IDs);
+		variableValues.add(values);
+
+		questions.add(new Question(problemStatement, formula));
 	}
 
 	////////////////////////////////////////////////////// PRIVATE
@@ -407,6 +371,7 @@ public class QuizTaker {
 			}
 
 			if (validNum && (numQuestions >= 1)) {
+				findNumEachQuestions();
 				startQuiz();
 			} else {
 				JOptionPane.showMessageDialog(null, "Invalid # of Questions");
@@ -444,6 +409,7 @@ public class QuizTaker {
 				}
 
 				if (validNum && (numQuestions >= 1)) {
+					findNumEachQuestions();
 					startQuiz();
 				} else {
 					JOptionPane.showMessageDialog(null, "Invalid # of Questions");
