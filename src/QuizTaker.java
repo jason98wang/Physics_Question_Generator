@@ -20,6 +20,7 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -141,7 +142,9 @@ public class QuizTaker {
 		mainPanel.add(title);
 		mainPanel.add(optionsPanel);
 		mainPanel.add(start);
+		mainPanel.add(Box.createRigidArea(new Dimension(0, 25)));
 		mainPanel.add(exit);
+		mainPanel.add(Box.createRigidArea(new Dimension(0, 25)));
 		mainPanel.add(stats);
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0,
 				(int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 5), 0));

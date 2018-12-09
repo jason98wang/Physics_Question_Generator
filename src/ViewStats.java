@@ -129,7 +129,7 @@ public class ViewStats extends JFrame {
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.X_AXIS));
 		leftPanel.setBackground(indigo);
 		panel.add(leftPanel);
-		panel.add(Box.createRigidArea(new Dimension(0,150)));
+		panel.add(Box.createRigidArea(new Dimension(0,50)));
 			
 		//creating a panel to add the backButton and align it to the left side
 		JPanel backButtonPanel = new JPanel();

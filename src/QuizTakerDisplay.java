@@ -112,6 +112,8 @@ class QuizTakerDisplay extends JFrame {
 					}
 				}
 
+				g.setColor(lightBlue);
+				g.drawString("Current User: " + student.getName(), window.getHeight() / 50, window.getHeight() / 50);
 				repaint();
 			}
 		};
@@ -177,7 +179,7 @@ class QuizTakerDisplay extends JFrame {
 			displayWordAnswerQuestions();
 			
 			//adding the custom inputed picture
-			Image pic = (rootQuestions.get(questionNum).getImage()).getScaledInstance(300, 120, Image.SCALE_DEFAULT);
+			Image pic = (rootQuestions.get(questionNum).getImage()).getScaledInstance(500, 300, Image.SCALE_DEFAULT);
 			variablePanel.add(new JLabel (new ImageIcon(pic)));
 		} else {
 			displayNumberAnswerQuestions();
@@ -235,7 +237,7 @@ class QuizTakerDisplay extends JFrame {
 		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		panel.add(Box.createRigidArea(new Dimension(0, x)));
 		panel.add(label);
-		panel.add(Box.createRigidArea(new Dimension(0, x)));
+		panel.add(Box.createRigidArea(new Dimension(0, 40)));
 		questionLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
 				100 + (int) (Math.ceil(
@@ -460,7 +462,7 @@ class QuizTakerDisplay extends JFrame {
 				displayWordAnswerQuestions();
 
 				//add the picture added by the teacher
-				Image pic = (rootQuestions.get(questionNum).getImage()).getScaledInstance(300, 120, Image.SCALE_DEFAULT);
+				Image pic = (rootQuestions.get(questionNum).getImage()).getScaledInstance(500, 300, Image.SCALE_DEFAULT);
 				variablePanel.add(new JLabel (new ImageIcon(pic)));
 			} else {
 				//display the number answer question

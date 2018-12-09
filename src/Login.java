@@ -1,6 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -15,6 +17,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -81,10 +84,12 @@ public class Login {
 		title.setBorder(BorderFactory.createEmptyBorder(0, 0, window.getHeight() / 2, 0));
 
 		login = new JButton("LOGIN");
+		login.setFont(new Font("Arial", Font.BOLD, 30));
 		login.addActionListener(new LoginButtonActionListener());
 		login.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		exit = new JButton("EXIT");
+		exit.setFont(new Font("Arial", Font.BOLD, 30));
 		exit.addActionListener(new ExitButtonActionListener());
 		exit.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -102,7 +107,9 @@ public class Login {
 		mainPanel.add(title);
 		mainPanel.add(studentNumField);
 		mainPanel.add(passwordField);
+		mainPanel.add(Box.createRigidArea(new Dimension(0, 50)));
 		mainPanel.add(login);
+		mainPanel.add(Box.createRigidArea(new Dimension(0, 50)));
 		mainPanel.add(exit);
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, window.getHeight() / 5, 0));
 		mainPanel.setVisible(true);
