@@ -89,7 +89,7 @@ public class QuizEditor extends JFrame {
 	private boolean addQ, removeQ, editQ, newFormula, editingQ, noFormula;
 
 	// JComponents
-	private JLabel currentFormulaDisplay;
+	private JLabel currentFormulaDisplay, logo = new JLabel(new ImageIcon("logo.png"));
 	private DefaultListModel<String> listModel = new DefaultListModel<String>();
 	private JList<String> list = new JList<String>(listModel);
 	private DefaultComboBoxModel<String> subjectModel = new DefaultComboBoxModel<String>();
@@ -197,9 +197,7 @@ public class QuizEditor extends JFrame {
 		JButton clear = new JButton("Clear");
 		JButton exit = new JButton("Exit");
 
-		// Logo
-		JLabel logo = new JLabel(new ImageIcon("logo.png"));
-
+		
 		// JPanels on the min frame
 		JPanel contentPane = new JPanel();
 		JPanel midPane = new JPanel();
@@ -1183,7 +1181,7 @@ public class QuizEditor extends JFrame {
 		subjectPane.add(editSubject);
 		subjectPane.setLayout(new BoxLayout(subjectPane, BoxLayout.X_AXIS));
 		subjectPane.setPreferredSize(
-				new Dimension((int) midPane.getPreferredSize().getWidth(), (int) subject.getMinimumSize().getHeight()));
+				new Dimension((int) midPane.getMaximumSize().getWidth(), (int) subject.getMinimumSize().getHeight()));
 		subjectPane.setBackground(indigo);
 		subjectPane.setMaximumSize(subjectPane.getPreferredSize());
 		midPane.add(subjectPane);
@@ -1317,7 +1315,6 @@ public class QuizEditor extends JFrame {
 		/// Buttons
 		JButton confirm = new JButton("Confirm");
 		JButton cancel = new JButton("Cancel");
-		JLabel logo = new JLabel(new ImageIcon("logo.png"));
 		
 		
 		// Scrollable panel
@@ -1514,7 +1511,6 @@ public class QuizEditor extends JFrame {
 		});
 		// Components
 		JPanel contentPanel = new JPanel();
-		JLabel logo = new JLabel(new ImageIcon("logo.png"));
 		JLabel enterName = new JLabel("Enter unit name");
 		JLabel enterNum = new JLabel("Enter unit number");
 		JTextArea name = new JTextArea();
@@ -1671,7 +1667,6 @@ public class QuizEditor extends JFrame {
 		JList<BufferedImage> list = new JList<BufferedImage>(model);
 		JButton confirm = new JButton("Confirm formula");
 		JButton cancel = new JButton("Cancel");
-		JLabel logo = new JLabel(new ImageIcon("logo.png"));
 		JPanel buttons = new JPanel();
 		JPanel contentPanel = new JPanel();
 		JPanel contentPane = new JPanel();
@@ -1835,7 +1830,8 @@ public class QuizEditor extends JFrame {
 		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
 
 		// Formatting the layout
-		int cols = (int) Math.ceil(Math.sqrt(symbols.size() + 2)) - 1;
+		double ratio = Toolkit.getDefaultToolkit().getScreenSize().getWidth() / Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+		int cols = (int) Math.ceil(ratio * (symbols.size() + 2));
 		int rows = (int) Math.ceil((double) (symbols.size() + 2) / cols);
 		buttons.setLayout(new GridLayout(rows, cols));
 
@@ -1881,7 +1877,7 @@ public class QuizEditor extends JFrame {
 								}
 								
 								// add new symbol
-								formula.add(new Symbol(previous.getId() + between + id));
+								formula.add(new Variable(previous.getId() + between + id));
 							} else {
 								// if it is not then the previous and current number symbol are both
 								// added to the formula
@@ -1968,7 +1964,7 @@ public class QuizEditor extends JFrame {
 							if (id.charAt(id.length() - 1) >= '0' && id.charAt(id.length() - 1) <= '9') {
 								between = "";
 							}
-							formula.add(new Symbol(previous.getId() + between + constant.getText()));
+							formula.add(new Variable(previous.getId() + between + constant.getText()));
 						} else {
 							// if previous is an operation, it is re-added
 							formula.add(previous);

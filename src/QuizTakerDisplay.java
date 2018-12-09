@@ -457,11 +457,14 @@ class QuizTakerDisplay extends JFrame {
 			//change the question on question label and reformat based on the question length
 			questionLabel.setText("<html><div style='text-align: center;'>" + getQuestionStatment().get(questionNum)
 					+ "</div></html");
-		
+			questionLabel.revalidate();
+			Graphics g = questionLabel.getGraphics();
+			int width = g.getFontMetrics(questionLabel.getFont()).stringWidth(getQuestionStatment().get(questionNum));
+			int height = g.getFontMetrics(questionLabel.getFont()).getHeight();
+//			System.out.println(x);
 			questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
-					(int) (Math.ceil(
-							questionLabel.getPreferredSize().getHeight() * (questionLabel.getPreferredSize().getWidth()
-									/ Toolkit.getDefaultToolkit().getScreenSize().getWidth())))));
+					height * (int) (Math.ceil(
+							(double)width / Toolkit.getDefaultToolkit().getScreenSize().getWidth()))));
 			questionLabel.setMinimumSize(questionLabel.getPreferredSize());
 
 			//change the question number of the label
