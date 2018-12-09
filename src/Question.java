@@ -129,7 +129,7 @@ public class Question {
 				questions[i][2] = possibleAnswers.get(0);
 				questions[i][3] = possibleAnswers.get(1);
 				questions[i][4] = possibleAnswers.get(2);
-			} else { //Randomize all possibleQuestions
+			} else { //Randomize all possibleChoices
 				boolean repeatedChoice;
 				for (int j = 2; j < 5; j++) {
 					do {
@@ -142,14 +142,13 @@ public class Question {
 								}
 							}
 						}
-						if (possibleAnswers.get(rand).equals(questions[i][0])) {
+						if ((possibleAnswers.get(rand)).equals(questions[i][1])) {
 							repeatedChoice = true;
 						}
 					} while (repeatedChoice);
 					questions[i][j] = possibleAnswers.get(rand);
 				}
 			}
-			//Insert false answers
 			
 		}
 		return questions;
