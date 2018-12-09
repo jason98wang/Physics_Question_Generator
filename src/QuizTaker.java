@@ -75,7 +75,7 @@ public class QuizTaker {
 	QuizTaker(Student student, Subject chosenSubject) {
 		this.student = student;
 		this.chosenSubject = chosenSubject;
-		studentName = this.student.getName();
+		studentName = student.getName();
 
 		window = new JFrame();
 
@@ -248,6 +248,9 @@ public class QuizTaker {
 
 			questions.add(new Question(problemStatement, formula));
 
+		}
+		for(int i =0;i<answers.size();i++) {
+			System.out.println(answers.get(i));
 		}
 		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions, student);
 		window.dispose();
