@@ -35,7 +35,7 @@ public class ViewStats extends JFrame {
 	private Color orange = new Color(255, 168, 104);
 
 	private JButton back;
-	private JLabel wrong, total, stats;
+	private JLabel wrong, total, stats, logo;
 
 	private Color indigo = new Color(56, 53, 74);
 	private Color lightBlue = new Color(162, 236, 250);
@@ -79,6 +79,7 @@ public class ViewStats extends JFrame {
 		});
 		back.setContentAreaFilled(false); 
 		back.setBorder(BorderFactory.createEmptyBorder());
+				
 
 		//creating the label with the student's name
 		JLabel name = new JLabel(studentName);
@@ -126,10 +127,11 @@ public class ViewStats extends JFrame {
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.X_AXIS));
 		leftPanel.setBackground(indigo);
 		panel.add(leftPanel);
-		panel.add(Box.createRigidArea(new Dimension(0,50)));
+		//panel.add(Box.createRigidArea(new Dimension(0,50)));
 		
 	    //creating a panel to add the backButton and align it to the left side
 		JPanel backButtonPanel = new JPanel();
+		backButtonPanel.setSize(backButtonPanel.getPreferredSize());
 		backButtonPanel.add(Box.createRigidArea(new Dimension(100,0)));
 		backButtonPanel.add(back);
 
@@ -137,6 +139,11 @@ public class ViewStats extends JFrame {
 		backButtonPanel.setBackground(indigo);
 		
 		panel.add(backButtonPanel);
+		
+		//creating the logo
+		logo = new JLabel(new ImageIcon("cropLogo.png"));
+		logo.setAlignmentX(CENTER_ALIGNMENT);
+		panel.add(logo);
 		
 
 	} // End of constructor
