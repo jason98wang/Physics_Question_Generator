@@ -93,8 +93,6 @@ class SummaryPage extends JFrame {
 		homePage = new JButton("Back to Main Page");
 		homePage.setFont(font);
 
-				
-
 		//adding listeners for each button 
 		redo.addActionListener(new RedoListener());
 		exit.addActionListener(new ExitListener());
@@ -123,7 +121,10 @@ class SummaryPage extends JFrame {
 		student.setIncorrectQuestions(student.getIncorrectQuestions() + QuizTakerDisplay.getQuestionWrong());
 		student.setTotalQuestions(student.getTotalQuestions() + QuizTakerDisplay.getQuestionStatment().size());
 
-		Login.getDatabase().update();
+		System.out.println(QuizTakerDisplay.getQuestionWrong());
+		
+		
+		
 
 	} // End of constructor
 
@@ -131,6 +132,7 @@ class SummaryPage extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			dispose();
+			Login.getDatabase().update();
 		}
 	}
 
