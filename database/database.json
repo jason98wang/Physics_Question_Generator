@@ -154,6 +154,9 @@
     },
     {
       "id": ")"
+    },
+    {
+      "id": "decimal"
     }
   ],
   "subjects": [
@@ -178,8 +181,8 @@
         },
         {
           "password": "u",
-          "total": "57",
-          "incorrect": "35",
+          "total": "65",
+          "incorrect": "36",
           "studentNumber": "u",
           "name": "u"
         }
@@ -257,8 +260,8 @@
         },
         {
           "password": "1",
-          "total": "351",
-          "incorrect": "291",
+          "total": "50",
+          "incorrect": "38",
           "studentNumber": "1",
           "name": "1"
         }

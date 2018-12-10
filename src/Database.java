@@ -1,4 +1,5 @@
 /**
+ * [Database].java
  * Database is a class used to communicate between the Gist File where all the data is stored
  * and the user interfaces, namely StudentInfo, Login, QuizEditor
  * It stores all the information about subjects, their units and questions, and student accuracy 
