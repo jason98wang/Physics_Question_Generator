@@ -8,15 +8,29 @@ package data_structures;
 public class Stack<T> {
 
     private Node<T> head;
-
+    
+	/**
+	 * Stack
+	 * this constructor is used to declare head as null
+	 */
     public Stack() {
         head = null;
     }
 
+	/**
+	 * push
+	 * this method is used to push an item to the stack
+	 * @param item, adding the item to the top of the stack
+	 */
     public void push(T item) {
         head = new Node<T>(item, head);
     }
 
+	/**
+	 * pop
+	 * this method is used to pop the top item from a stack
+	 * @return item, returns the item from the top of the list that got popped
+	 */
     public T pop() {
         if (head == null) {
             return null;
@@ -27,6 +41,11 @@ public class Stack<T> {
         }
     }
 
+	/**
+	 * peek
+	 * this method is used to return the top of the stack
+	 * @return item, returns the item from the top of the list without popping it
+	 */
     public T peek() {
         if (head == null) {
             return null;
@@ -35,6 +54,10 @@ public class Stack<T> {
         }
     }
 
+	/**
+	 * clear
+	 * this method is used to clear the stack
+	 */
     public void clear() {
         head = null;
     }
