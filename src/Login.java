@@ -1,8 +1,8 @@
 /**
  * [Login.java]
  * This class displays the login UI of the application
- * Authors:
- * Date:
+ * Authors: Jason Wang, Yili Liu, Eric Long, Josh Cai, Brian Li
+ * Date: December 9. 2018
  */
 
 //Java imports

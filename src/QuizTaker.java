@@ -1,8 +1,8 @@
 /**
  * [QuizTaker.java]
  * This class displays the main page for the application after logging in
- * Authors:
- * Date:
+ * Authors: Jason Wang, Yili Liu, Eric Long, Josh Cai, Brian Li
+ * Date: December 9. 2018
  */
 
 //java imports
