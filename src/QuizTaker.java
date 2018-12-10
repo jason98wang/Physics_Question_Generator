@@ -1,11 +1,17 @@
+/**
+ * [QuizTaker.java]
+ * This class displays the main page for the application after logging in
+ * Authors:
+ * Date:
+ */
+
+//java imports
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,34 +23,31 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
-
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import org.imgscalr.Scalr;
-
-import data_structures.SimpleLinkedList;
-
 import javax.swing.JComboBox;
 
-/*
- * To Do
- * Main UI better
- * Preset questions
- */
+//jar import
+import org.imgscalr.Scalr;
+
+//data structure import
+import data_structures.SimpleLinkedList;
 
 public class QuizTaker {
 
-	private int numQuestions;
+	// Init var
+	private int numQuestions; // number of questions the user wants to do
+	private String studentName;
+	private static Random rand;
 
+	// Lists for parts of each question
 	private SimpleLinkedList<Unit> units;
 	private SimpleLinkedList<Question> rootQuestions;
 	private SimpleLinkedList<Question> questions;
@@ -53,15 +56,19 @@ public class QuizTaker {
 	private SimpleLinkedList<String> problemStatements;
 	private SimpleLinkedList<String[]> variableIDs;
 	private SimpleLinkedList<double[]> variableValues;
+
+	// Objects for use in generating questions
 	public static Subject chosenSubject;
 	private Unit chosenUnit;
-	private static Student student;
-	private String studentName;
 
+	// Current user
+	private static Student student;
+
+	// Logo picture and colours
 	private Color indigo, lightBlue;
-	private static Random rand;
 	private BufferedImage logo;
 
+	// Java gui components
 	private static JFrame window;
 	private JPanel title;
 	private JPanel mainPanel;
@@ -72,21 +79,31 @@ public class QuizTaker {
 	private JComboBox<String> unit;
 	private JTextField numQuestionsField;
 
-	///////////////////////////////////////////////////////////////////// CONSTRUCTORS///////////////////////
-
+	/**
+	 * QuizTaker 
+	 * This method creates a new QuizTaker with the given student and
+	 * subject
+	 * 
+	 * @param student, a Student that represents the current user
+	 * @param chosenSubject, a Subject representing the subject the student belongs
+	 *        to
+	 */
 	public QuizTaker(Student student, Subject chosenSubject) {
 		this.student = student;
 		this.chosenSubject = chosenSubject;
+
 		studentName = student.getName();
 		rand = new Random();
 
-		window = new JFrame();
-
+		// Init colours
 		indigo = new Color(56, 53, 74);
 		lightBlue = new Color(162, 236, 250);
 
+		// Init main window
+		window = new JFrame();
 		window.setSize(Toolkit.getDefaultToolkit().getScreenSize());
 
+		// Init logo image
 		try {
 			logo = ImageIO.read(new File("logo.png"));
 			logo = Scalr.resize(logo, (int) (window.getHeight() / 2));
@@ -94,11 +111,13 @@ public class QuizTaker {
 			logo = null;
 		}
 
+		// Init JPanel for logo
 		title = new LogoPanel();
 		title.setBackground(indigo);
 		title.setBorder(BorderFactory.createEmptyBorder(0, 0,
 				(int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 5), 0));
 
+		// Init start, exit, and stats buttons
 		start = new JButton("START");
 		start.addActionListener(new StartButtonActionListener());
 		start.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -111,6 +130,7 @@ public class QuizTaker {
 		stats.addActionListener(new StatsListener());
 		stats.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+		// Init unit combo box and add all units into it
 		unit = new JComboBox<String>();
 		unit.addActionListener(new UnitActionListener());
 		unit.addKeyListener(new StartKeyListener());
@@ -125,10 +145,12 @@ public class QuizTaker {
 			}
 		}
 
+		// Init field used for entering numQuestions
 		numQuestionsField = new JTextField("# of Questions");
 		numQuestionsField.addFocusListener(new NumQuestionsFocusListener());
 		numQuestionsField.addKeyListener(new StartKeyListener());
 
+		// Init panel that contains the combobox and textfield and add them
 		optionsPanel = new JPanel();
 		optionsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 5));
 		optionsPanel.setBackground(indigo);
@@ -136,6 +158,7 @@ public class QuizTaker {
 		optionsPanel.add(numQuestionsField);
 		optionsPanel.setVisible(true);
 
+		// Init main panel and add everything
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		mainPanel.setBackground(indigo);
@@ -150,6 +173,7 @@ public class QuizTaker {
 				(int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 5), 0));
 		mainPanel.setVisible(true);
 
+		// Main window settings and add mainPanel
 		window.add(mainPanel, BorderLayout.CENTER);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setResizable(false);
@@ -158,7 +182,17 @@ public class QuizTaker {
 		window.setVisible(true);
 	}
 
+	/**
+	 * QuizTaker 
+	 * This method takes in a list of root questions, recalculates a list
+	 * of questions, and creates a new QuizTakerDisplay
+	 * 
+	 * @param rootQuestions, a SimpleLinkedList of Question objects representing the
+	 *        list of root questions
+	 */
 	public QuizTaker(SimpleLinkedList<Question> rootQuestions) {
+
+		// Init lists for parts of each question
 		answers = new SimpleLinkedList<String>();
 		choices = new SimpleLinkedList<String[]>();
 		problemStatements = new SimpleLinkedList<String>();
@@ -166,31 +200,36 @@ public class QuizTaker {
 		variableValues = new SimpleLinkedList<double[]>();
 		questions = new SimpleLinkedList<Question>();
 
+		// Init temporary question
 		Question tempQ;
 
-		for (int i = 0; i < rootQuestions.size(); i++) {
+		for (int i = 0; i < rootQuestions.size(); i++) { // Loop through every root question
 			tempQ = rootQuestions.get(i);
 
-			if (tempQ.isPreset()) {
-				if(problemStatements.contain(tempQ.getProblemStatement())) {
-					while(tempQ.isPreset()) {
-						tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size()));
+			if (tempQ.isPreset()) { // If the question is a preset question
+				if (problemStatements.contain(tempQ.getProblemStatement())) { // If the question already exists in the
+																				// list
+					while (tempQ.isPreset()) {
+						tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size())); // Get a question that isn't
+																						// preset
 					}
-					addNumQuestion(tempQ);
-				} else {
-					addWordQuestion(tempQ);
+					addNumQuestion(tempQ); // Call method to add a number question
+				} else { // If the question doesn't already exist
+					addWordQuestion(tempQ); // Call method to add a word question
 				}
 			} else {
 				addNumQuestion(tempQ);
 			}
 		}
+		// Create new display
 		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions, student);
 		window.dispose();
 
 	}
 
-	///////////////////////////////////////////////////////// METHODS//////////////////////////
-
+	/*
+	 * addUnits Adds all units in the chosen subject to the unit combo box
+	 */
 	private void addUnits() {
 
 		units = chosenSubject.getUnits();
@@ -201,65 +240,87 @@ public class QuizTaker {
 
 	}
 
+	/*
+	 * startQuiz 
+	 * Calculates a list of questions based on the root questions within
+	 * the chosen subject and the number of questions the user wants to do, then
+	 * creates a new display
+	 */
 	private void startQuiz() {
+
+		// Init lists
 		answers = new SimpleLinkedList<String>();
 		choices = new SimpleLinkedList<String[]>();
 		problemStatements = new SimpleLinkedList<String>();
 		variableIDs = new SimpleLinkedList<String[]>();
 		variableValues = new SimpleLinkedList<double[]>();
 		questions = new SimpleLinkedList<Question>();
-
-		Question tempQ;
-
 		rootQuestions = chosenUnit.getQuestions();
 
-		for (int i = 0; i < numQuestions; i++) {
-			tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size()));
+		// Init temporary question
+		Question tempQ;
 
-			if (tempQ.isPreset()) {
-				if(problemStatements.contain(tempQ.getProblemStatement())) {				
-					while(tempQ.isPreset()) {
-						tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size()));
+		for (int i = 0; i < numQuestions; i++) { // Loop based on numQuestions
+			tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size())); // Set tempQ to a question randomly chosen
+																			// from
+																			// the root questions
+
+			if (tempQ.isPreset()) { // If question is preset
+				if (problemStatements.contain(tempQ.getProblemStatement())) { // If already exists
+					while (tempQ.isPreset()) {
+						tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size())); // Find number question
 					}
-					addNumQuestion(tempQ);
+					addNumQuestion(tempQ); // Add number question
 				} else {
-					addWordQuestion(tempQ);
+					addWordQuestion(tempQ); // Add word question
 				}
 			} else {
-				addNumQuestion(tempQ);
+				addNumQuestion(tempQ); // Add number question
 			}
 		}
+
+		// Create new display
 		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions, student);
 		window.dispose();
 
 	}
 
+	/*
+	 * addWordQuestion 
+	 * Takes in a Question object, splits it up into its parts and
+	 * adds those parts into their respective lists
+	 */
 	private void addWordQuestion(Question tempQ) {
 
+		// Init vars and arrays
 		String ans;
 		String problemStatement;
 		String[] wrongAns;
 		String[] choicesArray;
 		String[][] stringQuestions;
-
-		boolean ansAdded;
-		int ansIndex;
+		boolean ansAdded; // Flag for is the answer has already been added to choices
+		int ansIndex; // Index for where answer goes in choices
 
 		stringQuestions = tempQ.getStringQuestions(1);
 
+		// Get problem statement
 		problemStatement = tempQ.getProblemStatement();
 
+		// Get answer
 		ans = stringQuestions[0][1];
 
+		// Get wrong answer array
 		wrongAns = new String[3];
 		wrongAns[0] = stringQuestions[0][2];
 		wrongAns[1] = stringQuestions[0][3];
 		wrongAns[2] = stringQuestions[0][4];
 
+		// Set up choices array
 		choicesArray = new String[4];
 		ansIndex = rand.nextInt(choicesArray.length);
 		ansAdded = false;
 
+		// Add wrong answers and answer to choices
 		for (int j = 0; j < choicesArray.length; j++) {
 			if (ansAdded) {
 				choicesArray[j] = wrongAns[j - 1];
@@ -273,22 +334,29 @@ public class QuizTaker {
 			}
 		}
 
+		// Add everything to their respective lists
 		problemStatements.add(problemStatement);
 		answers.add(ans);
 		choices.add(choicesArray);
 		variableIDs.add(null);
 		variableValues.add(null);
-
 		questions.add(new Question(tempQ.getProblemStatement(), tempQ.getSpecificQuestions(),
 				tempQ.getSpecificAnswers(), tempQ.getPossibleAnswers(), tempQ.getImage()));
 
 	}
 
+	/*
+	 * addNumQuestion
+	 * Takes in a Question object, splits it up into its parts and
+	 * adds those parts into their respective lists
+	 */
 	private void addNumQuestion(Question tempQ) {
 
+		//Init lists
 		SimpleLinkedList<Symbol> formula;
 		SimpleLinkedList<Variable> tempVariables;
 
+		//Init vars and arrays
 		int ansIndex;
 		String[] wrongAns;
 		String[] choicesArray;
@@ -301,19 +369,23 @@ public class QuizTaker {
 
 		tempVariables = new SimpleLinkedList<Variable>();
 
+		//Get and add answer
 		ans = String.format("%.2f", tempQ.getAnswer());
 		answers.add(ans);
 
+		//Get wrong answers
 		tempWrongAns = tempQ.getFalseAnswers();
 		wrongAns = new String[tempWrongAns.length];
 		for (int j = 0; j < tempWrongAns.length; j++) {
 			wrongAns[j] = tempWrongAns[j] + "";
 		}
 
+		//Set up choices
 		choicesArray = new String[wrongAns.length + 1];
 		ansIndex = rand.nextInt(choicesArray.length);
 		ansAdded = false;
 
+		//Add wrong answers and answer to choices then add choices to list
 		for (int j = 0; j < choicesArray.length; j++) {
 			if (ansAdded) {
 				choicesArray[j] = wrongAns[j - 1];
@@ -328,9 +400,12 @@ public class QuizTaker {
 		}
 		choices.add(choicesArray);
 
+		//Get and add problemStatement
 		problemStatement = tempQ.getProblemStatement();
 		problemStatements.add(problemStatement);
 
+		//Get formula
+		//Break up formula into only the Variable objects
 		formula = tempQ.getFormula();
 		for (int j = 0; j < formula.size(); j++) {
 			if (formula.get(j) instanceof Variable) {
@@ -348,21 +423,26 @@ public class QuizTaker {
 				}
 			}
 		}
+		//Add ID and Value of each variable
 		IDs = new String[tempVariables.size()];
 		values = new double[tempVariables.size()];
 		for (int k = 0; k < tempVariables.size(); k++) {
 			IDs[k] = tempVariables.get(k).getId();
 			values[k] = tempVariables.get(k).getValue();
 		}
+		//Add IDs and Values to lists
 		variableIDs.add(IDs);
 		variableValues.add(values);
 
+		//Add question to list
 		questions.add(new Question(problemStatement, formula));
 	}
-
-	////////////////////////////////////////////////////// PRIVATE
-	////////////////////////////////////////////////////// CLASSES////////////////////////////////
-
+	
+	/*
+	 * UnitActionListener
+	 * An action listener for the unit combo box
+	 * Sets the chosen unit as the item selected in the combo box
+	 */
 	private class UnitActionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -380,6 +460,11 @@ public class QuizTaker {
 
 	}
 
+	/*
+	 * NumQuestionsFocusListener
+	 * A focus listener for the numQuestions field
+	 * Displays "# of Questions" when field is empty and vice versa
+	 */
 	private class NumQuestionsFocusListener implements FocusListener {
 
 		public void focusGained(FocusEvent e) {
@@ -396,6 +481,11 @@ public class QuizTaker {
 
 	}
 
+	/*
+	 * StartButtonActionListener
+	 * Action listener for the start button
+	 * If the number of questions is valid, starts quiz
+	 */
 	private class StartButtonActionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -416,6 +506,11 @@ public class QuizTaker {
 
 	}
 
+	/*
+	 * ExitButtonActionListener
+	 * Action listener for the exit button
+	 * Exits and updates database
+	 */
 	private class ExitButtonActionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
@@ -424,7 +519,11 @@ public class QuizTaker {
 		}
 
 	}
-
+	
+	/*
+	 * StartKeyListener
+	 * Key listener for the Enter key to start quiz
+	 */
 	private class StartKeyListener implements KeyListener {
 
 		@Override
@@ -461,6 +560,10 @@ public class QuizTaker {
 
 	}
 
+	/*
+	 * LogoPanel
+	 * Custom JPanel that draws the logo and current user
+	 */
 	private class LogoPanel extends JPanel {
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
@@ -475,6 +578,10 @@ public class QuizTaker {
 		}
 	}
 
+	/*
+	 * StatsListener
+	 * Action listener for the stats button
+	 */
 	private class StatsListener implements ActionListener {
 
 		@Override
