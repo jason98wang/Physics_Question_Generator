@@ -10,9 +10,6 @@ public class SimpleQueue<T> {
     private Node<T> head = null;
     private Node<T> tail = null;
 
-    public SimpleQueue() {
-    }
-
     public T dequeue() {
         if (head == null) {
             return null;
