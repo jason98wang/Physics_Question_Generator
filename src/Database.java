@@ -1,3 +1,13 @@
+/**
+ * Database is a class used to communicate between the Gist File where all the data is stored
+ * and the user interfaces, namely StudentInfo, Login, QuizEditor
+ * It stores all the information about subjects, their units and questions, and student accuracy 
+ * in a JSON format, by utilizing a local JSON file
+ * @author      Yili Liu
+ * @since       Nov.20.2018
+ */
+
+// IMPORTS
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -25,6 +35,7 @@ import data_structures.SimpleLinkedList;
 
 public class Database {
 
+	// INITIALIZE VARIABLES
 	// credentials used to track the gist file
 	private static final String USERNAME = "plap2018";
 	private static final String PASSWORD = "thinklikeaphysicist";
@@ -35,17 +46,21 @@ public class Database {
 	private static Gist gist;
 	private static GistFile gistFile;
 
-	private static SimpleLinkedList<Subject> subjects;
-	private static SimpleLinkedList<Symbol> symbols;
-	private static SimpleLinkedList<SimpleLinkedList<Symbol>> formulas;
+	// variables taken from database
+	private static SimpleLinkedList<Subject> subjects; // subjects
+	private static SimpleLinkedList<Symbol> symbols; // symbols
+	private static SimpleLinkedList<SimpleLinkedList<Symbol>> formulas; // previously stored formulas
 
+	// json file used to interpret data from database
+	// and to store data to database
 	private static File jsonFile;
 
-	public static void main(String[] args) {
-		Database db = new Database();
-		db.update();
-	}
-
+	// CONSTRUCTOR
+	/**
+	 * Constructor
+	 * Instantiates json file, subjects, symbols and formulas
+	 * and initializes gist database
+	 */
 	Database() {
 		// fine json file
 		jsonFile = new File("database/database.json");
@@ -54,15 +69,21 @@ public class Database {
 		subjects = new SimpleLinkedList<Subject>();
 		symbols = new SimpleLinkedList<Symbol>();
 		formulas = new SimpleLinkedList<SimpleLinkedList<Symbol>>();
-		
+
 		// setup gist and get data
 		initGist();
 	}
 
-	// private methods
-
-	private void initGist() {
-		// set user info
+	// PRIVATE METHODS
+	/**
+	 * initGist
+	 * This method establishes connections to the gist database,
+	 * reads from it,
+	 * writes to the json file,
+	 * and interprets the data
+	 */
+	private static void initGist() {
+		// set github user info
 		service = new GistService();
 		service.getClient().setCredentials(USERNAME, PASSWORD);
 
@@ -73,12 +94,13 @@ public class Database {
 			e.printStackTrace();
 		}
 
-		// get gistfile from its respective gist
+		// get gist file from its respective gist
 		gistFile = gist.getFiles().get("database");
 
 		// get data from file
 		String data = gistFile.getContent();
 
+		// write data to the json file
 		try {
 			FileWriter file = new FileWriter(jsonFile);
 			file.write(data);
@@ -87,11 +109,16 @@ public class Database {
 			e.printStackTrace();
 		}
 
+		// interpret data
 		interpretData();
 	}
 
+	/**
+	 * interpretData
+	 * This method parses through the json file to interpret the data
+	 */
 	private static void interpretData() {
-		// take in array of subjects
+		// take in array of operations, variables, and subjects
 		JSONObject all = null;
 		try {
 			all = (JSONObject) (new JSONParser()).parse(new FileReader(jsonFile));
@@ -99,9 +126,12 @@ public class Database {
 			e.printStackTrace();
 		}
 
+		// get subjects array
 		JSONArray array1 = (JSONArray) all.get("subjects");
+
 		// for every subject
 		for (Object a : array1) {
+			// convert object to JSONObject
 			JSONObject subject = (JSONObject) a;
 
 			// get its name, grade and level
@@ -109,7 +139,7 @@ public class Database {
 			int grade = Integer.parseInt((String) subject.get("grade"));
 			String level = (String) subject.get("level");
 
-			// add subject to linkedlist
+			// add subject to linked list
 			Subject s = new Subject(name, grade, level);
 			subjects.add(s);
 
@@ -135,121 +165,192 @@ public class Database {
 				for (Object c : questions) {
 					JSONObject question = (JSONObject) c;
 
-					// get its problem statement and its formula
+					// get its problem statement, its formula and its image
 					String problemStatement = (String) question.get("problem");
 					SimpleLinkedList<Symbol> formula = stringToSymbols((String) question.get("formula"));
+					BufferedImage image = stringToImage((String) question.get("image"));
 
+					// initialize question
 					Question q;
 
 					if (formula != null) { // if question is calculable
-						q = new Question(problemStatement, formula);
+						if (image == null) {
+							// instantiate question using only the problem statement and formula
+							q = new Question(problemStatement, formula);
+						} else {
+							// instantiate question using the problem statement, formula and image
+							q = new Question(problemStatement, formula, image);
+						}
 						formulas.add(formula);
 					} else { // if question is not calculable
-						BufferedImage image = stringToImage((String) question.get("image"));
-						JSONArray questionsAnswers = (JSONArray) question.get("qa"); // questions and answers
-						JSONArray possibleAnswers = (JSONArray) question.get("pa"); // possible answers
+						// get questions and their respective answers, and other possible answers
+						JSONArray questionsAnswers = (JSONArray) question.get("qa");
+						JSONArray possibleAnswers = (JSONArray) question.get("pa");
 
 						SimpleLinkedList<String> sq = new SimpleLinkedList<String>(); // specific questions
 						SimpleLinkedList<String> sa = new SimpleLinkedList<String>(); // specific answers
 						SimpleLinkedList<String> pa = new SimpleLinkedList<String>(); // possible answers
 
+						// for every question and its answer
 						for (Object d : questionsAnswers) {
 							JSONObject jo = (JSONObject) d;
-							String possibleQuestion = (String) jo.get("q");
-							String possibleAnswer = (String) jo.get("a");
+							String possibleQuestion = (String) jo.get("q"); // get the question
+							String possibleAnswer = (String) jo.get("a"); // and its answer
+
+							// add them to lists of specific questions and answers
 							sq.add(possibleQuestion);
 							sa.add(possibleAnswer);
 						}
+
+						// for every other answer
 						for (Object d : possibleAnswers) {
 							JSONObject jo = (JSONObject) d;
-							String str = (String) jo.get("p");
+							String str = (String) jo.get("p"); // get the possible answer
+
+							// add them to list of possible answers
 							pa.add(str);
 						}
 
-						// add new question
-						q = new Question(problemStatement, sq, sa, pa, image);
+						// instantiate question using the problem statement,
+						// specific questions and answers,
+						// possible answers,
+						// and its image if applicable
+						if (image == null) {
+							q = new Question(problemStatement, sq, sa, pa);
+						} else {
+							q = new Question(problemStatement, sq, sa, pa, image);
+						}
 					}
+					// add question to unit
 					u.addQuestion(q);
 				}
 			}
 
-			// get this subject's units
+			// get this subject's students
 			JSONArray students = (JSONArray) subject.get("students");
+			// for every student
 			for (Object b : students) {
 				JSONObject student = (JSONObject) b;
 
-				// get its name and number
+				// get their name, student number, password, incorrect questions and total questions answered
 				String name2 = (String) student.get("name");
 				String studentNumber = (String) student.get("studentNumber");
 				String password = (String) student.get("password");
 				int incorrect = Integer.parseInt((String) student.get("incorrect"));
 				int total = Integer.parseInt((String) student.get("total"));
 
-				// add unit to subject
+				// create new student
 				Student st = new Student(name2, studentNumber, password, incorrect, total);
+				// add student to subject
 				s.getStudents().add(st);
 			}
 		}
 
+		// get operations array
 		JSONArray array2 = (JSONArray) all.get("operations");
 		for (Object a : array2) {
 			JSONObject symbol = (JSONObject) a;
 
 			// get its id
 			String id = (String) symbol.get("id");
+			
+			// create new operation
 			Symbol s = new Operation(id);
+			
+			// add it to list of symbols
 			symbols.add(s);
 		}
 
+		// get variables array
 		JSONArray array3 = (JSONArray) all.get("variables");
 		for (Object a : array3) {
 			JSONObject symbol = (JSONObject) a;
 
 			// get its id
 			String id = (String) symbol.get("id");
+			
+			// create new variable
 			Symbol s = new Variable(id);
+			
+			// add it to list of symbols
 			symbols.add(s);
 		}
 	}
 
+	/**
+	 * stringToSymbols
+	 * This method takes in a string and converts it into a list of symbols
+	 * @param String str, a string containing symbols
+	 * @return SimpleLinkedList<Symbol> formula, formula required for the question
+	 */
 	private static SimpleLinkedList<Symbol> stringToSymbols(String str) {
+		// if there is no formula, return null
 		if (str.equals("null")) {
 			return null;
 		}
+		// create new list of symbols
 		SimpleLinkedList<Symbol> formula = new SimpleLinkedList<Symbol>();
+		// remove the first space
 		str = str.substring(1, str.length());
 
+		// while string is not empty
 		while (str.length() > 0) {
-			String sub = str.substring(0, str.indexOf(" "));			
+			// symbol to be converted is stored in sub
+			String sub = str.substring(0, str.indexOf(" "));
+			
+			// check if it is an operation or variable and add to formula
 			if ((sub.equals("+")) || (sub.equals("-")) || (sub.equals("mul")) || (sub.equals("div")) || (sub.equals("sqrt")) || (sub.equals("^")) || (sub.equals("(")) || (sub.equals(")"))) {
 				formula.add(new Operation(sub));
 			} else {
 				formula.add(new Variable(sub));
 			}
+			
+			// shorten string
 			str = str.substring(str.indexOf(" ") + 1);
 		}
 
+		// return the list of symbols
 		return formula;
 	}
 
-	// converts string taken from database to image for the question
+	/**
+	 * stringToImage
+	 * converts string taken from database to a byte array
+	 * then from the byte array to an image
+	 * @param String str, a base64 string representing the image
+	 * @return BufferedImage image, the image required for the question
+	 */
 	private static BufferedImage stringToImage(String str) {
+		// if there is no image, return null
 		if (str.equals("null")) {
 			return null;
 		}
+		
+		// make decode string to byte array
 		BufferedImage image = null;
 		byte[] bytes = Base64.getDecoder().decode(str);
+		
+		// input the byte array
 		ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+		
 		try {
+			// read from the input stream and convert into image
 			image = ImageIO.read(bais);
 			bais.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		// return the image
 		return image;
 	}
 
-	// public methods
+	// PUBLIC METHODS
+	/**
+	 * update
+	 * This method writes data to the json file, reads from the json file line by line
+	 * and pushes it to the gist database
+	 */
 	public void update() {
 		JSONObject all = new JSONObject();
 
@@ -348,7 +449,7 @@ public class Database {
 			JsonParser jp = new JsonParser();
 			JsonElement je = jp.parse(all.toJSONString());
 			String prettyJsonString = gson.toJson(je);
-			
+
 			// write to file
 			FileWriter file = new FileWriter(jsonFile);
 			file.write(prettyJsonString);
@@ -362,14 +463,29 @@ public class Database {
 		}
 	}
 
-	// getters
+	/**
+	 * getSubjects
+	 * This method returns a linked list of subjects from the database
+	 * @return SimpleLinkedList<Subject> subjects, a linked list of subjects
+	 */
 	public SimpleLinkedList<Subject> getSubjects() {
 		return subjects;
 	}
 
+	/**
+	 * getSymbols
+	 * This method returns a linked list of symbols
+	 * @return SimpleLinkedList<Symbol> symbols, a linked list of symbols
+	 */
 	public SimpleLinkedList<Symbol> getSymbols() {
 		return symbols;
 	}
+
+	/**
+	 * getFormulas
+	 * This method returns a linked list of linked list of symbols
+	 * @return SimpleLinkedList<SimpleLinkedList<Symbol>> formulas, a linked list of linked list of symbols
+	 */
 	public SimpleLinkedList<SimpleLinkedList<Symbol>> getFormulas() {
 		return formulas;
 	}
