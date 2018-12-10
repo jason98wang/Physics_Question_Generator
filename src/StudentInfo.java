@@ -309,7 +309,7 @@ public class StudentInfo {
 		// and when they click away from it text filler shows up
 		addNameField.addFocusListener(new FocusListener() {
 			public void focusGained(FocusEvent e) {
-				if (addNameField.getText().trim().equals("    Name    ")) {
+				if (addNameField.getText().trim().equals("Name")) {
 					addNameField.setText("");
 				}
 			}
@@ -337,7 +337,7 @@ public class StudentInfo {
 		
 		addPasswordField.addFocusListener(new FocusListener() {
 			public void focusGained(FocusEvent e) {
-				if (addPasswordField.getText().trim().equals("  Password  ")) {
+				if (addPasswordField.getText().trim().equals("Password")) {
 					addPasswordField.setText("");
 				}
 			}
