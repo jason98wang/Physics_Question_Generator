@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Toolkit;
@@ -21,6 +22,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -40,11 +42,11 @@ import data_structures.SimpleLinkedList;
 public class Login {
 
 	private static Database database;
-	private SimpleLinkedList<Student> students;
 	private SimpleLinkedList<Subject> subjects;
 	private Subject chosenSubject;
 	private Student student;
 
+	private Font buttonFont;
 	private Color indigo;
 	private BufferedImage logo;
 	private String studentNum;
@@ -53,8 +55,8 @@ public class Login {
 	private static JFrame window;
 	private JPanel title;
 	private JPanel mainPanel;
-	private JButton login;
-	private JButton exit;
+	private JPanel loginPanel;
+	private JButton login, exit;
 	private JTextField studentNumField;
 	private JPasswordField passwordField;
 
@@ -66,6 +68,8 @@ public class Login {
 		subjects = getDatabase().getSubjects();
 
 		indigo = new Color(56, 53, 74);
+
+		buttonFont = new Font("Arial", Font.BOLD, 30);
 
 		////////////////////////////////////////////////// GUI
 		////////////////////////////////////////////////// STUFF/////////////////////////////////////
@@ -84,29 +88,37 @@ public class Login {
 		title.setBorder(BorderFactory.createEmptyBorder(0, 0, window.getHeight() / 2, 0));
 
 		login = new JButton("LOGIN");
-		login.setFont(new Font("Arial", Font.BOLD, 30));
+		login.setFont(buttonFont);
 		login.addActionListener(new LoginButtonActionListener());
 		login.setAlignmentX(Component.CENTER_ALIGNMENT);
+		login.requestFocus();
 
 		exit = new JButton("EXIT");
-		exit.setFont(new Font("Arial", Font.BOLD, 30));
+		exit.setFont(buttonFont);
 		exit.addActionListener(new ExitButtonActionListener());
 		exit.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		studentNumField = new JTextField("Student #");
-//		studentNumField.setPreferredSize(new Dimension(window.getWidth()/4, window.getHeight()/5));
 		studentNumField.addFocusListener(new StudentNumFocusListener());
 		studentNumField.addKeyListener(new LoginKeyListener());
 
-		passwordField = new JPasswordField();
+		passwordField = new JPasswordField("Password");
+		passwordField.addFocusListener(new PasswordFocusListener());
 		passwordField.addKeyListener(new LoginKeyListener());
+		passwordField.setEchoChar((char) 0);
+
+		loginPanel = new JPanel();
+		loginPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 100, 5));
+		loginPanel.setBackground(indigo);
+		loginPanel.add(studentNumField);
+		loginPanel.add(passwordField);
+		loginPanel.setVisible(true);
 
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 		mainPanel.setBackground(indigo);
 		mainPanel.add(title);
-		mainPanel.add(studentNumField);
-		mainPanel.add(passwordField);
+		mainPanel.add(loginPanel);
 		mainPanel.add(Box.createRigidArea(new Dimension(0, 50)));
 		mainPanel.add(login);
 		mainPanel.add(Box.createRigidArea(new Dimension(0, 50)));
@@ -124,7 +136,6 @@ public class Login {
 
 	private void startQuiz() {
 
-		boolean valid = true;
 		password = "";
 		char[] tempPassword = passwordField.getPassword();
 		studentNum = studentNumField.getText();
@@ -148,11 +159,8 @@ public class Login {
 
 	}
 
-	
 	////////////////////////////////////////////////////// PRIVATE
 	////////////////////////////////////////////////////// CLASSES////////////////////////////////
-
-
 
 	private class StudentNumFocusListener implements FocusListener {
 
@@ -165,6 +173,38 @@ public class Login {
 		public void focusLost(FocusEvent e) {
 			if (studentNumField.getText().trim().equals("")) {
 				studentNumField.setText("Student #");
+			}
+		}
+
+	}
+
+	private class PasswordFocusListener implements FocusListener {
+
+		public void focusGained(FocusEvent e) {
+			char[] tempPassword = passwordField.getPassword();
+			String password = "";
+
+			for (int i = 0; i < tempPassword.length; i++) {
+				password += tempPassword[i];
+			}
+
+			if (password.equals("Password")) {
+				passwordField.setText("");
+				passwordField.setEchoChar('•');
+			}
+		}
+
+		public void focusLost(FocusEvent e) {
+			char[] tempPassword = passwordField.getPassword();
+			String password = "";
+
+			for (int i = 0; i < tempPassword.length; i++) {
+				password += tempPassword[i];
+			}
+
+			if (password.equals("")) {
+				passwordField.setText("Password");
+				passwordField.setEchoChar((char) 0);
 			}
 		}
 
@@ -222,7 +262,6 @@ public class Login {
 			repaint();
 		}
 	}
-
 
 	public static Database getDatabase() {
 		return database;
