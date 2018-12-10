@@ -1,3 +1,10 @@
+/**
+ * [SummaryPage.java]
+ * The UI at the end of the quiz
+ * Author: Jason Wang
+ * Nov. 20, 2018
+ */
+//imports
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -16,16 +23,9 @@ import javax.swing.JPanel;
 
 import data_structures.SimpleLinkedList;
 
-/*
- * [SummaryPage.java]
- * The UI at the end of the quiz
- * Author: Jason Wang
- * Nov. 20, 2018
- */
 class SummaryPage extends JFrame {
 
-	private static JFrame window;
-
+	//declaring variables
 	private JLabel title;
 	private JLabel accuracy;
 	private JButton exit, redo, homePage ;
@@ -76,6 +76,7 @@ class SummaryPage extends JFrame {
 		//creating new label for the accuracy 
 		accuracy = new JLabel(String.format("%.2f", precentage) + "%");
 
+		//set font and color
 		accuracy.setFont(new Font("Serif", Font.BOLD, 150));
 		accuracy.setForeground(lightBlue);
 		accuracy.setAlignmentX(JLabel.CENTER_ALIGNMENT);
@@ -128,32 +129,47 @@ class SummaryPage extends JFrame {
 
 	} // End of constructor
 
+	/*
+	 * [ExitButtonListener.java]
+	 * Private class ActionListener for the exit button
+	 */
 	private class ExitListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			dispose();
+			//if the window closes update database
 			Login.getDatabase().update();
 		}
 	}
 
+	/*
+	 * [RedoListener.java]
+	 * Private class ActionListener for the redo button
+	 */
 	private class RedoListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (wrongQuestions.size() != 0) {
+				//generate new questions based on the ones messed up
 				new QuizTaker(wrongQuestions);
 				dispose();
 			} else {
+				//if no wrong questions to do
 				JOptionPane.showMessageDialog(null, "No wrong question to do! Choose a new unit and practice again.");
 			}
 
 		}
 	}
 
+	/*
+	 * [HomePageListener.java]
+	 * Private class ActionListener for the home button
+	 */
 	private class HomePageListener implements ActionListener {
-
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			//go back to the quiz taker main menu
 			new QuizTaker(student, QuizTaker.chosenSubject);
 			dispose();
 		}

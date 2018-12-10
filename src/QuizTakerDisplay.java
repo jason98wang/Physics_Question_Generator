@@ -1,4 +1,5 @@
-/*
+
+/**
  * [QuizTakerDisplay.java]
  * The User Interface where the user takes the quiz
  * Author: Jason Wang
@@ -24,7 +25,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -51,7 +51,6 @@ class QuizTakerDisplay extends JFrame {
 
 	private JPanel variablePanel, bottomPanel;
 	private Component c;
-	private Font font1 = new Font("Serif", Font.BOLD, 100);
 	private Font font2 = new Font("Arial", Font.ITALIC, 50);
 	private Font font3 = new Font("Serif", Font.BOLD, 25);
 	private Color indigo = new Color(56, 53, 74);
@@ -112,6 +111,7 @@ class QuizTakerDisplay extends JFrame {
 					}
 				}
 
+				//drawing name of current user on top left corner
 				g.setColor(lightBlue);
 				g.drawString("Current User: " + student.getName(), window.getHeight() / 50, window.getHeight() / 50);
 				repaint();
@@ -134,37 +134,6 @@ class QuizTakerDisplay extends JFrame {
 		this.variableIDs = variableIDs;
 		this.variableValues = variableValues;
 		this.rootQuestions = rootQuestions;
-		
-		//traverse and make the longest question be at the top of the list
-//				if (question.size() > 1) {
-//					int max = -1;
-//					int index = 0;
-//					for (int i = 0; i < question.size(); i++) {
-//						if (question.get(i).length() > max) {
-//							max = question.get(i).length();
-//							index = i;
-//						}
-//					}
-//					
-//					question.addToFront(question.get(index));
-//					question.remove(index + 1);
-//
-//					choices.addToFront(choices.get(index));
-//					choices.remove(index + 1);
-//
-//					answers.addToFront(answers.get(index));
-//					answers.remove(index + 1);
-//
-//					variableIDs.addToFront(variableIDs.get(index));
-//					variableIDs.remove(index + 1);
-//
-//					variableValues.addToFront(variableValues.get(index));
-//					variableValues.remove(index + 1);
-//
-//					rootQuestions.addToFront(rootQuestions.get(index));
-//					rootQuestions.remove(index + 1);
-//
-//				}
 
 		// creating buttons for each choice based on number of options
 		choicesPanel = new JPanel();
@@ -177,10 +146,10 @@ class QuizTakerDisplay extends JFrame {
 		//determine if the current question contains a number or word answer
 		if (variableIDs.get(questionNum) == null) {
 			displayWordAnswerQuestions();
-			
+
 			//adding the custom inputed picture
 			Image pic = (rootQuestions.get(questionNum).getImage()).getScaledInstance(500, 300, Image.SCALE_DEFAULT);
-			variablePanel.add(new JLabel (new ImageIcon(pic)));
+			variablePanel.add(new JLabel(new ImageIcon(pic)));
 		} else {
 			displayNumberAnswerQuestions();
 			//creating panel for the variables and displaying them		
@@ -191,6 +160,7 @@ class QuizTakerDisplay extends JFrame {
 					try {
 						Double.parseDouble(ids[j]);
 					} catch (NumberFormatException e) {
+						//add the variable picture as well as the values
 						variablePanel.add(new JLabel(new ImageIcon(QuizEditor.stringToImage(ids[j]))));
 						JLabel value = new JLabel(" = " + String.format("%.2f", values[j]) + "  ");
 						value.setFont(font2);
@@ -293,7 +263,7 @@ class QuizTakerDisplay extends JFrame {
 		this.student = student;
 	} // End of constructor
 
-	/**
+	/*
 	 * getQuestionStatment
 	 * This method returns the question statement
 	 * @return questionStatement, the question statement 
@@ -302,7 +272,7 @@ class QuizTakerDisplay extends JFrame {
 		return questionStatement;
 	}
 
-	/**
+	/*
 	 * getWrongQuestions
 	 * This method returns the list of wrong questions 
 	 * @return wrongQuestions, SimpleLinkedList of wrong questions in the question type
@@ -311,7 +281,7 @@ class QuizTakerDisplay extends JFrame {
 		return wrongQuestions;
 	}
 
-	/**
+	/*
 	 * getQuestionWrong
 	 * This method returns the number of wrong questions
 	 * @return questionWrong, the number of questions the user got wrong 
@@ -320,7 +290,7 @@ class QuizTakerDisplay extends JFrame {
 		return questionWrong;
 	}
 
-	/**
+	/*
 	 * playMusic
 	 * This method plays a sound signifying the user got the question correct
 	 */
@@ -337,7 +307,7 @@ class QuizTakerDisplay extends JFrame {
 		}
 	}
 
-	/**
+	/*
 	 * displayNumberAnswerQuestions
 	 * This method displays a question of the number type(Number as an answer)
 	 */
@@ -383,7 +353,7 @@ class QuizTakerDisplay extends JFrame {
 		}
 	}
 
-	/**
+	/*
 	 * displayWordAnswerQuestions
 	 * This method displays a question of the word type(word as an answer, customized added by teacher)
 	 */
@@ -395,7 +365,7 @@ class QuizTakerDisplay extends JFrame {
 			JButton button = new JButton(choices.get(questionNum)[i]);
 			button.setFont(font3);
 			button.setOpaque(true);
-			button.setBorderPainted(false);		
+			button.setBorderPainted(false);
 			buttonlist.add(button);
 			//create action listener for the button
 			button.addActionListener(new ActionListener() {
@@ -424,10 +394,15 @@ class QuizTakerDisplay extends JFrame {
 			choicesPanel.add(button);
 			choicesPanel.add(Box.createRigidArea(new Dimension(100, 0)));
 			choicesPanel.setBackground(null);
-			
+
 		}
 	}
 
+	/*
+	 * [NextButtonListener.java]
+	 * Private class ActionListener for the next button
+	 * resets questions attributes to the next question
+	 */
 	private class NextButtonListener implements ActionListener {
 
 		@Override
@@ -443,10 +418,10 @@ class QuizTakerDisplay extends JFrame {
 				}
 				questionWrong++;
 			}
-			
+
 			//increase the question number index 
 			questionNum++;
-			
+
 			//if we reached the end, close this page and create summary page
 			if (questionNum == getQuestionStatment().size()) {
 				System.out.println("run");
@@ -457,18 +432,19 @@ class QuizTakerDisplay extends JFrame {
 
 			//determine if the next question is a word answer question of number answer
 			if (variableIDs.get(questionNum) == null) {
-				
+
 				//display the word answer question
 				displayWordAnswerQuestions();
 
 				//add the picture added by the teacher
-				Image pic = (rootQuestions.get(questionNum).getImage()).getScaledInstance(500, 300, Image.SCALE_DEFAULT);
-				variablePanel.add(new JLabel (new ImageIcon(pic)));
+				Image pic = (rootQuestions.get(questionNum).getImage()).getScaledInstance(500, 300,
+						Image.SCALE_DEFAULT);
+				variablePanel.add(new JLabel(new ImageIcon(pic)));
 			} else {
 				//display the number answer question
 				displayNumberAnswerQuestions();
-				
-				//add the picture of the vaiables and its values
+
+				//add the picture of the variables and its values
 				ids = variableIDs.get(questionNum);
 				values = variableValues.get(questionNum);
 				if (ids != null) {
@@ -497,13 +473,12 @@ class QuizTakerDisplay extends JFrame {
 			Graphics g = questionLabel.getGraphics();
 			int width = g.getFontMetrics(questionLabel.getFont()).stringWidth(getQuestionStatment().get(questionNum));
 			int height = g.getFontMetrics(questionLabel.getFont()).getHeight();
-//			System.out.println(x);
 			questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
-					100 + height * (int) (Math.ceil(
-							(double)width / Toolkit.getDefaultToolkit().getScreenSize().getWidth()))));
+					100 + height * (int) (Math
+							.ceil((double) width / Toolkit.getDefaultToolkit().getScreenSize().getWidth()))));
 			questionLabel.setMaximumSize(questionLabel.getPreferredSize());
 			questionLabel.setMinimumSize(questionLabel.getPreferredSize());
-			
+
 			//change the question number of the label
 			label.setText("Question #" + Integer.toString(questionNum + 1));
 			bottomPanel.setPreferredSize(bottom);
@@ -512,16 +487,14 @@ class QuizTakerDisplay extends JFrame {
 			choicesPanel.setMaximumSize(choicesPanel.getPreferredSize());
 			revalidate();
 			java.awt.Rectangle r = bottomPanel.getBounds();
-			
+
 			panel.setPreferredSize(
 					new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), r.y + r.height));
 			panel.setSize(panel.getPreferredSize());
 			panel.setMinimumSize(panel.getPreferredSize());
 			panel.setMaximumSize(panel.getPreferredSize());
 			revalidate();
-//			System.out.println(choicesPanel.getSize());
-//			System.out.println(panel.getSize());
-			
+
 		}
 	}
 

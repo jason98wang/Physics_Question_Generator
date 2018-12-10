@@ -1,15 +1,18 @@
+/**
+ * [ViewStats.java]
+ * The page where students can check out their life time account stats
+ * Author: Jason Wang
+ * Nov. 20, 2018
+ */
+
+//imports
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.function.DoubleToIntFunction;
-
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -19,12 +22,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-/*
- * [ViewStats.java]
- * The page where students can check out their life time account stats
- * Author: Jason Wang
- * Nov. 20, 2018
- */
+
 public class ViewStats extends JFrame {
 	private static JFrame window;
 

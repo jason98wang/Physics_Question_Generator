@@ -1,7 +1,9 @@
 
 /**
- * file to run quiz editor
- * @author Eric long
+ * [QuizEditor.java]
+ * This class is used to add/edit/remove questions into or out of the database
+ * Authors: Eric Long
+ * Date: December 09, 2018
  */
 // Formatting imports
 import java.awt.Color;

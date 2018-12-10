@@ -5,8 +5,6 @@
  * Date: December 09, 2018
  */
 
-//Generic???????????
-
 //Imports
 import java.awt.image.BufferedImage;
 
