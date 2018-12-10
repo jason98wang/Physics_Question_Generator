@@ -55,7 +55,7 @@ public class Unit {
 	/**
 	 * removeQuestion
 	 * Removes a given question from the unit's list of questions
-	 * @return q, the question object to be removed
+	 * @param q, the question object to be removed
 	 */
 	public void removeQuestion(Question q) {
 		questions.remove(q);

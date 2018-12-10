@@ -467,7 +467,7 @@ public class Database {
 	/**
 	 * getSubjects
 	 * This method returns a linked list of subjects from the database
-	 * @return SimpleLinkedList<Subject> subjects, a linked list of subjects
+	 * @return subjects, a linked list of subjects
 	 */
 	public SimpleLinkedList<Subject> getSubjects() {
 		return subjects;
@@ -476,7 +476,7 @@ public class Database {
 	/**
 	 * getSymbols
 	 * This method returns a linked list of symbols
-	 * @return SimpleLinkedList<Symbol> symbols, a linked list of symbols
+	 * @return symbols, a linked list of symbols
 	 */
 	public SimpleLinkedList<Symbol> getSymbols() {
 		return symbols;
@@ -485,7 +485,7 @@ public class Database {
 	/**
 	 * getFormulas
 	 * This method returns a linked list of linked list of symbols
-	 * @return SimpleLinkedList<SimpleLinkedList<Symbol>> formulas, a linked list of linked list of symbols
+	 * @return formulas, a linked list of linked list of symbols
 	 */
 	public SimpleLinkedList<SimpleLinkedList<Symbol>> getFormulas() {
 		return formulas;

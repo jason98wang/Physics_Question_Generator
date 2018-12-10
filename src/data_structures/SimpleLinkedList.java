@@ -104,7 +104,7 @@ public class SimpleLinkedList<E> {
 	 * remove
 	 * This method removes the item given the item
 	 * @param item, the item that you would like to remove
-	 * @param true if removed, false if not removed
+	 * @return true if removed, false if not removed
 	 */
 	public boolean remove(E item) {
 		if (head == null) {
@@ -138,7 +138,7 @@ public class SimpleLinkedList<E> {
 	/**
 	 * size
 	 * This method returns the size of the simple linked list
-	 * @param counter, the size the the linked list
+	 * @return counter, the size the the linked list
 	 */
 	public int size() {
 	Node<E> tempNode = head;
