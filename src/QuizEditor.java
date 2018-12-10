@@ -91,7 +91,7 @@ public class QuizEditor extends JFrame {
 	private boolean addQ, removeQ, editQ, newFormula, editingQ, noFormula;
 
 	// JComponents
-	private JLabel currentFormulaDisplay, logo = new JLabel(new ImageIcon("logo.png"));
+	private JLabel currentFormulaDisplay;
 	private DefaultListModel<String> listModel = new DefaultListModel<String>();
 	private JList<String> list = new JList<String>(listModel);
 	private DefaultComboBoxModel<String> subjectModel = new DefaultComboBoxModel<String>();
@@ -184,7 +184,8 @@ public class QuizEditor extends JFrame {
 			}
 
 		});
-
+		
+		JLabel logo = new JLabel(new ImageIcon("logo.png"));
 		// Buttons on main frame
 		JButton add = new JButton("Add");
 		JButton remove = new JButton("Remove");
@@ -898,6 +899,9 @@ public class QuizEditor extends JFrame {
 					displayPane.removeAll();
 					displayPane.add(formula);
 					// no formula
+					if (editQuestion == null) {
+						return;
+					}
 					if (editQuestion.isPreset()) {
 						displayPane.add(notFormula);
 						image = editQuestion.getImage();
@@ -1307,7 +1311,7 @@ public class QuizEditor extends JFrame {
 		JTextArea grade = new JTextArea();
 		JTextArea level = new JTextArea();
 		JButton addUnit = new JButton("Add a unit");
-		
+		JLabel logo = new JLabel(new ImageIcon("logo.png"));
 		// Scrollable JList
 		DefaultListModel<String> unitModel = new DefaultListModel<String>();
 		JList<String> units = new JList<String>(unitModel);
@@ -1397,11 +1401,20 @@ public class QuizEditor extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					// Add subject
-					subjects.add(new Subject(name.getText(), Integer.parseInt(grade.getText()), level.getText()));
-					subjectModel.addElement(name.getText() + " " + grade.getText() + " " + level.getText());
+					Subject tempSubject = new Subject(name.getText(), Integer.parseInt(grade.getText()), level.getText());
+					for (int i = 0; i < unitList.size(); i++) {
+						tempSubject.getUnits().add(unitList.get(i));
+					}
+					subjects.add(tempSubject);
 					if (sub != null) {
+						if (subjectModel.getIndexOf(name.getText() + " " + grade.getText() + " " + level.getText()) >= 0) {
+							subjectModel.removeElement(name.getText() + " " + grade.getText() + " " + level.getText());
+						}
 						subjects.remove(sub);
 					}
+					subjectModel.addElement(name.getText() + " " + grade.getText() + " " + level.getText());
+					subjectModel.setSelectedItem(name.getText() + " " + grade.getText() + " " + level.getText());
+					unit.setSelectedIndex(0);
 					addSubjectFrame.dispose();
 					// the grade must be an integer
 				} catch (NumberFormatException ex) {
@@ -1519,6 +1532,7 @@ public class QuizEditor extends JFrame {
 		JTextArea num = new JTextArea();
 		JButton confirm = new JButton("Confirm");
 		JButton cancel = new JButton("Cancel");
+		JLabel logo = new JLabel(new ImageIcon("logo.png"));
 		
 		// makes whole content panel scrollable
 		JScrollPane scroll = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -1562,7 +1576,15 @@ public class QuizEditor extends JFrame {
 					// add unit to list
 					unitList.add(new Unit(name.getText(), Integer.parseInt(num.getText())));
 					String nameString = name.getText();
-					
+					if (un != null) {
+						unitList.remove(un);
+						if (model != null) {
+							model.removeElement(un.getNum() + ". " + un.getName());
+						}
+						if (s != null) {
+							unitModel.removeElement(un.getNum() + ". " + un.getName());
+						}
+					}
 					// adds to unit to model if there is one
 					if (model != null) {
 						model.addElement(num.getText() + ". " + nameString);
@@ -1570,10 +1592,8 @@ public class QuizEditor extends JFrame {
 					
 					// adds unit to subject if the subject is not a new one
 					if (s != null) {
-						unit.addItem(num.getText() + ". " + nameString);
-					}
-					if (un != null) {
-						unitList.remove(un);
+						unitModel.addElement(num.getText() + ". " + nameString);
+						unitModel.setSelectedItem(num.getText() + ". " + nameString);
 					}
 					addUnitFrame.dispose();
 					
@@ -1672,6 +1692,7 @@ public class QuizEditor extends JFrame {
 		JPanel buttons = new JPanel();
 		JPanel contentPanel = new JPanel();
 		JPanel contentPane = new JPanel();
+		JLabel logo = new JLabel(new ImageIcon("logo.png"));
 		JScrollPane scroll = new JScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		JScrollPane scrollPane = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -1832,8 +1853,7 @@ public class QuizEditor extends JFrame {
 		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
 
 		// Formatting the layout
-		double ratio = Toolkit.getDefaultToolkit().getScreenSize().getWidth() / Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-		int cols = (int) Math.ceil(ratio * (symbols.size() + 2));
+		int cols = (int) Math.ceil(Math.sqrt(((double)symbols.size() + 2.0)));
 		int rows = (int) Math.ceil((double) (symbols.size() + 2) / cols);
 		buttons.setLayout(new GridLayout(rows, cols));
 
