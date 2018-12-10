@@ -217,7 +217,7 @@ public class QuizTaker {
 			tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size()));
 
 			if (tempQ.isPreset()) {
-				if(questions.contain(tempQ)) {
+				if(problemStatements.contain(tempQ.getProblemStatement())) {				
 					while(tempQ.isPreset()) {
 						tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size()));
 					}
@@ -228,7 +228,6 @@ public class QuizTaker {
 			} else {
 				addNumQuestion(tempQ);
 			}
-			System.out.println(tempQ.getProblemStatement());
 		}
 		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions, student);
 		window.dispose();

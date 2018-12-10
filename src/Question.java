@@ -1,8 +1,8 @@
 /**
  * [Question.java]
  * This class represents a question object, which also holds a formula or preset answers
- * Authors:
- * Date:
+ * Authors: Jason Wang, Yili Liu, Eric Long, Josh Cai, Brian Li
+ * Date: December 09, 2018
  */
 
 //java imports
