@@ -190,7 +190,7 @@ public class Login {
 
 			if (password.equals("Password")) {
 				passwordField.setText("");
-				passwordField.setEchoChar('•');
+				passwordField.setEchoChar('*');
 			}
 		}
 

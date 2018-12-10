@@ -172,7 +172,14 @@ public class QuizTaker {
 			tempQ = rootQuestions.get(i);
 
 			if (tempQ.isPreset()) {
-				addWordQuestion(tempQ);
+				if(problemStatements.contain(tempQ.getProblemStatement())) {
+					while(tempQ.isPreset()) {
+						tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size()));
+					}
+					addNumQuestion(tempQ);
+				} else {
+					addWordQuestion(tempQ);
+				}
 			} else {
 				addNumQuestion(tempQ);
 			}
@@ -205,15 +212,23 @@ public class QuizTaker {
 		Question tempQ;
 
 		rootQuestions = chosenUnit.getQuestions();
-		
+
 		for (int i = 0; i < numQuestions; i++) {
 			tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size()));
-			
+
 			if (tempQ.isPreset()) {
-				addWordQuestion(tempQ);
+				if(questions.contain(tempQ)) {
+					while(tempQ.isPreset()) {
+						tempQ = rootQuestions.get(rand.nextInt(rootQuestions.size()));
+					}
+					addNumQuestion(tempQ);
+				} else {
+					addWordQuestion(tempQ);
+				}
 			} else {
 				addNumQuestion(tempQ);
 			}
+			System.out.println(tempQ.getProblemStatement());
 		}
 		new QuizTakerDisplay(problemStatements, choices, answers, variableIDs, variableValues, questions, student);
 		window.dispose();
@@ -233,42 +248,40 @@ public class QuizTaker {
 
 		stringQuestions = tempQ.getStringQuestions(1);
 
-//		for (int row = 0; row < stringQuestions.length; row++) {
-			problemStatement = stringQuestions[0][0];
+		problemStatement = tempQ.getProblemStatement();
 
-			ans = stringQuestions[0][1];
+		ans = stringQuestions[0][1];
 
-			wrongAns = new String[3];
-			wrongAns[0] = stringQuestions[0][2];
-			wrongAns[1] = stringQuestions[0][3];
-			wrongAns[2] = stringQuestions[0][4];
+		wrongAns = new String[3];
+		wrongAns[0] = stringQuestions[0][2];
+		wrongAns[1] = stringQuestions[0][3];
+		wrongAns[2] = stringQuestions[0][4];
 
-			choicesArray = new String[4];
-			ansIndex = rand.nextInt(choicesArray.length);
-			ansAdded = false;
+		choicesArray = new String[4];
+		ansIndex = rand.nextInt(choicesArray.length);
+		ansAdded = false;
 
-			for (int j = 0; j < choicesArray.length; j++) {
-				if (ansAdded) {
-					choicesArray[j] = wrongAns[j - 1];
+		for (int j = 0; j < choicesArray.length; j++) {
+			if (ansAdded) {
+				choicesArray[j] = wrongAns[j - 1];
+			} else {
+				if (j == ansIndex) {
+					choicesArray[j] = ans;
+					ansAdded = true;
 				} else {
-					if (j == ansIndex) {
-						choicesArray[j] = ans;
-						ansAdded = true;
-					} else {
-						choicesArray[j] = wrongAns[j];
-					}
+					choicesArray[j] = wrongAns[j];
 				}
 			}
+		}
 
-			problemStatements.add(problemStatement);
-			answers.add(ans);
-			choices.add(choicesArray);
-			variableIDs.add(null);
-			variableValues.add(null);
-			
-			questions.add(new Question(tempQ.getProblemStatement(), tempQ.getSpecificQuestions(),
-					tempQ.getSpecificAnswers(), tempQ.getPossibleAnswers(), tempQ.getImage()));
-//		}
+		problemStatements.add(problemStatement);
+		answers.add(ans);
+		choices.add(choicesArray);
+		variableIDs.add(null);
+		variableValues.add(null);
+
+		questions.add(new Question(tempQ.getProblemStatement(), tempQ.getSpecificQuestions(),
+				tempQ.getSpecificAnswers(), tempQ.getPossibleAnswers(), tempQ.getImage()));
 
 	}
 
@@ -289,7 +302,7 @@ public class QuizTaker {
 
 		tempVariables = new SimpleLinkedList<Variable>();
 
-		ans = String.format("%.2f",tempQ.getAnswer());
+		ans = String.format("%.2f", tempQ.getAnswer());
 		answers.add(ans);
 
 		tempWrongAns = tempQ.getFalseAnswers();
