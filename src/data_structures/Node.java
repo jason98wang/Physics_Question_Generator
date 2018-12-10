@@ -1,11 +1,15 @@
 package data_structures;
-
+/*
+ * [Node.java]
+ * Node Class
+ * Authors: Jason Wang, Yili Liu, Eric Long, Josh Cai, Brian Li
+ * Nov. 20, 2018
+ */
 public class Node<T>{
-	
-	// jason98wang suck de de
 	
 	private T item;
 	private Node<T> next;
+	
 	
 	public Node(T item) {
 		this.item = item;
