@@ -71,7 +71,7 @@ public class ViewStats extends JFrame {
 
 
 		//creating the back button the leave the page
-		back = new JButton(new ImageIcon("BackButton.png"));
+		back = new JButton(new ImageIcon("assets/BackButton.png"));
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
