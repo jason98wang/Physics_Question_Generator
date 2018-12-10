@@ -7,8 +7,8 @@ package data_structures;
  * Nov. 20, 2018
  */
 public class SimpleLinkedList<E> {
-	private Node<E> head;
-	private Node<E> tail;
+	private Node<E> head; //Head node (start)
+	private Node<E> tail; //Tail node (end)
 
 	/**
 	 * add
@@ -18,7 +18,7 @@ public class SimpleLinkedList<E> {
 	public void add(E item) {
 		Node<E> node = new Node<E>(item, null);
 		if (tail != null) {
-			tail.setNext(node);
+			tail.setNext(node); 
 			tail = node;
 		} else {
 			head = node;
@@ -32,7 +32,7 @@ public class SimpleLinkedList<E> {
 	 * @param item, item of type E that is being added to the list
 	 */
 	public void addToFront(E item) {
-		head = new Node<E>(item, head);
+		head = new Node<E>(item, head); //setting the new node as head and head after it 
 	}
 
 	/**
@@ -45,9 +45,8 @@ public class SimpleLinkedList<E> {
 		Node<E> tempNode = head;
 		int counter = 0;
 		while (tempNode != null) {
-
 			if (counter == index) {
-				return tempNode.getItem();
+				return tempNode.getItem(); //return once the counter hits the specifed index
 			}
 			tempNode = tempNode.getNext();
 			counter++;
@@ -109,22 +108,22 @@ public class SimpleLinkedList<E> {
 	 */
 	public boolean remove(E item) {
 		if (head == null) {
-			return false;
+			return false;  //if empty return false
 		} else if (head.getItem().equals(item)) {
-			head = head.getNext();
+			head = head.getNext(); //if its the first item return it
 			return true;
 		}
 
 		Node<E> cur = head;
 		while (cur.getNext() != null) {
 			if (cur.getNext().getItem().equals(item)) {
-				Node<E> n = cur.getNext();
+				Node<E> n = cur.getNext(); //keep getting next until found the item
 				cur.setNext(n.getNext());
-
 				return true;
 			}
 			cur = cur.getNext();
 		}
+		//if item never found return
 		return false;
 	}
 
@@ -133,7 +132,7 @@ public class SimpleLinkedList<E> {
 	 * This method clears the simple linked list
 	 */
 	public void clear() {
-		head = null;
+		head = null; //set head to null and break the connection
 	}
 
 	/**
@@ -142,10 +141,9 @@ public class SimpleLinkedList<E> {
 	 * @param counter, the size the the linked list
 	 */
 	public int size() {
+	Node<E> tempNode = head;
 
-		Node<E> tempNode = head;
-
-		int counter = 0;
+		int counter = 0; 
 
 		while (tempNode != null) {
 			counter++;
@@ -161,7 +159,7 @@ public class SimpleLinkedList<E> {
 	public void display() {
 		Node<E> tempNode = head;
 		while (tempNode != null) {
-			System.out.println(tempNode.getItem());
+			System.out.println(tempNode.getItem()); 
 			tempNode = tempNode.getNext();
 		}
 	}
@@ -176,7 +174,7 @@ public class SimpleLinkedList<E> {
 		Node<E> tempNode = head;
 		for (int i = 0; i < size(); i++) {
 			if (tempNode.getItem().equals(item)) {
-				return true;
+				return true; //if the item is found in the list return true
 			}
 			tempNode = tempNode.getNext();
 		}

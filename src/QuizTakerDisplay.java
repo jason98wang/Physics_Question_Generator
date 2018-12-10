@@ -395,8 +395,7 @@ class QuizTakerDisplay extends JFrame {
 			JButton button = new JButton(choices.get(questionNum)[i]);
 			button.setFont(font3);
 			button.setOpaque(true);
-			button.setBorderPainted(false);
-			
+			button.setBorderPainted(false);		
 			buttonlist.add(button);
 			//create action listener for the button
 			button.addActionListener(new ActionListener() {

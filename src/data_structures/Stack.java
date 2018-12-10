@@ -23,7 +23,7 @@ public class Stack<T> {
 	 * @param item, adding the item to the top of the stack
 	 */
     public void push(T item) {
-        head = new Node<T>(item, head);
+        head = new Node<T>(item, head); //set it as the head
     }
 
 	/**
@@ -33,11 +33,11 @@ public class Stack<T> {
 	 */
     public T pop() {
         if (head == null) {
-            return null;
+            return null; //return null if the list is empty
         } else {
             Node<T> tempNode = head;
             head = head.getNext();
-            return tempNode.getItem();
+            return tempNode.getItem(); //return the head node, and set head as the next node
         }
     }
 
