@@ -1,5 +1,5 @@
 package data_structures;
-/*
+/**
  * [Stack.java]
  * Stack data structure
  * Authors: Jason Wang, Yili Liu, Eric Long, Josh Cai, Brian Li
