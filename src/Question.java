@@ -1,109 +1,194 @@
+/**
+ * [Question.java]
+ * This class represents a question object, which also holds a formula or preset answers
+ * Authors:
+ * Date:
+ */
+
+//java imports
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Base64;
-
 import javax.imageio.ImageIO;
 
+//Data structure imports
 import data_structures.SimpleLinkedList;
 import data_structures.SimpleQueue;
 import data_structures.Stack;
 
 public class Question {
 
-	// init vars
-	private String problemStatement;
-	private SimpleLinkedList<Symbol> formula;
-	private Double answer = 0.0;
+	//Init vars
+	private String problemStatement; //General problem statement (situation outline)
+	private SimpleLinkedList<Symbol> formula; //List of symbol objects representing the formula (if numerical)
+	private Double answer = 0.0; //Answer to the question (if numerical) - Rounded to 2 decimal places
 
+    //Lists for preset questions (to store sub-questions, answers, and choices for MC)
 	private SimpleLinkedList<String> specificQuestions;
 	private SimpleLinkedList<String> specificAnswers;
 	private SimpleLinkedList<String> possibleAnswers;
 
+	//Image related to the question (possibly displaying choices or the situation)
 	private BufferedImage image;
 
+	//Flags to determine whether the question is preset (choices held inside) or needs the answer calculated
 	private boolean preset;
 	private boolean numerical;
 
-	//Stacks (for shunting yard alg)
+	//Stacks (for formula calculation)
 	private Stack<Operation> operators;
 	private SimpleQueue<Symbol> output;
 
-	// constructor
+    /**
+     * Question
+     * This method creates a question object with a given problem statement and formula
+     * @param problemStatement, a String representing the Question's problem statement
+     * @param formula, A linked list of Symbols representing the formula used to calculate the answer to the problem
+     */
 	Question(String problemStatement, SimpleLinkedList<Symbol> formula){
 		this.problemStatement = problemStatement;
 		this.formula = formula;
-		operators = new Stack<>();
-		output = new SimpleQueue<>();
-		numerical = true;
+		operators = new Stack<>(); //Initialize stack used to calc answer
+		output = new SimpleQueue<>(); //Initialize queue used to calc answer
+		numerical = true; //Flag as numerical question
 	}
 
+    /**
+     * Question
+     * This method creates a question object with a given problem statement, formula, and image
+     * @param problemStatement, a String representing the Question's problem statement
+     * @param formula, A linked list of Symbols representing the formula used to calculate the answer to the problem
+     * @param image, A BufferedImage representing the question's accompanying image
+     */
 	Question(String problemStatement, SimpleLinkedList<Symbol> formula, BufferedImage image){
 		this.image = image;
 		this.problemStatement = problemStatement;
 		this.formula = formula;
-		operators = new Stack<>();
-		output = new SimpleQueue<>();
-		numerical = true;
+		operators = new Stack<>(); //Initialize stack used to calc answer
+		output = new SimpleQueue<>(); //Initialize queue used to calc answer
+		numerical = true;//Flag as numerical question
 	}
 
+    /**
+     * Question
+     * This method creates a Question object with a given problem statement, list of specific questions,
+     *    list of answers to those questions, and a list of possible answers (for MC choices)
+     * @param problemStatement, the question's problem statement
+     * @param specificQuestions, the sub-questions stored in the general question
+     * @param specificAnswers, the answers to the sub-questions
+     * @param possibleAnswers, the overall possibilities that serve as possible valid answers to sub-questions
+     */
 	Question(String problemStatement, SimpleLinkedList<String> specificQuestions, SimpleLinkedList<String> specificAnswers, SimpleLinkedList<String> possibleAnswers) {
 		this.specificQuestions = specificQuestions;
 		this.specificAnswers = specificAnswers;
 		this.possibleAnswers = possibleAnswers;
-		preset = true;
+		preset = true; //Flag as preset question
 	}
 
+    /**
+     * Question
+     * This method creates a Question object with a given problem statement, list of specific questions,
+     *    list of answers to those questions, a list of possible answers (for MC choices), and an image
+     * @param problemStatement, the question's problem statement
+     * @param specificQuestions, the sub-questions stored in the general question
+     * @param specificAnswers, the answers to the sub-questions
+     * @param possibleAnswers, the overall possibilities that serve as possible valid answers to sub-questions
+     * @param image, the BufferedImage accompanying the question
+     */
 	Question(String problemStatement, SimpleLinkedList<String> specificQuestions, SimpleLinkedList<String> specificAnswers, SimpleLinkedList<String> possibleAnswers, BufferedImage image) {
 		this.problemStatement = problemStatement;
 		this.specificQuestions = specificQuestions;
 		this.specificAnswers = specificAnswers;
 		this.possibleAnswers = possibleAnswers;
 		this.image = image;
-		preset = true;
+		preset = true; //Flag as preset question
 	}
 
-	// setters
+    /**
+     * setProblemStatement
+     * This method sets the problem statement of the question
+     * @param problemStatement, the String representing the problem statement to be set
+     */
 	public void setProblemStatement(String problemStatement) {
 		this.problemStatement = problemStatement;
 	}
 
+    /**
+     * setFormula
+     * This method sets the formula of the question
+     * @param formula, the SimpleLinkedList of symbols representing the formula to be set
+     */
 	public void setFormula(SimpleLinkedList<Symbol> formula) {
 		this.formula = formula;
 	}
 
-	// getters
+    /**
+     * getProblemStatement
+     * This method returns the problem statement
+     * @return problemStatement, a string representing the question's problem statement
+     */
 	public String getProblemStatement() {
 		return problemStatement;
 	}
 
+    /**
+     * getFormula
+     * This method returns the question's formula
+     * @return formula, a SimpleLinkedList of Symbol objects representing the formula used to calculate the answer
+     */
 	public SimpleLinkedList<Symbol> getFormula() {
 		return formula;
 	}
 
+    /**
+     * getImage
+     * This method returns the question's image
+     * @return image, a BufferedImage representing the image held in the question
+     */
 	public BufferedImage getImage() {
 		return image;
 	}
 
+    /**
+     * getSpecificQuestion
+     * This method returns the sub-questions held in the general question
+     * @return specificQuestions, a SimpleLinkedList of Strings representing the sub-questions
+     */
 	public SimpleLinkedList<String> getSpecificQuestions() {
 		return specificQuestions;
 	}
 
+    /**
+     * getSpecificAnswers
+     * This method returns the answers to the sub-questions
+     * @return specificAnswers, a SimpleLinkedList of Strings representing the answers
+     */
 	public SimpleLinkedList<String> getSpecificAnswers() {
 		return specificAnswers;
 	}
 
+    /**
+     * getPossibleAnswers
+     * This method returns the possible answers to any given sub-question
+     * @return possibleAnswers, a SimpleLinkedList of String representing all possible answers
+     */
 	public SimpleLinkedList<String> getPossibleAnswers() {
 		return possibleAnswers;
 	}
 
+    /**
+     * getStringQuestions
+     * This method returns a given number of preset sub-questions, along with the answers and false choices (3 each)
+     * @param num, An integer representing the number of questions, with answers and false choices, to be returned
+     * @return questions, A 2D array of strings representing the sub-questions, answers, and false choices
+     */
 	//Returns in format (for each row): Question, Answer, FalseAnswer1, FalseAnswer2, FalseAnswer3
-	//Make sure that the max value of 'num' entered is the num of specific questions (prevent doubling)
 	public String[][] getStringQuestions(int num) {
 		String[][] questions = new String[num][5];
-		int rand;
-		boolean repeatedQuestion;
+		int rand; //Random integer to be generated
+		boolean repeatedQuestion; //Flag to mark whether the question has already been randomly selected
 
 		for (int i = 0; i < num; i++) {
 			do {
@@ -146,14 +231,29 @@ public class Question {
 		return questions;
 	}
 
+    /**
+     * isPreset
+     * This method returns whether the question is a preset question
+     * @return preset, a boolean representing whether the question is preset
+     */
 	public boolean isPreset() {
 		return preset;
 	}
 
+    /**
+     * isNumerical
+     * This method returns whether the question is numerical (has a calculated answer)
+     * @return numerical, a boolean representing whether the question is numerical
+     */
 	public boolean isNumerical() {
 		return numerical;
 	}
 
+    /**
+     * numSpecificQuestions
+     * This method returns the number of sub-questions held in the general question
+     * @return specificQuestions.size, the size of the sub-Question SimpleLinkedList
+     */
 	public int numSpecificQuestions() {
 		return specificQuestions.size();
 	}
@@ -220,35 +320,35 @@ public class Question {
 			} while (flag);
 			randInts[i] = j;
 			if (j == 0) {
-				falseAnswers[i] = answer*2.0;
+				falseAnswers[i] = Math.round(answer*2.0*100.0)/100.0;
 			} else if (j == 1) {
-				falseAnswers[i] = answer/2.0;
+				falseAnswers[i] = Math.round(answer/2.0*100.0)/100.0;
 			} else if (j == 2) {
-				falseAnswers[i] = Math.pow(answer,2.0);
+				falseAnswers[i] = Math.round(Math.pow(answer,2.0)*100.0)/100.0;
 			} else if (j == 3) {
-				falseAnswers[i] = Math.sqrt(answer);
+				falseAnswers[i] = Math.round(Math.sqrt(answer)*100.0)/100.0;
 			} else if (j == 4) {
-				falseAnswers[i] = answer*3.0;
+				falseAnswers[i] = Math.round(answer*3.0*100.0)/100.0;
 			} else if (j == 5) {
-				falseAnswers[i] = answer/3.0;
+				falseAnswers[i] = Math.round(answer/3.0*100.0)/100.0;
 			} else if (j == 6) {
-				falseAnswers[i] = answer/Math.PI;
+				falseAnswers[i] = Math.round(answer/Math.PI*100.0)/100.0;
 			} else if (j == 7) {
-				falseAnswers[i] = answer*Math.PI;
+				falseAnswers[i] = Math.round(answer*Math.PI*100.0)/100.0;
 			} else if (j == 8) {
-				falseAnswers[i] = answer*Math.E;
+				falseAnswers[i] = Math.round(answer*Math.E*100.0)/100.0;
 			} else if (j == 9) {
-				falseAnswers[i] = answer/Math.E;
+				falseAnswers[i] = Math.round(answer/Math.E*100.0)/100.0;
 			}
 		}
 
 		return falseAnswers;
 	}
 
-	/**
+	/*
 	 * toRPN
 	 * This method converts the symbol list storing the formula into a queue sorted by calculation order
-	 *    in postfix notation (RPN)
+	 *    in reverse polish notation
 	 */
 	private void toRPN() {
 
@@ -290,7 +390,7 @@ public class Question {
 
 	}
 
-	/**
+	/*
 	 * calcAnswer
 	 * Calculates the answer that corresponds to the formula stored in the question
 	 *   after the calculation order has been determined and stored in postfix notation
@@ -327,7 +427,7 @@ public class Question {
 			}
 		}
 
-		answer = calc.pop();
+		answer = Math.round(calc.pop()*100.0) / 100.0;
 
 	}
 
@@ -368,7 +468,11 @@ public class Question {
 
 	}
 
-	// converts image to string for database to store
+    /**
+     * imageToString
+     * This method converts image to string for database to store
+     * @return The String representing the question's image
+     */
 	public String imageToString() {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {

@@ -1,5 +1,10 @@
 package data_structures;
-
+/*
+ * [SimpleQueue.java]
+ * Simple Queue data structure
+ * Authors: Jason Wang, Yili Liu, Eric Long, Josh Cai, Brian Li
+ * Nov. 20, 2018
+ */
 public class SimpleQueue<T> {
 
     private Node<T> head = null;
