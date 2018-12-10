@@ -237,7 +237,7 @@ class QuizTakerDisplay extends JFrame {
 		label.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		panel.add(Box.createRigidArea(new Dimension(0, x)));
 		panel.add(label);
-		panel.add(Box.createRigidArea(new Dimension(0, 40)));
+		panel.add(Box.createRigidArea(new Dimension(0, x)));
 		questionLabel.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 		questionLabel.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(),
 				100 + (int) (Math.ceil(
@@ -450,6 +450,7 @@ class QuizTakerDisplay extends JFrame {
 			
 			//if we reached the end, close this page and create summary page
 			if (questionNum == getQuestionStatment().size()) {
+				System.out.println("run");
 				new SummaryPage(wrongQuestions, student);
 				dispose();
 				return;
@@ -533,6 +534,8 @@ class QuizTakerDisplay extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			//dispose the window if the exit button is clicked
 			window.dispose();
+			//update the database after file closes
+			Login.getDatabase().update();
 		}
 	}
 

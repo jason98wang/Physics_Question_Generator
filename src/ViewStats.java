@@ -29,17 +29,16 @@ public class ViewStats extends JFrame {
 	private static JFrame window;
 
 	private String studentName;
-	private Student student;
 	private int studentWrongQuestions;
 	private int studentTotalQuestions;
 	private double accuracy = 0;
 	private Color orange = new Color(255, 168, 104);
 
 	private JButton back;
+	private JLabel wrong, total, stats;
 
 	private Color indigo = new Color(56, 53, 74);
 	private Color lightBlue = new Color(162, 236, 250);
-	private Font font = new Font("Arial", Font.BOLD, 30);
 
 	// Constructor
 	ViewStats(Student student) {
@@ -65,7 +64,6 @@ public class ViewStats extends JFrame {
 		this.setVisible(true);
 		this.setContentPane(panel);
 	
-		this.student = student;
 		studentName = student.getName();
 		studentWrongQuestions = student.getIncorrectQuestions();
 		studentTotalQuestions = student.getTotalQuestions();
@@ -79,7 +77,6 @@ public class ViewStats extends JFrame {
 				dispose();
 			}
 		});
-		back.setFont(font);
 		back.setContentAreaFilled(false); 
 		back.setBorder(BorderFactory.createEmptyBorder());
 
@@ -95,20 +92,20 @@ public class ViewStats extends JFrame {
 		panel.add(name);
 
 		//creating the life time accuracy label
-		JLabel stats = new JLabel(String.format("Accuracy " + "%.2f", accuracy) + "%");
+		stats = new JLabel(String.format("Accuracy " + "%.2f", accuracy) + "%");
 		stats.setFont(new Font("Serif", Font.BOLD, 150));
 		stats.setAlignmentX(JTextArea.CENTER_ALIGNMENT);
 		stats.setHorizontalAlignment(JLabel.CENTER);
 		stats.setForeground(lightBlue);
 
 		//creating the life time total incorrect questions panel
-		JLabel wrong = new JLabel("Total Incorrect: " + Integer.toString(studentWrongQuestions));
+		wrong = new JLabel("Total Incorrect: " + Integer.toString(studentWrongQuestions));
 		wrong.setFont(new Font("Serif", Font.BOLD, 50));
 		wrong.setHorizontalAlignment(JLabel.CENTER);
 		wrong.setForeground(lightBlue);
 
 		//creating the life time total questions panel
-		JLabel total = new JLabel("Total Questions: " + Integer.toString(studentTotalQuestions));
+	    total = new JLabel("Total Questions: " + Integer.toString(studentTotalQuestions));
 		total.setFont(new Font("Serif", Font.BOLD, 50));
 		total.setHorizontalAlignment(JLabel.CENTER);
 		total.setForeground(lightBlue);
@@ -130,18 +127,19 @@ public class ViewStats extends JFrame {
 		leftPanel.setBackground(indigo);
 		panel.add(leftPanel);
 		panel.add(Box.createRigidArea(new Dimension(0,50)));
-			
-		//creating a panel to add the backButton and align it to the left side
+		
+	    //creating a panel to add the backButton and align it to the left side
 		JPanel backButtonPanel = new JPanel();
 		backButtonPanel.add(Box.createRigidArea(new Dimension(100,0)));
 		backButtonPanel.add(back);
+
 		backButtonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 		backButtonPanel.setBackground(indigo);
+		
 		panel.add(backButtonPanel);
 		
-		
-	
 
 	} // End of constructor
+	
 
 }

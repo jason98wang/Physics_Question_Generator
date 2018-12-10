@@ -408,6 +408,7 @@ public class QuizTaker {
 
 		public void actionPerformed(ActionEvent e) {
 			window.dispose();
+			Login.getDatabase().update();
 		}
 
 	}
