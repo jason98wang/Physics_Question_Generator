@@ -45,7 +45,7 @@ class QuizTakerDisplay extends JFrame {
 	private JLabel label;
 	private JLabel questionLabel;
 	private JPanel panel, choicesPanel;
-	private JLabel clapping = new JLabel(new ImageIcon("clapping.gif"));
+	private JLabel clapping = new JLabel(new ImageIcon("assets/clapping.gif"));
 	private Dimension bottom, choice;
 	private long time;
 
@@ -206,7 +206,7 @@ class QuizTakerDisplay extends JFrame {
 		//creating the next button
 		nextButton = new JButton();
 		try {
-			nextButton = new JButton(new ImageIcon(ImageIO.read(new File("nextButton.png"))));
+			nextButton = new JButton(new ImageIcon(ImageIO.read(new File("assets/nextButton.png"))));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -327,7 +327,7 @@ class QuizTakerDisplay extends JFrame {
 	private void playMusic() {
 		try {
 			AudioInputStream audioInputStream = AudioSystem
-					.getAudioInputStream(new File("CorrectSound.wav").getAbsoluteFile());
+					.getAudioInputStream(new File("assets/CorrectSound.wav").getAbsoluteFile());
 			Clip clip = AudioSystem.getClip();
 			clip.open(audioInputStream);
 			clip.start();
