@@ -105,7 +105,7 @@ public class QuizTaker {
 
 		// Init logo image
 		try {
-			logo = ImageIO.read(new File("logo.png"));
+			logo = ImageIO.read(new File("assets/logo.png"));
 			logo = Scalr.resize(logo, (int) (window.getHeight() / 2));
 		} catch (IOException e) {
 			logo = null;
