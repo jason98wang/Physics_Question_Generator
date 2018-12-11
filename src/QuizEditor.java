@@ -31,6 +31,7 @@ import java.awt.dnd.DropTargetListener;
 // ImageIO
 import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
+import org.imgscalr.Scalr;
 
 // Swing
 import javax.swing.BorderFactory;
@@ -67,8 +68,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -328,7 +327,7 @@ public class QuizEditor extends JFrame {
 		JScrollPane enterScroll = new JScrollPane(enter, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		enterScroll.getVerticalScrollBar().setUnitIncrement(16);
-		enterScroll.setPreferredSize(enter.getPreferredSize());
+		enterScroll.setPreferredSize(enter.getMinimumSize());
 		enterScroll.setMinimumSize(enterScroll.getPreferredSize());
 		hasFormula.add(enterScroll);
 		hasFormula.setLayout(new BoxLayout(hasFormula, BoxLayout.Y_AXIS));
@@ -583,7 +582,7 @@ public class QuizEditor extends JFrame {
 						unitModel.addElement(units.get(i).getNum() + ". " + units.get(i).getName());
 					}
 
-					// Subject has not ben chosen
+					// Subject has not been chosen
 				} else {
 					s = null;
 				}
@@ -600,7 +599,7 @@ public class QuizEditor extends JFrame {
 
 				// Updates questions in unit
 				if (!chosenUnit.equals("Choose a unit")) {
-
+					
 					// Units in subject
 					SimpleLinkedList<Unit> units = s.getUnits();
 					u = units.get(unit.getSelectedIndex() - 1);
@@ -689,7 +688,7 @@ public class QuizEditor extends JFrame {
 				if (addQ) {
 					return;
 				}
-
+				
 				addQ = true;
 				removeQ = false;
 				editQ = false;
@@ -816,14 +815,17 @@ public class QuizEditor extends JFrame {
 				if (removeQ) {
 					SimpleLinkedList<Question> questions = u.getQuestions();
 					int[] indicies = list.getSelectedIndices();
-					
 					// Need the array because the model updates indexes after every removal
 					Object[] A = listModel.toArray();
+					SimpleLinkedList<Question> remove = new SimpleLinkedList<Question>();
 					// deletes questions that have been selected
 					for (int i = 0; i < indicies.length; i++) {
 						// d.deleteQuestion(s,u,questions.get(i);
 						listModel.removeElement(A[indicies[i]]);
-						u.removeQuestion(questions.get(indicies[i]));
+						remove.add(questions.get(indicies[i]));
+					}
+					for (int i = 0; i < remove.size(); i++) {
+						u.removeQuestion(remove.get(i));
 					}
 					list.clearSelection();
 
@@ -832,11 +834,15 @@ public class QuizEditor extends JFrame {
 					if (noFormula) {
 						// there must be an answer for every question
 						if (questionsModel.size() != rightAnswerModel.size()) {
+							JOptionPane.showMessageDialog(null, "Questions must match answers");
 							return;
 						}
 						// get problem statement
 						String problemStatement = enterQ.getText();
-						
+						if (problemStatement.equals("")) {
+							JOptionPane.showMessageDialog(null, "Please enter a problem statement");
+							return;
+						}
 						// puts everything in the 3 lists into 3 simple linked lists 
 						SimpleLinkedList<String> specificQuestions = new SimpleLinkedList<String>();
 						SimpleLinkedList<String> specificAnswers = new SimpleLinkedList<String>();
@@ -858,17 +864,24 @@ public class QuizEditor extends JFrame {
 						rightAnswerModel.removeAllElements();
 						enterAllAnswers.setText("");
 						allAnswersModel.removeAllElements();
-						q = new Question(problemStatement, specificQuestions, specificAnswers, possibleAnswers,
-								copyBufferedImage(image));
+						if (image == null) {
+							q = new Question(problemStatement, specificQuestions, specificAnswers, possibleAnswers, null);
+						} else {
+							q = new Question(problemStatement, specificQuestions, specificAnswers, possibleAnswers,
+								Scalr.resize(image,500));
+						}
 						image = null;
 						listModel.addElement(problemStatement);
 					} else {
-						//
+						if (enter.getText().equals("")) {
+							JOptionPane.showMessageDialog(null, "Enter a problem statement");
+							return;
+						}
 						q.setProblemStatement(enter.getText());
 
 						// no formula 
 						if (q.getFormula() == null || q.getFormula().size() == 0) {
-							// error message
+							JOptionPane.showMessageDialog(null, "Please enter a formula or select no formula");
 							return;
 						}
 						// if it is a new formula, the formula list is updated
@@ -952,12 +965,15 @@ public class QuizEditor extends JFrame {
 						
 						// answer for every question
 						if (questionsModel.size() != rightAnswerModel.size()) {
+							JOptionPane.showMessageDialog(null, "Questions must match answers");
 							return;
 						}
 						
 						// get problem statement
 						String problemStatement = enterQ.getText();
-						
+						if (problemStatement.equals("")) {
+							JOptionPane.showMessageDialog(null, "Enter a valid problem statement");
+						}
 						// put elements in list into simple linked lists
 						SimpleLinkedList<String> specificQuestions = new SimpleLinkedList<String>();
 						SimpleLinkedList<String> specificAnswers = new SimpleLinkedList<String>();
@@ -980,8 +996,12 @@ public class QuizEditor extends JFrame {
 						rightAnswerModel.removeAllElements();
 						enterAllAnswers.setText("");
 						allAnswersModel.removeAllElements();
-						q = new Question(problemStatement, specificQuestions, specificAnswers, possibleAnswers,
-								copyBufferedImage(image));
+						if (image == null) {
+							q = new Question(problemStatement, specificQuestions, specificAnswers, possibleAnswers, null);
+						} else {
+							q = new Question(problemStatement, specificQuestions, specificAnswers, possibleAnswers,
+								Scalr.resize(image,500));
+						}
 						image = null;
 						
 						// remove original question and adds the new one
@@ -992,10 +1012,13 @@ public class QuizEditor extends JFrame {
 					} else {
 						// there must be a formula 
 						if (q.getFormula() == null || q.getFormula().size() == 0) {
-							// error message
+							JOptionPane.showMessageDialog(null, "Please enter a formula or select no formula.");
 							return;
 						}
-						
+						if (enter.getText().equals("")) {
+							JOptionPane.showMessageDialog(null, "Please enter a problem statement");
+							return;
+						}
 						// removes the edited question and adds a new one to the unit list and the jlist of questions
 						listModel.add(listModel.indexOf(editQuestion.getProblemStatement()), enter.getText());
 						listModel.removeElement(editQuestion.getProblemStatement());
@@ -1037,6 +1060,8 @@ public class QuizEditor extends JFrame {
 		addSubject.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				s = null;
+				subject.setSelectedIndex(0);
 				// makes the main frame invisible and runs the add subject method
 				setVisible(false);
 				addSubject(null, subjects);
@@ -1053,7 +1078,8 @@ public class QuizEditor extends JFrame {
 					JOptionPane.showMessageDialog(null, "A valid subject has not been selected");
 					return;
 				}
-				
+				unit.setSelectedIndex(0);
+				u = null;
 				// makes main frame invisible and runs the add unit method
 				setVisible(false);
 				SimpleLinkedList<Unit> unitList = s.getUnits();
@@ -1311,10 +1337,12 @@ public class QuizEditor extends JFrame {
 		JTextArea grade = new JTextArea();
 		JTextArea level = new JTextArea();
 		JButton addUnit = new JButton("Add a unit");
+		JButton removeUnit = new JButton("Remove selected units");
 		JLabel logo = new JLabel(new ImageIcon("logo.png"));
 		// Scrollable JList
 		DefaultListModel<String> unitModel = new DefaultListModel<String>();
 		JList<String> units = new JList<String>(unitModel);
+		units.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		JScrollPane scroll = new JScrollPane(units, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		
@@ -1366,8 +1394,12 @@ public class QuizEditor extends JFrame {
 
 		addUnit.setBackground(lightBlue);
 		addUnit.setFont(font);
-		addUnit.setAlignmentX(CENTER_ALIGNMENT);
+		addUnit.setAlignmentX(JButton.CENTER_ALIGNMENT);
 
+		removeUnit.setBackground(lightBlue);
+		removeUnit.setFont(font);
+		removeUnit.setAlignmentX(JButton.CENTER_ALIGNMENT);
+		
 		confirm.setBackground(lightBlue);
 		confirm.setFont(font);
 		confirm.setAlignmentX(JButton.CENTER_ALIGNMENT);
@@ -1395,23 +1427,55 @@ public class QuizEditor extends JFrame {
 			}
 		});
 
+		// remove unit
+		removeUnit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int[] delete = units.getSelectedIndices();
+				Object[] A = unitModel.toArray();
+				SimpleLinkedList<Unit> remove = new SimpleLinkedList<Unit>();
+				for (int i = 0; i < delete.length; i++) {
+					unitModel.removeElement(A[delete[i]]);
+					remove.add(unitList.get(delete[i]));
+				}
+				for (int i = 0; i < remove.size(); i++) {
+					unitList.remove(remove.get(i));
+				}
+			}
+		});
 		// Confirm button
 		confirm.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				// Make sure everything is filled in 
+				if (name.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "A valid name has not been selected");
+					return;
+				} else if (grade.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "A valid grade has not been selected");
+					return;
+				} else if (level.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "A valid level has not been selected");
+					return;
+				}
 				try {
 					// Add subject
 					Subject tempSubject = new Subject(name.getText(), Integer.parseInt(grade.getText()), level.getText());
-					for (int i = 0; i < unitList.size(); i++) {
-						tempSubject.getUnits().add(unitList.get(i));
-					}
-					subjects.add(tempSubject);
 					if (sub != null) {
 						if (subjectModel.getIndexOf(name.getText() + " " + grade.getText() + " " + level.getText()) >= 0) {
 							subjectModel.removeElement(name.getText() + " " + grade.getText() + " " + level.getText());
 						}
 						subjects.remove(sub);
+					} else {
+						if (subjectModel.getIndexOf(name.getText() + " " + grade.getText() + " " + level.getText()) >= 0) {
+							JOptionPane.showMessageDialog(null, "This subject already exists!");
+							return;
+						}
 					}
+					for (int i = 0; i < unitList.size(); i++) {
+						tempSubject.getUnits().add(unitList.get(i));
+					}
+					subjects.add(tempSubject);
 					subjectModel.addElement(name.getText() + " " + grade.getText() + " " + level.getText());
 					subjectModel.setSelectedItem(name.getText() + " " + grade.getText() + " " + level.getText());
 					unit.setSelectedIndex(0);
@@ -1459,6 +1523,8 @@ public class QuizEditor extends JFrame {
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.add(addUnit);
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
+		contentPanel.add(removeUnit);
+		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.add(confirm);
 		contentPanel.add(Box.createVerticalStrut(addingoffset));
 		contentPanel.add(cancel);
@@ -1476,6 +1542,7 @@ public class QuizEditor extends JFrame {
 
 	/**
 	 * method to run the ui for adding a unit
+	 * @param unit the unit that is being edited
 	 * @param unitList the simple linked list of units to add to
 	 * @param model model of the jlist to add to if there is one
 	 * @param addSubjectFrame frame to update when a unit is added
@@ -1572,10 +1639,18 @@ public class QuizEditor extends JFrame {
 		confirm.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (name.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "A valid name has not been selected");
+					return;
+				} else if (num.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "A valid number has not been selected");
+					return;
+				}
 				try {
 					// add unit to list
-					unitList.add(new Unit(name.getText(), Integer.parseInt(num.getText())));
+					Unit tempUnit = new Unit(name.getText(), Integer.parseInt(num.getText()));
 					String nameString = name.getText();
+					unitList.add(tempUnit);
 					if (un != null) {
 						unitList.remove(un);
 						if (model != null) {
@@ -1587,16 +1662,26 @@ public class QuizEditor extends JFrame {
 					}
 					// adds to unit to model if there is one
 					if (model != null) {
+						if (model.contains(num.getText() + ". " + nameString)) {
+							JOptionPane.showMessageDialog(null, "List already contains this unit");
+							model.removeElement(un.getNum() + ". " + unit.getName());
+							return;
+						}
 						model.addElement(num.getText() + ". " + nameString);
-					}
+					
 					
 					// adds unit to subject if the subject is not a new one
-					if (s != null) {
+					} else {
+						if (unitModel.getIndexOf(num.getText() + ". " + nameString) > -1) {
+							JOptionPane.showMessageDialog(null, "Subject contains this unit.");
+							unitList.remove(tempUnit);
+							return;
+						}
 						unitModel.addElement(num.getText() + ". " + nameString);
 						unitModel.setSelectedItem(num.getText() + ". " + nameString);
 					}
-					addUnitFrame.dispose();
 					
+					addUnitFrame.dispose();
 					// unit must be an integer
 				} catch (NumberFormatException ex) {
 					JOptionPane.showMessageDialog(null, "A valid number has not been selected");
@@ -2239,21 +2324,6 @@ public class QuizEditor extends JFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * copy bufferedimage
-	 * @param bi buffered image to be copied
-	 * @return buffered image in another bufferedimage object
-	 */
-	static BufferedImage copyBufferedImage(BufferedImage bi) {
-		if (bi == null) {
-			return bi;
-		}
-		ColorModel cm = bi.getColorModel();
-		boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
-		WritableRaster raster = bi.copyData(null);
-		return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
 	}
 
 	/**

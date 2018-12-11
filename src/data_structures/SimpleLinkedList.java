@@ -118,11 +118,19 @@ public class SimpleLinkedList<E> {
 		while (cur.getNext() != null) {
 			if (cur.getNext().getItem().equals(item)) {
 				Node<E> n = cur.getNext(); //keep getting next until found the item
+				if (head == null || tail == null) {
+					tail = head;
+				} else if (cur.getNext().equals(tail)) {
+					tail = cur;
+				}
 				cur.setNext(n.getNext());
+				
+				
 				return true;
 			}
 			cur = cur.getNext();
 		}
+		
 		//if item never found return
 		return false;
 	}
