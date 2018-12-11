@@ -1,8 +1,8 @@
 /**
  * [Login.java]
  * This class displays the login UI of the application
- * Authors: Jason Wang, Yili Liu, Eric Long, Josh Cai, Brian Li
- * Date: December 9. 2018
+ * @author Josh Cai
+ * @since Nov.20.2018
  */
 
 //Java imports
@@ -92,7 +92,7 @@ public class Login {
 
 		//Logo image
 		try {
-			logo = ImageIO.read(new File("logo.png"));
+			logo = ImageIO.read(new File("assets/logo.png"));
 			logo = Scalr.resize(logo, (int) (window.getHeight() / 2));
 		} catch (IOException e) {
 			logo = null;

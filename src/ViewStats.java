@@ -139,7 +139,7 @@ public class ViewStats extends JFrame {
 		panel.add(backButtonPanel);
 		
 		//creating the logo
-		logo = new JLabel(new ImageIcon("cropLogo.png"));
+		logo = new JLabel(new ImageIcon("assets/cropLogo.png"));
 		logo.setAlignmentX(CENTER_ALIGNMENT);
 		panel.add(logo);
 		

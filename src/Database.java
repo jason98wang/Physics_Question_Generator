@@ -39,8 +39,8 @@ public class Database {
 	// INITIALIZE VARIABLES
 	// credentials used to track the gist file
 	private static final String USERNAME = "plap2018";
-	private static final String PASSWORD = "thinklikeaphysicist";
-	private static final String ID = "e8cfd6bc0c6aff7d18170237f1b36b34";
+	private static final String PASSWORD = "rhhsphysicsdep2018";
+	private static final String ID = "4a8bed7470440c8fe7d194118776203d";
 
 	// github gist vars
 	private static GistService service;
