@@ -868,7 +868,7 @@ public class QuizEditor extends JFrame {
 							q = new Question(problemStatement, specificQuestions, specificAnswers, possibleAnswers, null);
 						} else {
 							q = new Question(problemStatement, specificQuestions, specificAnswers, possibleAnswers,
-								Scalr.resize(image,500));
+								Scalr.resize(image,400));
 						}
 						image = null;
 						listModel.addElement(problemStatement);
@@ -1000,7 +1000,7 @@ public class QuizEditor extends JFrame {
 							q = new Question(problemStatement, specificQuestions, specificAnswers, possibleAnswers, null);
 						} else {
 							q = new Question(problemStatement, specificQuestions, specificAnswers, possibleAnswers,
-								Scalr.resize(image,500));
+								Scalr.resize(image,400));
 						}
 						image = null;
 						
