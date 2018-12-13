@@ -184,7 +184,7 @@ public class QuizEditor extends JFrame {
 
 		});
 		
-		JLabel logo = new JLabel(new ImageIcon("logo.png"));
+		JLabel logo = new JLabel(new ImageIcon("assets/logo.png"));
 		// Buttons on main frame
 		JButton add = new JButton("Add");
 		JButton remove = new JButton("Remove");
@@ -1338,7 +1338,7 @@ public class QuizEditor extends JFrame {
 		JTextArea level = new JTextArea();
 		JButton addUnit = new JButton("Add a unit");
 		JButton removeUnit = new JButton("Remove selected units");
-		JLabel logo = new JLabel(new ImageIcon("logo.png"));
+		JLabel logo = new JLabel(new ImageIcon("assets/logo.png"));
 		// Scrollable JList
 		DefaultListModel<String> unitModel = new DefaultListModel<String>();
 		JList<String> units = new JList<String>(unitModel);
@@ -1599,7 +1599,7 @@ public class QuizEditor extends JFrame {
 		JTextArea num = new JTextArea();
 		JButton confirm = new JButton("Confirm");
 		JButton cancel = new JButton("Cancel");
-		JLabel logo = new JLabel(new ImageIcon("logo.png"));
+		JLabel logo = new JLabel(new ImageIcon("assets/logo.png"));
 		
 		// makes whole content panel scrollable
 		JScrollPane scroll = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -1777,7 +1777,7 @@ public class QuizEditor extends JFrame {
 		JPanel buttons = new JPanel();
 		JPanel contentPanel = new JPanel();
 		JPanel contentPane = new JPanel();
-		JLabel logo = new JLabel(new ImageIcon("logo.png"));
+		JLabel logo = new JLabel(new ImageIcon("assets/logo.png"));
 		JScrollPane scroll = new JScrollPane(list, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		JScrollPane scrollPane = new JScrollPane(contentPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
@@ -1828,6 +1828,7 @@ public class QuizEditor extends JFrame {
 		cancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				formula.setSelectedIndex(0);
 				previousFormulaFrame.dispose();
 			}
 		});
@@ -1924,7 +1925,7 @@ public class QuizEditor extends JFrame {
 		JPanel contentPane = new JPanel();
 		JPanel contentPanel = new JPanel();
 		JTextArea constant = new JTextArea();
-		
+//		contentPanel.setMaximumSize(new Dimension((int)Toolkit.getDefaultToolkit().getScreenSize().getWidth(), (int)contentPanel.getPreferredSize().getHeight()));
 		
 		// JScrollPanes to make components scrollable 
 		JScrollPane scroll = new JScrollPane(enteredFormula, JScrollPane.VERTICAL_SCROLLBAR_NEVER,
@@ -1934,40 +1935,39 @@ public class QuizEditor extends JFrame {
 		
 
 		// Lists
-		SimpleLinkedList<Symbol> formula = new SimpleLinkedList<Symbol>();
-		SimpleLinkedList<JButton> buttonlist = new SimpleLinkedList<JButton>();
+		SimpleLinkedList<Symbol> formulaList = new SimpleLinkedList<Symbol>();
+		SimpleLinkedList<JButton> buttonList = new SimpleLinkedList<JButton>();
 
 		// Formatting the layout
-		int cols = (int) Math.ceil(Math.sqrt(((double)symbols.size() + 2.0)));
-		int rows = (int) Math.ceil((double) (symbols.size() + 2) / cols);
-		buttons.setLayout(new GridLayout(rows, cols));
 
+		int length = 0;
 		enteredFormula.setAlignmentX(JLabel.CENTER_ALIGNMENT);
 
 		// Adding all symbols
 		for (int i = 0; i < symbols.size(); i++) {
-
+			
 			// JButton for all symbols
 			BufferedImage image = symbols.get(i).getImage();
-			
+			length = Math.max(length, image.getHeight());
 			// makes image smaller
 			Image tmp = image.getScaledInstance(image.getWidth() / 2, image.getHeight() / 2, Image.SCALE_SMOOTH);
 			JButton symbol = new JButton(new ImageIcon(tmp));
+			symbol.setPreferredSize(symbol.getMinimumSize());
 			symbol.setBackground(lightBlue);
 			symbol.addActionListener(new ActionListener() {
 				@Override
 				// Add to formula
 				public void actionPerformed(ActionEvent e) {
 
-					if (formula.size() > 0) {
-						String id = symbols.get(buttonlist.indexOf(symbol)).getId();
+					if (formulaList.size() > 0) {
+						String id = symbols.get(buttonList.indexOf(symbol)).getId();
 						try {
 							// checks if id is a number
 							Integer.parseInt(id);
 							
 							// if it is it gets the previous symbol and removes it
-							Symbol previous = formula.get(formula.size() - 1);
-							formula.remove(formula.size() - 1);
+							Symbol previous = formulaList.get(formulaList.size() - 1);
+							formulaList.remove(formulaList.size() - 1);
 							
 							// it checks if it is a variable
 							if (previous instanceof Variable) {
@@ -1984,33 +1984,38 @@ public class QuizEditor extends JFrame {
 								}
 								
 								// add new symbol
-								formula.add(new Variable(previous.getId() + between + id));
+								formulaList.add(new Variable(previous.getId() + between + id));
 							} else {
 								// if it is not then the previous and current number symbol are both
 								// added to the formula
-								formula.add(previous);
-								formula.add(symbols.get(buttonlist.indexOf(symbol)));
+								formulaList.add(previous);
+								formulaList.add(symbols.get(buttonList.indexOf(symbol)));
 							}
 						} catch (NumberFormatException ex) {
 							
 							// adds symbol if the current symbol is not an integer
-							formula.add(symbols.get(buttonlist.indexOf(symbol)));
+							formulaList.add(symbols.get(buttonList.indexOf(symbol)));
 						}
 						// this is the first symbol in the formula so it is just added
 					} else {
-						formula.add(symbols.get(buttonlist.indexOf(symbol)));
+						formulaList.add(symbols.get(buttonList.indexOf(symbol)));
 					}
 					// updates frame and display
-					enteredFormula.setIcon(new ImageIcon(joinBufferedImages(formula)));
+					enteredFormula.setIcon(new ImageIcon(joinBufferedImages(formulaList)));
 					createFormulaFrame.revalidate();
 				}
 			});
+			
+			// Formatting
+			int cols = (int) Math.ceil(Toolkit.getDefaultToolkit().getScreenSize().getWidth() / length / 2);
+			int rows = (int) Math.ceil((double) (symbols.size() + 2) / cols);
+			buttons.setLayout(new GridLayout(rows, cols));
 			
 			// add button
 			// button list is the simplelinked list used so that you can determine the symbol
 			// that is pressed with the index of the button and the index of the symbol in 
 			// the symbol list
-			buttonlist.add(symbol);
+			buttonList.add(symbol);
 			// button is the grid to add the button to
 			buttons.add(symbol);
 		}
@@ -2023,14 +2028,14 @@ public class QuizEditor extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// if it has at least one symbol
-				if (formula.size() > 0) {
-					formula.remove(formula.size() - 1);
+				if (formulaList.size() > 0) {
+					formulaList.remove(formulaList.size() - 1);
 				} else {
 					return;
 				}
 				// if it still has at least one symbol after removing
-				if (formula.size() > 0) {
-					enteredFormula.setIcon(new ImageIcon(joinBufferedImages(formula)));
+				if (formulaList.size() > 0) {
+					enteredFormula.setIcon(new ImageIcon(joinBufferedImages(formulaList)));
 				} else {
 					enteredFormula.setIcon(new ImageIcon());
 				}
@@ -2054,11 +2059,11 @@ public class QuizEditor extends JFrame {
 					double d = Double.parseDouble(constant.getText());
 					
 					// if it is an integer and is not the first element
-					if (formula.size() > 0 && d % 1 == 0) {
+					if (formulaList.size() > 0 && d % 1 == 0) {
 						
 						// gets prev and removes it from the formula
-						Symbol previous = formula.get(formula.size() - 1);
-						formula.remove(formula.size() - 1);
+						Symbol previous = formulaList.get(formulaList.size() - 1);
+						formulaList.remove(formulaList.size() - 1);
 						
 						// if previous is a variable
 						if (previous instanceof Variable) {
@@ -2071,19 +2076,19 @@ public class QuizEditor extends JFrame {
 							if (id.charAt(id.length() - 1) >= '0' && id.charAt(id.length() - 1) <= '9') {
 								between = "";
 							}
-							formula.add(new Variable(previous.getId() + between + constant.getText()));
+							formulaList.add(new Variable(previous.getId() + between + constant.getText()));
 						} else {
 							// if previous is an operation, it is re-added
-							formula.add(previous);
-							formula.add(new Symbol(constant.getText()));
+							formulaList.add(previous);
+							formulaList.add(new Symbol(constant.getText()));
 						}
 					} else {
 						// is a doouble or is the first element
-						formula.add(new Symbol(constant.getText()));
+						formulaList.add(new Symbol(constant.getText()));
 					}
 					
 					// update and clear
-					enteredFormula.setIcon(new ImageIcon(joinBufferedImages(formula)));
+					enteredFormula.setIcon(new ImageIcon(joinBufferedImages(formulaList)));
 					createFormulaFrame.revalidate();
 					constant.setText("");
 					
@@ -2114,13 +2119,13 @@ public class QuizEditor extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				// Nothing has been entered yet
-				if (formula.size() == 0) {
+				if (formulaList.size() == 0) {
 					return;
 				}
 				
 				// set formula and update
-				q.setFormula(formula);
-				formulaDisplay.setIcon(new ImageIcon(joinBufferedImages(formula)));
+				q.setFormula(formulaList);
+				formulaDisplay.setIcon(new ImageIcon(joinBufferedImages(formulaList)));
 				quiz.revalidate();
 				createFormulaFrame.dispose();
 			}
@@ -2133,6 +2138,7 @@ public class QuizEditor extends JFrame {
 		cancel.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				formula.setSelectedIndex(0);
 				createFormulaFrame.dispose();
 			}
 		});
