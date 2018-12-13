@@ -74,7 +74,7 @@ public class QuizTaker {
 	private JPanel mainPanel;
 	private JPanel optionsPanel;
 	private JButton start;
-	private JButton exit;
+	private JButton logout;
 	private JButton stats;
 	private JComboBox<String> unit;
 	private JTextField numQuestionsField;
@@ -117,14 +117,14 @@ public class QuizTaker {
 		title.setBorder(BorderFactory.createEmptyBorder(0, 0,
 				(int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 5), 0));
 
-		// Init start, exit, and stats buttons
+		// Init start, logout, and stats buttons
 		start = new JButton("START");
 		start.addActionListener(new StartButtonActionListener());
 		start.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-		exit = new JButton("EXIT");
-		exit.addActionListener(new ExitButtonActionListener());
-		exit.setAlignmentX(Component.CENTER_ALIGNMENT);
+		logout = new JButton("LOGOUT");
+		logout.addActionListener(new LogoutButtonActionListener());
+		logout.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		stats = new JButton("Account Info");
 		stats.addActionListener(new StatsListener());
@@ -166,7 +166,7 @@ public class QuizTaker {
 		mainPanel.add(optionsPanel);
 		mainPanel.add(start);
 		mainPanel.add(Box.createRigidArea(new Dimension(0, 25)));
-		mainPanel.add(exit);
+		mainPanel.add(logout);
 		mainPanel.add(Box.createRigidArea(new Dimension(0, 25)));
 		mainPanel.add(stats);
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(0, 0,
@@ -304,7 +304,7 @@ public class QuizTaker {
 		stringQuestions = tempQ.getStringQuestions(1);
 
 		// Get problem statement
-		problemStatement = tempQ.getProblemStatement();
+		problemStatement = tempQ.getProblemStatement() + " " + stringQuestions[0][0];
 
 		// Get answer
 		ans = stringQuestions[0][1];
@@ -507,13 +507,14 @@ public class QuizTaker {
 	}
 
 	/*
-	 * ExitButtonActionListener
-	 * Action listener for the exit button
-	 * Exits and updates database
+	 * LogoutButtonActionListener
+	 * Action listener for the logout button
+	 * Logs out and updates database
 	 */
-	private class ExitButtonActionListener implements ActionListener {
+	private class LogoutButtonActionListener implements ActionListener {
 
 		public void actionPerformed(ActionEvent e) {
+			new Login();
 			window.dispose();
 			Login.getDatabase().update();
 		}
